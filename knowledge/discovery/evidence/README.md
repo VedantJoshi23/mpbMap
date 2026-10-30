@@ -6,12 +6,15 @@ append-only: new evidence takes the next `EVD-NNN`, new claims the next
 `KC-NNN`. Nothing is renumbered or deleted. A revised claim is marked
 `superseded_by`.
 
-**Subject of this project.** The owner wants to build an Android app that
-replicates the behaviour of an existing iOS app, *MapShifter: Stylized Game
-Map* by Filipp Bazun (the "reference app"). Most evidence below observes
-the reference app directly. A claim about what the reference app does can
-be a `fact`. A claim about what *this* project should do follows from it
-only by inference, unless the owner stated it.
+**Subject of this project.** The owner is building an original Android app
+based on the *concept* of an existing iOS app, *MapShifter: Stylized Game
+Map* by Filipp Bazun (the "reference app"), which MapShifter is credited
+for. The concept is real-world maps reskinned in video-game-inspired
+styles. The owner first framed this as a replica (EVD-001) and narrowed it
+to concept-only in EVD-010. Most evidence below observes the reference app
+directly. A claim about what the reference app does can be a `fact`. Those
+claims are concept and market evidence for this project, not its
+requirements (KC-063).
 
 **Source of web evidence.** `EVD-008` and `EVD-009` were read on
 2026-10-30 with a fetch tool. That tool returns a model-extracted digest of
@@ -43,6 +46,7 @@ claims:
     confidence: 100
     evidence_ids: [EVD-001]
     investigation: business-vision
+    superseded_by: KC-056
   - id: KC-002
     statement: >
       The project must not cost money ("without spending any money").
@@ -51,9 +55,8 @@ claims:
     evidence_ids: [EVD-001]
     investigation: business-vision
     notes: >
-      Not yet stated: whether this rules out the one-time Google Play
-      developer registration fee, i.e. whether the app is distributed
-      through Play at all. Open question Q-03.
+      Q-03 asked whether this rules out the one-time Google Play
+      registration fee. Resolved by KC-058: the fee is already paid.
   - id: KC-003
     statement: >
       MapShifter's work is to be credited and acknowledged wherever
@@ -69,9 +72,10 @@ claims:
     confidence: 100
     evidence_ids: [EVD-001]
     investigation: business-vision
+    superseded_by: KC-057
     notes: >
-      How far "as much as possible" extends to visual assets, names and
-      logos, as opposed to behaviour, is open. See KC-055 and Q-01.
+      Q-01 asked how far "as much as possible" extends to visual assets,
+      names and logos. Resolved by KC-057: concept only.
   - id: KC-005
     statement: >
       The reference app is iOS-only today, with an Android version
@@ -717,7 +721,124 @@ claims:
     confidence: 70
     evidence_ids: [EVD-001, EVD-004, EVD-008, EVD-009]
     investigation: recommendations
-    notes: The owner must decide this. Surfaced as Q-01.
+    notes: >
+      Surfaced as Q-01. The owner accepted it and went further, to concept
+      only (KC-057).
+```
+
+---
+
+## EVD-010
+
+```yaml
+id: EVD-010
+type: conversation
+source: Owner answers to Q-01–Q-03 in the Oriveda setup session, 2026-10-30
+received: 2026-10-30
+summary: >
+  The owner narrows the project from replicating MapShifter to building an
+  original app on its concept alone. Initial scope is the phone app,
+  extendable later to Wear OS and Android Auto. Distribution is through
+  the owner's existing, already-paid Google Play developer account.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-056
+    statement: >
+      The project builds an original Android app on MapShifter's concept
+      (real-world maps reskinned in video-game-inspired styles). It is not
+      a replica of MapShifter.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-010]
+    investigation: business-vision
+  - id: KC-057
+    statement: >
+      Everything beyond the concept is the project's own: the app name,
+      skins, art, UI layout, features and flows. MapShifter is credited as
+      the inspiration for the concept.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-010, EVD-001]
+    investigation: business-vision
+  - id: KC-058
+    statement: >
+      The app is published on Google Play through the owner's existing
+      developer account. The one-time registration fee is already paid, so
+      Play distribution adds no cost under KC-002.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-010]
+    investigation: business-vision
+  - id: KC-059
+    statement: >
+      The initial scope is the Android phone app only.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-010]
+    investigation: business-vision
+  - id: KC-060
+    statement: >
+      The design must stay extendable to Wear OS and Android Auto, which
+      may be planned later but are not built now.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-010]
+    investigation: technical-architecture
+  - id: KC-061
+    statement: >
+      No preview video or iOS screen recording of the reference app can be
+      obtained. Its user journeys will remain unobserved.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-010]
+    investigation: user-journeys
+  - id: KC-062
+    statement: >
+      Because the project's UI and flows are its own (KC-057), user
+      journeys are designed, not discovered. They will be authored in this
+      project's Domain and Feature specifications (M5/M6). The unobserved
+      reference journeys (KC-061) therefore no longer block Discovery.
+    status: inference
+    confidence: 85
+    evidence_ids: [EVD-010]
+    investigation: user-journeys
+  - id: KC-063
+    statement: >
+      Claims about the reference app (EVD-003–EVD-009) now serve as concept
+      and market evidence, not requirements. They show what the concept
+      looks like in a shipped product, that it can be built on a free open
+      stack (KC-038), and which areas proved fragile (KC-035). None of them
+      binds this project's design unless adopted explicitly.
+    status: inference
+    confidence: 85
+    evidence_ids: [EVD-010, EVD-008, EVD-009]
+    investigation: recommendations
+  - id: KC-064
+    statement: >
+      Publishing on Google Play brings obligations that a sideloaded
+      portfolio build would not. These include a privacy policy and Data
+      safety declaration, a content rating, Play's target-API-level rules,
+      map-data attribution in the app (e.g. OpenStreetMap's ODbL credit),
+      and a store listing that does not use MapShifter's name or
+      game-franchise trademarks in a way that implies affiliation.
+    status: inference
+    confidence: 75
+    evidence_ids: [EVD-010, EVD-009]
+    investigation: business-vision
+    notes: >
+      Rests on general knowledge of Play and OSM policy, not on logged
+      evidence. To verify against current policy text in M3/M4.
+  - id: KC-065
+    statement: >
+      MapShifter has announced its own Android version (KC-045). This app
+      will therefore be published on Play in a category where the concept's
+      originator is expected to arrive. That makes a distinct name,
+      identity and listing, plus clear credit, more important.
+    status: inference
+    confidence: 80
+    evidence_ids: [EVD-010, EVD-009]
+    investigation: recommendations
 ```
 
 ---
@@ -727,39 +848,34 @@ claims:
 | Investigation | Best claims | Status |
 | --- | --- | --- |
 | `repo-structure` | KC-007, KC-008 (fact) | Covered. The project is greenfield. |
-| `business-vision` | KC-001–005, KC-024–026, KC-033, KC-036–037 (fact) | Covered. Scope boundaries are open (Q-01–Q-03). |
-| `feature-inventory` | KC-012, KC-029–031, KC-039–040 (fact) | Covered for *what* exists. Depth per feature comes only from listing copy. |
-| `user-journeys` | KC-016 (fact), KC-022 (inference 60) | **Gap.** Only static screens. Onboarding, the skin-switch interaction, search → route → navigate, settings, offline download and the journey screen are unseen. |
-| `data-model` | KC-048, KC-049 (inference) | Inference only, which is expected with no source code. |
+| `business-vision` | KC-002, KC-003, KC-056–059 (fact); reference context KC-024–026, KC-033, KC-036–037 | Covered. Q-01–Q-03 resolved. |
+| `feature-inventory` | KC-012, KC-029–031, KC-039–040 (fact) | Covered as reference inspiration only (KC-063). The project's own feature set is still to be defined. |
+| `user-journeys` | KC-061 (fact), KC-062 (inference 85) | **Visible gap, not blocking.** Reference journeys are unobservable. This project's journeys get designed in M5/M6. |
+| `data-model` | KC-048, KC-049 (inference) | Inference only, from the reference concept. |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Events check done (KC-051). |
-| `technical-architecture` | KC-038 (fact), KC-047, KC-054 (inference) | Covered. The tile and geocoding source is unknown (Q-04). NFRs: KC-024 (accessibility), KC-041 (offline). |
-| `hidden-business-rules` | KC-027, KC-028, KC-032, KC-042, KC-043 (fact) | Covered. KC-015 and KC-052 are assumption-tier and stay open. |
+| `technical-architecture` | KC-038 (fact), KC-060 (fact), KC-047, KC-054 (inference) | Covered. Data providers are open (Q-04). NFRs: KC-024 (accessibility), KC-041 (offline). |
+| `hidden-business-rules` | KC-027, KC-028, KC-032, KC-042, KC-043 (fact) | Covered as reference rules. Whether the project adopts them is open (Q-09). |
 | `technical-debt` | KC-035 (inference) | Not applicable to this project yet (greenfield). Recorded as risk carried over from the reference app. |
-| `recommendations` | KC-053, KC-055 (inference) | Waiting on owner decisions Q-01–Q-03. |
+| `recommendations` | KC-053, KC-055, KC-063–065 (inference) | Covered. |
 
 ## Open Questions and Gaps (per OV-000 gap detection)
 
 Ranked by how much they block downstream work.
 
-- **Q-01: Replica boundary (blocks Constitution).** Should the project
-  replicate behaviour and layout but use its own name, skin names and art,
-  with MapShifter credited (KC-055)? Or does the owner intend something
-  closer to the original?
-- **Q-02: Platform scope (blocks Architecture).** Is the scope the phone
-  app only, or do Android Auto, Wear OS and the home-screen widget count
-  too (KC-053)?
-- **Q-03: Distribution (blocks Architecture).** How is the app
-  distributed: a GitHub release/APK, or Google Play (which charges a
-  one-time registration fee, KC-002)?
-- **Q-04: Data providers.** The tile, search and weather sources are
-  unknown in the reference app. Settled in M3 against KC-002 and KC-054.
-- **Q-05: Skin-switch gesture.** Is "one swipe" a literal gesture? Needs
-  user-journey evidence.
-- **Q-06: POI badges.** What do the coloured corner badges on POI markers
-  mean?
-- **Q-07: Fog of War, the speech-bubble button and the avatar button.**
-  The behaviour of all three is unobserved.
-- **Largest evidence gap: `user-journeys`.** A screen recording of the iOS
-  app would close Q-05–Q-07 and most of the journeys gap at once. That
-  could be the App Store preview video, or a walkthrough from anyone with
-  an iPhone.
+- **Q-01: Replica boundary.** *Resolved* by KC-056 and KC-057: concept
+  only.
+- **Q-02: Platform scope.** *Resolved* by KC-059 and KC-060: phone first,
+  extendable later.
+- **Q-03: Distribution.** *Resolved* by KC-058: Google Play, fee already
+  paid.
+- **Q-09: Product posture (for the Constitution, M2).** Does the project
+  adopt the reference app's posture (no accounts, no backend of its own,
+  no location logging, no ads, free; KC-027, KC-042) as its own? Or does
+  it set a different one?
+- **Q-08: Identity.** The app's own name and its own skin concepts. Needed
+  before the first store listing, not before Discovery.
+- **Q-04: Data providers.** Tile, search, routing and weather sources.
+  Settled in M3 against KC-002 and KC-054.
+- **Q-05–Q-07: Reference-app details** (the swipe gesture, POI badges, Fog
+  of War, the speech-bubble and avatar buttons). *No longer needed.* The
+  project designs its own equivalents (KC-062).
