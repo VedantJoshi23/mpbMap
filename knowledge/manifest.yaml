@@ -10,3 +10,9 @@ documents:
     status: Frozen
     version: 1.0.0
     milestone: M1
+  - id: ADR-0001
+    title: Owner Proxy Agent Approves Specifications on the Owner's Behalf
+    path: knowledge/decisions/ADR-0001-owner-proxy-review.md
+    status: Frozen
+    version: 1.0.0
+    milestone: M1

@@ -1397,6 +1397,53 @@ claims:
 
 ---
 
+## EVD-023
+
+```yaml
+id: EVD-023
+type: conversation
+source: Owner instruction on the review workflow, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner delegates review and approval of Oriveda artifacts to an owner
+  proxy agent. The proxy runs on Opus 5.5, argues with the drafting agent
+  over multiple rounds until they agree, and pings the owner only for
+  critical matters. Implementation is paused until the owner explicitly
+  approves it. A comprehensive summary artifact is due once the Oriveda
+  steps are done.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-106
+    statement: >
+      An owner proxy agent (Opus 5.5) reviews and approves specifications
+      on the owner's behalf, in rounds with the drafting agent until they
+      agree. It escalates to the owner only for critical matters. The
+      mechanism and escalation rules are set out in ADR-0001.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-023]
+    investigation: recommendations
+  - id: KC-107
+    statement: >
+      Implementation (M8) does not begin without the owner's explicit
+      approval.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-023]
+    investigation: recommendations
+  - id: KC-108
+    statement: >
+      Once all Oriveda steps before implementation are done, the owner
+      receives one comprehensive artifact summarising everything.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-023]
+    investigation: recommendations
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
