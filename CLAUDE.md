@@ -38,6 +38,10 @@ numbering.
 
 ## Current stage
 
-M1 Discovery and M2 Constitution are complete. Next: `PRM-ARCHITECTURE`
-(M3). Implementation (M8) waits for the owner's explicit approval. Reviews and approvals follow
+M1–M6 are complete and Frozen (Discovery, Constitution, Architecture with
+technology ADRs, Standards, Domains, Features). M7, the prompt catalog, is
+used directly from the submodule (`OV-008`). **M8 implementation waits for
+the owner's explicit approval** (`knowledge/decisions/ADR-0001-owner-proxy-review.md`
+rule 6). For any change, use `PRM-FEATURE` or `PRM-REVIEW`, and log
+divergences in `knowledge/decisions/DIVERGENCE-LOG.md`. Reviews and approvals follow
 `knowledge/decisions/ADR-0001-owner-proxy-review.md`.
