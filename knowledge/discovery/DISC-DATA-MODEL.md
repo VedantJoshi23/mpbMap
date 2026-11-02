@@ -236,7 +236,7 @@ All entities are [S]. **Storage class** values:
 - **v1.2.0 (2026-11-02):** adds the TripBootRecord heartbeat fields and
   their fail-safe reading. Additive only; required by ADR-0005 (the
   watchdog). Also restores two lines lost in v1.1.0 to a script defect
-  (non-semantic). Approved by the owner proxy (KC-168).
+  (non-semantic). Approved by the owner proxy (KC-160).
 
 ## Confidence Level
 

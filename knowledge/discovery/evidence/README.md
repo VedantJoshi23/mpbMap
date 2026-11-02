@@ -2336,7 +2336,7 @@ summary: >
 pipeline: vision
 processed: true
 claims:
-  - id: KC-168
+  - id: KC-160
     statement: >
       DISC-DATA-MODEL v1.2.0 is approved by the owner proxy. The watchdog
       receiver lives in feature/trip/platform/boot; ARCH-SYSTEM §2 cites
@@ -2345,7 +2345,7 @@ claims:
     confidence: 100
     evidence_ids: [EVD-046]
     investigation: data-model
-  - id: KC-169
+  - id: KC-161
     statement: >
       Lines lost in commit b482fe8 (a regex callback that inserted a
       literal backreference) were restored verbatim from b482fe8^:
@@ -2357,7 +2357,7 @@ claims:
     confidence: 100
     evidence_ids: [EVD-046]
     investigation: technical-debt
-  - id: KC-170
+  - id: KC-162
     statement: >
       All twelve M4 Standards (STD-INDEX and STD-CODE through STD-SKINS)
       are approved by the owner proxy and Frozen at v1.0.0.

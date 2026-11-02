@@ -261,7 +261,7 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
   DDNS subdomain for the API, and the sanctioned public API hostname.
   Approved by the owner proxy (KC-141).
 - **v1.1.1 (2026-11-02):** restores a heading lost in v1.1.0 to a
-  script defect (non-semantic). Approved by the owner proxy (KC-169).
+  script defect (non-semantic). Approved by the owner proxy (KC-161).
 
 ## Confidence Level
 

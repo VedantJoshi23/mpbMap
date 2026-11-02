@@ -35,7 +35,7 @@ complexity: Low
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
 CONST-CORE Law (Frozen). **Tier: High** (Oriveda ADR-0005). Lifecycle:
 **Frozen** v1.0.0 (2026-11-02), approved by the owner proxy after rounds
-1–2 (KC-170, ADR-0001).
+1–2 (KC-162, ADR-0001).
 Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope

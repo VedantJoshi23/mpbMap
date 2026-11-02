@@ -130,7 +130,7 @@ triggers and migration paths, so that M4 Standards and M8 can track them.
   (KC-141).
 - **v1.1.1 (2026-11-02):** restores the TD15 row and a heading lost in
   v1.1.0 to a script defect (non-semantic). Approved by the owner proxy
-  (KC-169).
+  (KC-161).
 
 ## Confidence Level
 
