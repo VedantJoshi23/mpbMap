@@ -30,7 +30,7 @@ data class AlarmEntity(
 )
 
 @Dao
-interface TripDao {
+internal interface TripDao {
     @Upsert suspend fun upsertTrip(trip: TripEntity)
     @Upsert suspend fun upsertAlarms(alarms: List<AlarmEntity>)
     @Query("SELECT * FROM trip WHERE active = 1 LIMIT 1") suspend fun activeTrip(): TripEntity?
@@ -39,7 +39,7 @@ interface TripDao {
 }
 
 @Database(entities = [TripEntity::class, AlarmEntity::class], version = 1, exportSchema = false)
-abstract class TripDatabase : RoomDatabase() {
+internal abstract class TripDatabase : RoomDatabase() {
     abstract fun dao(): TripDao
 
     companion object {
@@ -50,5 +50,20 @@ abstract class TripDatabase : RoomDatabase() {
             instance ?: Room.databaseBuilder(context.applicationContext, TripDatabase::class.java, "trip.db")
                 .build().also { instance = it }
         }
+    }
+}
+
+/** The data module's public surface: Room stays internal to the module (CE storage, after unlock). */
+object TripStore {
+    suspend fun activeTrip(context: Context): Pair<TripEntity, List<AlarmEntity>>? {
+        val dao = TripDatabase.get(context).dao()
+        val trip = dao.activeTrip() ?: return null
+        return trip to dao.alarmsFor(trip.id)
+    }
+
+    suspend fun save(context: Context, trip: TripEntity, alarms: List<AlarmEntity>) {
+        val dao = TripDatabase.get(context).dao()
+        dao.upsertTrip(trip)
+        dao.upsertAlarms(alarms)
     }
 }

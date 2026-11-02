@@ -19,7 +19,7 @@ import io.github.vedantjoshi23.kairos.feature.location.api.LocationSource
 import io.github.vedantjoshi23.kairos.feature.trip.api.TripLifecycle
 import io.github.vedantjoshi23.kairos.feature.trip.data.AlarmEntity
 import io.github.vedantjoshi23.kairos.feature.trip.data.BootRecordStore
-import io.github.vedantjoshi23.kairos.feature.trip.data.TripDatabase
+import io.github.vedantjoshi23.kairos.feature.trip.data.TripStore
 import io.github.vedantjoshi23.kairos.feature.trip.data.TripEntity
 import io.github.vedantjoshi23.kairos.feature.trip.domain.Alarm
 import io.github.vedantjoshi23.kairos.feature.trip.domain.AlarmState
@@ -89,9 +89,8 @@ class TripService : LifecycleService() {
     private fun resume() {
         if (session != null) return
         lifecycleScope.launch {
-            val dao = TripDatabase.get(this@TripService).dao()
-            val trip = dao.activeTrip() ?: return@launch stopSelf()
-            val alarms = dao.alarmsFor(trip.id).map { Alarm(AlarmId(it.id), it.radiusM, AlarmState.valueOf(it.state)) }
+            val (trip, stored) = TripStore.activeTrip(this@TripService) ?: return@launch stopSelf()
+            val alarms = stored.map { Alarm(AlarmId(it.id), it.radiusM, AlarmState.valueOf(it.state)) }
             if (alarms.none { it.state.isActive }) return@launch stopSelf()
             InterruptedNotifier.clear(this@TripService)
             val (s, effects) = TripSession.restore(
@@ -151,9 +150,11 @@ class TripService : LifecycleService() {
 
     private fun persist(s: TripSession) {
         lifecycleScope.launch {
-            val dao = TripDatabase.get(this@TripService).dao()
-            dao.upsertTrip(TripEntity(s.tripId.value, s.destination.position.lat, s.destination.position.lon, s.destination.label, s.mode.name, active = !s.ended))
-            dao.upsertAlarms(s.alarms.map { AlarmEntity(it.id.value, s.tripId.value, it.radiusM, it.state.name) })
+            TripStore.save(
+                this@TripService,
+                TripEntity(s.tripId.value, s.destination.position.lat, s.destination.position.lon, s.destination.label, s.mode.name, active = !s.ended),
+                s.alarms.map { AlarmEntity(it.id.value, s.tripId.value, it.radiusM, it.state.name) },
+            )
         }
         writeHeartbeat()
     }
