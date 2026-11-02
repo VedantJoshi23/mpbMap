@@ -1,0 +1,70 @@
+---
+id: DIVERGENCE-LOG
+title: "Etak — Divergence Log"
+version: 0.1.0
+status: Draft
+owner: Vedant Joshi
+reviewers: []
+created: 2026-11-02
+updated: 2026-11-02
+milestone: M8
+category: Decision
+priority: High
+depends_on: []
+required_by: []
+related_documents: []
+related_domains: []
+related_features: []
+related_decisions:
+  - ADR-0005
+  - ADR-0007
+tags:
+  - divergence
+risk: Medium
+complexity: Low
+---
+
+# Divergence Log
+
+Save this file as `knowledge/decisions/DIVERGENCE-LOG.md`. A project
+has exactly one log, and `DIV-NNN` numbers are per project
+(`ADR-0007` rule 5).
+
+A divergence is a recorded disagreement between code and a
+specification that is **not yet Frozen** (`ADR-0005` rule 1). A
+disagreement with a Frozen specification is not a divergence: the code
+is wrong, and it is fixed or the spec is formally revised.
+
+**Adoption entries** are the one exception (`ADR-0007` rule 2). When an
+Oriveda upgrade brings a rule that existing work already breaks, the
+upgrade change logs each case here as an `open` row with a **Due** date.
+Such a row may name a Frozen spec. It records a known gap; it does not
+make the code right. Leave Due empty for ordinary divergences.
+
+Rules (`ADR-0005` rule 4):
+
+- A change that introduces a divergence logs it **in the same change**.
+  An unlogged divergence counts as a defect.
+- A specification cannot be Frozen while it has `open` entries here.
+- An `open` row against a Frozen spec needs a Due date, and no `open`
+  row may pass its Due date. `scripts/validate.py --root` checks both.
+- Entries are never deleted. A resolved entry keeps its history.
+
+This is a living log, never Frozen. Its own `status` stays `Draft`.
+
+## Entries
+
+No entries yet: there is no code. Logging starts with M8, after the
+owner approves implementation (KC-107).
+
+| ID | Spec § | Spec says | Code does | Found in | Status | Due | Resolved |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+**Status values:** `open` · `spec-updated` · `code-fixed` · `both`.
+**Due:** `YYYY-MM-DD`; required for adoption entries, empty otherwise.
+
+### Notes
+
+Use this section only when a one-line row can't explain a resolution
+(for example a divergence that led to an ADR). Head each note with its
+`DIV-NNN` ID.
