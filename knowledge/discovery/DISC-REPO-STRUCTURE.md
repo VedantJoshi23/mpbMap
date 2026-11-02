@@ -1,8 +1,8 @@
 ---
 id: DISC-REPO-STRUCTURE
 title: "Discovery: Repository Structure"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -30,8 +30,9 @@ complexity: Low
 # DISC-REPO-STRUCTURE: Repository Structure
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**.
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-116). Draft v0.1.0, then
+owner-proxy rounds 1–2 (ADR-0001), then Architecture Review, then Freeze.
+Q1 is open with the owner. Suggestions are marked **[S]**.
 
 ## Purpose
 
@@ -129,6 +130,21 @@ that code and assets will follow, leaving module-level design to M3
 - **Improve:** the hygiene rules ship with the first code commit; the
   interim credit notice is done.
 - **Remove:** whatever Q1 decides.
+
+## Architecture Review (2026-11-02)
+
+- **Against DISC-BUSINESS-VISION and DISC-FEATURE-INVENTORY (Frozen):**
+  - The monorepo and public visibility serve the portfolio-first audience
+    (KC-066).
+  - `backend/` and `infra/` fit the existing VM (KC-081).
+  - `skins/` as data matches FEATURE-INVENTORY C1.
+  - The UI-independent alarm engine matches C4 and KC-060.
+  - Consistent.
+- **Citations:** all current (KC-112–KC-115 supersede EVD-002's stale
+  summary).
+- **Divergences:** none (no code).
+- **Open:** Q1 is escalated. It does not affect the layout.
+- **Result:** passes.
 
 ## Confidence Level
 

@@ -1548,11 +1548,64 @@ claims:
 
 ---
 
+## EVD-026
+
+```yaml
+id: EVD-026
+type: conversation
+source: Owner-proxy reviews, 2026-11-02 (ADR-0001). DISC-REPO-STRUCTURE rounds 1-2; DISC-HIDDEN-BUSINESS-RULES round 1
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-REPO-STRUCTURE for freezing, with its Q1 (the
+  public third-party images and the project licence) escalated to the
+  owner. In round 1 of DISC-HIDDEN-BUSINESS-RULES it escalated the map
+  boundaries and the applicability of DPDP right away, because they
+  constrain the M3 tile source and the M2 Laws. It answered that
+  hidden-business-rules Q2 keeps R18 as an opt-in.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-116
+    statement: >
+      DISC-REPO-STRUCTURE v1.0.0 is approved by the owner proxy (ADR-0001).
+      Q1a (third-party images in the public reference/) and Q1b (the
+      project licence) are escalated to the owner and pending.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-026]
+    investigation: repo-structure
+  - id: KC-117
+    statement: >
+      Escalated to the owner and pending: (a) how map boundaries are drawn
+      (OSM as-is, an India-compliant layer, or no country boundary lines
+      at all; the proxy recommends none); (b) whether the app is designed
+      as if India's DPDP Act applies (the proxy recommends yes).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-026]
+    investigation: hidden-business-rules
+  - id: KC-118
+    statement: >
+      A disclosed, double opt-in secondary use of trip-session location for
+      reveal is acceptable under Play's foreground-service and
+      prominent-disclosure rules.
+    status: assumption
+    confidence: 55
+    evidence_ids: [EVD-019, EVD-026]
+    investigation: hidden-business-rules
+    notes: >
+      Play's text (KC-092) does not address secondary use of
+      foreground-service location directly. Fallback if Play objects:
+      reveal grows only while the app is in use.
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
 | --- | --- | --- |
-| `repo-structure` | KC-007, KC-008 (fact) | Covered. The project is greenfield. |
+| `repo-structure` | KC-007, KC-008, KC-112–115 (fact) | **Frozen** as DISC-REPO-STRUCTURE v1.0.0 (KC-116). Q1 escalated. |
 | `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078, KC-103 (fact) | **Frozen** as DISC-BUSINESS-VISION v1.0.0 (KC-105). |
 | `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.0 (KC-109). |
 | `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |

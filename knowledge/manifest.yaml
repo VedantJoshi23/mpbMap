@@ -25,12 +25,12 @@ documents:
   - id: DISC-REPO-STRUCTURE
     title: "Discovery: Repository Structure"
     path: knowledge/discovery/DISC-REPO-STRUCTURE.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M1
   - id: DISC-HIDDEN-BUSINESS-RULES
     title: "Discovery: Hidden Business Rules"
     path: knowledge/discovery/DISC-HIDDEN-BUSINESS-RULES.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M1
