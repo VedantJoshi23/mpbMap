@@ -1,8 +1,8 @@
 ---
 id: DISC-BUSINESS-VISION
 title: "Discovery: Business Vision"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Vedant Joshi
@@ -30,9 +30,10 @@ One of the ten M1 investigations, run under Oriveda `OV-001` (Frozen) over
 the claims in [the evidence log](evidence/README.md). Claim IDs (`KC-NNN`)
 point into that log, which holds the full statements and sources.
 
-Lifecycle: **Draft**. v0.1.0 went through Discussion (EVD-011). This is
-the Revision. Next come Architecture Review and then Freeze, once the
-owner approves.
+Lifecycle: **Frozen** (v1.0.0, 2026-11-02, owner approval KC-105).
+v0.1.0 Draft → Discussion (EVD-011) → v0.2.0 Revision → Architecture
+Review (below) → Freeze. From here on, any change is a versioned revision,
+never a silent edit.
 
 ## Purpose
 
@@ -63,16 +64,18 @@ All owner-stated, at confidence 100.
 - **Scope.** Phone app first, extendable later to Wear OS and Android Auto
   (KC-059, KC-060). The server is the owner's existing VM (KC-081).
 - **Posture.** Free, no ads, user accounts, a backend of its own, and
-  location logging (KC-075).
+  location logging (KC-075). Accounts are optional, with a guest mode
+  (KC-102). Location is logged only while the app is in use or an alarm
+  or navigation session is running (KC-101).
 - **Identity.** No franchise-referencing names or marks anywhere in the
   app's identity. Games are design references only (KC-078, KC-083).
 - **Non-functional requirements** (the `OV-001` cross-cutting check):
   - maps that feel as smooth as Google or Apple Maps (KC-070)
   - offline maps (KC-076)
   - English only, with no localisation (KC-076)
-  - accessibility options, inferred at 75 and awaiting confirmation
-    (KC-077)
-  - no availability target is stated
+  - accessibility options (KC-103)
+  - backend availability is best effort, and the arrival alarm, offline
+    maps and saved places work without the backend (KC-104)
 
 ## Interpretation
 
@@ -126,18 +129,19 @@ new.
   compliance load of any option considered. This is not a reason to
   change it, but it must be designed in from the first slice
   (`ADR-0005`, High tier).
-- No availability target is stated for the backend. On a shared VM, a
-  realistic target should be written down, even if modest.
 
 ## Questions
 
-1. *(For `hidden-business-rules`, Q-10)* Limit location logging to while
-   the app is open or an alarm or navigation session is running (KC-096)?
-2. *(For `user-journeys`, Q-11)* Make accounts optional, with a guest mode
-   that syncs on sign-in (KC-100)?
-3. *(For the Constitution, Q-12)* Is accessibility in scope (KC-077)?
-4. *(For Standards)* Is there a backend availability target, e.g. "best
-   effort; the app's core features work offline when the server is down"?
+None open. Every question raised in v0.2.0 was resolved in EVD-022:
+
+1. Location-logging scope (Q-10): resolved by KC-101.
+2. Optional accounts (Q-11): resolved by KC-102.
+3. Accessibility (Q-12): resolved by KC-103.
+4. Backend availability (Q-13): resolved by KC-104.
+
+Carried to other investigations, without blocking this one: the app's
+identity (Q-08, needed before the store listing) and the provider choice
+(Q-04, decided in M3).
 
 ## Recommendations
 
@@ -145,7 +149,7 @@ new.
   zero spend to 300 downloads; Play distribution; phone-first scope; the
   arrival alarm as the headline utility.
 - **Keep:** free, no ads, accounts, own backend, location logging (KC-075),
-  scoped as in Q-10 and Q-11.
+  scoped by KC-101 and KC-102.
 - **Improve:** turn KC-070 into numeric performance targets in Standards.
 - **Improve:** design core features so they work when the backend is
   unavailable. This covers the alarm, offline maps and saved places, and
@@ -153,10 +157,29 @@ new.
 - **Remove:** franchise names and marks from the project's identity
   (KC-078). This is done by rule: no identity exists yet to strip.
 
+## Architecture Review (2026-11-02)
+
+- **Against other investigations:** this is the first investigation, so
+  there is no other Frozen or Draft `DISC-` document to contradict.
+- **Against the evidence log:** every load-bearing claim it cites is
+  current. Superseded claims (KC-001's scope, KC-004, KC-077, KC-096,
+  KC-100) are cited only for what still stands or through their
+  successors.
+- **Internal consistency:**
+  - Location logging (KC-075) is consistent with Play's one-feature rule
+    once it is scoped by KC-101.
+  - Accounts (KC-075) are consistent with the portfolio-first audience
+    once they are optional (KC-102).
+  - A shared VM is consistent with zero spend once availability is best
+    effort and core features work offline (KC-104).
+- **Divergences:** none. There is no code yet, so the divergence log
+  (`ADR-0005`) is empty.
+- **Result:** passes. Ready to freeze.
+
 ## Confidence Level
 
-Vision, audience, scope, budget, posture and identity: **Fact (100)**,
-owner-stated in EVD-010 and EVD-011. Interpretations confirmed in
+Vision, audience, scope, budget, posture and identity: **Fact (95–100)**,
+owner-stated in EVD-010, EVD-011 and EVD-022. Interpretations confirmed in
 Discussion: **Inference (85)**. Statements that rest on Play-policy and
 provider claims: **Inference (75)**, capped by KC-099, the weakest
 load-bearing claim (`OV-001` §4).

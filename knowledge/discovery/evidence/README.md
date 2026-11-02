@@ -967,6 +967,7 @@ claims:
     confidence: 75
     evidence_ids: [EVD-011]
     investigation: business-vision
+    superseded_by: KC-103
     notes: To confirm with the owner.
   - id: KC-078
     statement: >
@@ -1265,6 +1266,7 @@ claims:
     confidence: 80
     evidence_ids: [EVD-019, EVD-011]
     investigation: hidden-business-rules
+    superseded_by: KC-101
     notes: >
       This is High-tier under ADR-0005, because it is security- and
       policy-bearing. It needs the owner's agreement and a Constitution Law.
@@ -1323,7 +1325,74 @@ claims:
     confidence: 70
     evidence_ids: [EVD-011]
     investigation: user-journeys
+    superseded_by: KC-102
     notes: To confirm with the owner.
+```
+
+---
+
+## EVD-022
+
+```yaml
+id: EVD-022
+type: conversation
+source: Owner decisions on Q-10–Q-12, the availability target and the freeze, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner approves freezing DISC-BUSINESS-VISION and tells the agent to
+  proceed with its recommendations on the open questions. The owner also
+  accepts the proposed backend availability target.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-101
+    statement: >
+      Location logging is limited to while the app is in use or a
+      user-started arrival-alarm or navigation session is running. Nothing
+      is logged while the app is closed and idle.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-022, EVD-019]
+    investigation: hidden-business-rules
+    notes: >
+      The owner adopted the KC-096 recommendation in general terms ("proceed
+      with your recommendations"), not word for word, hence 95.
+  - id: KC-102
+    statement: >
+      Accounts are optional. A guest mode keeps data on-device, and signing
+      in syncs it to the backend.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-022]
+    investigation: user-journeys
+    notes: Adopts KC-100 through the owner's general approval.
+  - id: KC-103
+    statement: >
+      Accessibility options are in scope.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-022, EVD-011]
+    investigation: business-vision
+    notes: >
+      Adopts KC-077 through the owner's general approval. KC-077 was the
+      only position the agent had put forward on this question.
+  - id: KC-104
+    statement: >
+      Backend availability target: best effort. The arrival alarm, offline
+      maps and saved places must all work while the backend is
+      unreachable.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-022]
+    investigation: technical-architecture
+  - id: KC-105
+    statement: >
+      The owner approved freezing DISC-BUSINESS-VISION at v0.2.0 content,
+      released as v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-022]
+    investigation: business-vision
 ```
 
 ---
@@ -1333,13 +1402,13 @@ claims:
 | Investigation | Best claims | Status |
 | --- | --- | --- |
 | `repo-structure` | KC-007, KC-008 (fact) | Covered. The project is greenfield. |
-| `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078 (fact) | Covered. Revised into DISC-BUSINESS-VISION v0.2.0. |
+| `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078, KC-103 (fact) | **Frozen** as DISC-BUSINESS-VISION v1.0.0 (KC-105). |
 | `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | Covered. The project's own feature set is now stated by the owner. |
-| `user-journeys` | KC-061 (fact), KC-062, KC-100 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |
+| `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
-| `technical-architecture` | KC-081, KC-085, KC-087–091 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
-| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093 (fact); KC-095–097 (inference) | Covered. KC-098 is assumption-tier. |
+| `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
+| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093, KC-101 (fact); KC-095, KC-097 (inference) | Covered. KC-098 is assumption-tier. |
 | `technical-debt` | KC-035 (inference) | Not applicable yet (greenfield). |
 | `recommendations` | KC-053, KC-055, KC-063–065, KC-096, KC-099, KC-100 (inference) | Covered. |
 
@@ -1350,13 +1419,13 @@ Ranked by how much they block downstream work.
 - **Q-01, Q-02, Q-03:** *Resolved* (KC-056–KC-060).
 - **Q-09: Product posture.** *Resolved* by KC-075. Follow-ups are Q-10
   and Q-11.
-- **Q-10: Scope of location logging (blocks the Constitution).** Should
-  logging be limited to while the app is open or an alarm or navigation
-  session is running, as KC-096 recommends for Play's one-feature rule?
-- **Q-11: Optional accounts (blocks the Constitution).** Should there be
-  a guest mode, with sign-in optional (KC-100)?
-- **Q-12: Accessibility (Constitution or Standards).** Confirm it is in
-  scope (KC-077).
+- **Q-10: Scope of location logging.** *Resolved* by KC-101: only while
+  the app is in use or an alarm or navigation session is running.
+- **Q-11: Optional accounts.** *Resolved* by KC-102: guest mode, with
+  sign-in optional.
+- **Q-12: Accessibility.** *Resolved* by KC-103: in scope.
+- **Q-13: Backend availability target.** *Resolved* by KC-104: best
+  effort, with core features working offline.
 - **Q-08: Identity.** The app name and its own skin names. Needed before
   the first store listing, not before Discovery.
 - **Q-04: Data providers.** A recommendation exists (KC-099). The decision

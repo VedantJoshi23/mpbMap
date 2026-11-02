@@ -1,0 +1,12 @@
+# This project's specification manifest (Oriveda ADR-0004).
+# Validate with: python3 .oriveda-framework/scripts/validate.py --root .
+project: mpbMap
+framework: .oriveda-framework
+
+documents:
+  - id: DISC-BUSINESS-VISION
+    title: "Discovery: Business Vision"
+    path: knowledge/discovery/DISC-BUSINESS-VISION.md
+    status: Frozen
+    version: 1.0.0
+    milestone: M1
