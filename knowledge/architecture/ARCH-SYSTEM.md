@@ -1,7 +1,7 @@
 ---
 id: ARCH-SYSTEM
 title: "Etak System Architecture"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -33,7 +33,7 @@ complexity: High
 # ARCH-SYSTEM: Etak System Architecture
 
 Authored under Oriveda `OV-003` (Frozen) through `PRM-ARCHITECTURE`.
-Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-150), after owner-proxy
+Lifecycle: **Frozen** v1.1.0 (2026-11-02, KC-150, KC-163), after owner-proxy
 rounds 1–2 (ADR-0001) and Architecture Review. Freezing does not
 authorise implementation (KC-107).
 
@@ -65,11 +65,26 @@ Law 13 concretely.
 | BC7 Routing | Route preview | Provider HTTP and policy (BC10) |
 | BC8 Offline Maps | OfflinePack lifecycle; size and provider limits (R10); elevation tiles inside packs | Rendering (BC3) |
 | BC9 Identity & Sync | Account, sign-in and sign-out, the sync protocol (LWW for the Codex, epoch-then-union for cells), account deletion (R9, R19). Sign-in-sync consent is recorded through BC2 | ConsentRecord (BC2); the content of synced entities (BC4, BC5) |
-| BC10 Provider Gateway (backend) | Proxying, rate limits, caching with coarsened keys, abuse protection, User-Agent; logs without coordinates (Law 5) | Any user-linked storage of query coordinates (forbidden, Law 5) |
+| BC10 Provider Gateway (backend) | Proxying, rate limits, caching with coarsened keys, abuse protection, User-Agent; logs without coordinates (Law 5); **the ACRA crash-ingest endpoint and the `crash_report` table** (backend operations, v1.1.0) | Any user-linked storage of query coordinates (forbidden, Law 5) |
 | BC11 Platform Surfaces | *Reserved.* Wear OS, Android Auto, widgets | Anything in the MVP |
 
 **Shared kernel**, kept deliberately tiny: geographic primitives (LatLng,
 distance) and IDs. No context reaches into another context's storage.
+*(v1.1.0)* The shared unit DOM-KERNEL groups the `core/*` modules:
+`kernel`, `eventbus`, `designsystem`, and **`config`**. `config` is the
+bootstrap-config client: it fetches the file, enforces the exact-host
+allowlist, keeps the last known good value, and supplies source endpoints
+to BC3, BC8 and the HTTP clients. None of these holds business rules.
+`core/config` owns one small **non-user cache**: the last-known-good
+endpoints, held in CE DataStore and injected lazily under the ADR-0002
+direct-boot rule. It is not on the boot-path allowlist.
+**`android/app/**` is the composition root and belongs to no domain.** It
+wires ports to adapters. **Both adapters live in `app/`:**
+- one wraps BC6's `PlacesApi.reverse()` as BC4's `CityResolver`;
+- the other wraps BC2's `LocationApi` as `feature/codex/ui`'s
+  current-location port.
+
+No feature module implements another feature's port.
 
 **Demo sandbox** (J12): BC1 runs against a synthetic fix source in place
 of BC2. It starts no foreground service, persists nothing, and emits no
@@ -86,7 +101,7 @@ BC4 events.
 
 ## 2. Domain Model
 
-**Source: Adopted** (DISC-DATA-MODEL v1.1.0). Each aggregate root has
+**Source: Adopted** (DISC-DATA-MODEL v1.2.0). Each aggregate root has
 exactly one owning context.
 
 | Aggregate root | Context | Members / invariants (by reference) |
@@ -113,10 +128,13 @@ authoritative).
   receiver or the foreground service. The bus only carries follow-up
   notifications to other contexts, and nothing on the safety path depends
   on the network (Laws 1, 9).
-- **Erasure flow** (Law 6):
-  - Local: BC4 issues EraseLocalHistory. BC4 deletes JournalEntry and
-    ExploredCell and sets `clearedAt`. BC2 deletes LocationFix. The flow
-    completes only when both confirm.
+- **Erasure flow** (Law 6), with the v1.1.0 mechanism:
+  - BC4 persists the EraseLocalHistory command in `exploration.db`.
+  - It deletes JournalEntry and ExploredCell and sets `clearedAt`.
+  - It calls `LocationApi.eraseFixes()` (BC2 `api/`), which deletes
+    LocationFix and returns a confirmation that BC4 records.
+  - The command retries on start until both parts are confirmed.
+  - BC4 publishes ExplorationCleared only after that.
   - Account: BC9 deletes the server copies (Account, CodexEntry,
     ExploredCell, ExploredArea), purged within 30 days, plus the disclosed
     7-day backup window, so at most 37 days.
@@ -138,7 +156,8 @@ android/
   feature/<ctx>/platform/ platform adapters (where needed)
     ctx ∈ {trip (BC1), location (BC2), map (BC3), exploration (BC4), codex (BC5),
            places (BC6), routing (BC7), offline (BC8), account (BC9)}
-  demo/                   J12 sandbox (synthetic fix source)
+  demo/                   J12 sandbox (synthetic fix source), owned by BC1
+  core/config/            bootstrap-config client (DOM-KERNEL shared unit)
 backend/                  ONE deployable service (S5 RAM budget)
   gateway/                BC10 module
   account-sync/           BC9 server module
@@ -148,6 +167,20 @@ skins/<codename>/         original or openly licensed style, fonts, icons, textu
 **Dependency rules**, checkable in CI:
 1. `feature/*` depends only on `core/*` and other features' `api/`. It
    never depends on another feature's internals or on `app/`.
+   **`feature/*/api` depends only on `core/*`** (v1.1.0), which keeps
+   mutual api-level dependencies acyclic.
+   **Declared api-level dependencies** (v1.1.0; event flows per the
+   DISC-DOMAIN-DISCOVERY catalogue):
+   - BC1 → BC2;
+   - BC1 `ui/` → BC3;
+   - BC2 → BC1, BC4;
+   - BC3 → BC2 (locate-me), BC8;
+   - BC4 → BC1, BC2, BC9;
+   - BC5 → BC9;
+   - BC6 → BC3, BC5, BC8;
+   - BC9 → BC2, BC4, BC5.
+
+   BC6 and BC7 reach BC10 over HTTP only.
 2. `feature/trip/domain` depends only on `core/kernel`.
 3. Only `feature/location/platform` imports platform location APIs
    (Law 13).
@@ -203,6 +236,23 @@ skins/<codename>/         original or openly licensed style, fonts, icons, textu
   - CI checks implementing the §4 rules.
 - **Divergences:** none (no code).
 - **Result:** passes.
+
+## Architecture Review: v1.1.0 re-review (2026-11-02)
+
+- Checked against CONST-CORE, ADR-0002..0009 and DISC-DATA-MODEL v1.2.0.
+- The declared api-level dependencies match the event catalogue, and
+  the port wiring adds no module dependency.
+- Result: passes (KC-163).
+
+## Revision History
+
+- **v1.1.0 (2026-11-02):** assigns owners to the bootstrap-config client
+  (DOM-KERNEL `core/config`) and to ACRA ingest and `crash_report`
+  (BC10); declares `app/` as the composition root with port wiring;
+  states the erasure confirmation mechanism; lists the api-level
+  dependencies; adds the `api/`→`core/*` rule; places `demo/` under BC1;
+  cites DISC-DATA-MODEL v1.2.0. Additive and clarifying. Reviewed as a
+  draft by the owner proxy (KC-163) before being applied.
 
 ## Freeze plan (Oriveda ADR-0005)
 

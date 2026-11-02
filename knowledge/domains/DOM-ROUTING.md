@@ -1,8 +1,8 @@
 ---
 id: DOM-ROUTING
 title: "Domain: Routing"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,8 +32,9 @@ complexity: Low
 **Tier:** Thin. A pure client of the gateway's routing endpoint. It holds no data and no rules of its own beyond those owned by DOM-GATEWAY (ARCH-SYSTEM §1: 'Route preview').
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
-CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-164), after owner-proxy
+review (ADR-0001). It binds to CONST-CORE and ARCH-SYSTEM (both
+Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
 ## 1. Overview
@@ -117,3 +118,9 @@ N/A: derived. Failure means 'unavailable'.
 ## 9. Open Questions
 
 - None.
+
+## Architecture Review (2026-11-02)
+
+Checked against ARCH-SYSTEM v1.1.0, CONST-CORE and the DISC-DOMAIN-DISCOVERY
+event catalogue: §5 and §7 match the declared api-level dependencies, and
+the boundary block matches the prose. Divergences: none. Result: passes.

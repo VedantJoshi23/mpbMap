@@ -1,8 +1,8 @@
 ---
 id: DOM-KERNEL
 title: "Domain: Shared Kernel"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,9 +32,9 @@ complexity: Low
 **Tier:** Thin. DOM-KERNEL groups the `core/*` modules of ARCH-SYSTEM §4 (`kernel`, `eventbus`, `designsystem`, `config`) as the shared unit, per the ARCH-SYSTEM v1.1.0 draft. None of them holds business rules.
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
-CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-164), after owner-proxy
+review (ADR-0001). It binds to CONST-CORE and ARCH-SYSTEM (both
+Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
 ## 1. Overview
@@ -53,7 +53,7 @@ Geographic primitives (LatLng, distance), typed IDs, the in-process event bus an
 ### Explicitly Does NOT Own
 
 - Any business entity or rule
-- Any storage
+- Any business entity or user data
 
 ## 3. Invariants
 
@@ -77,7 +77,7 @@ N/A: a shared kernel with no business rules. Its one technical rule is that the 
 
 ## 6. Data Ownership
 
-- None.
+- The `core/config` last-known-good endpoint cache: CE DataStore, non-user, injected lazily (ARCH-SYSTEM v1.1.0)
 
 ## 7. Dependencies
 
@@ -105,3 +105,9 @@ N/A: no business rules.
 ## 9. Open Questions
 
 - None.
+
+## Architecture Review (2026-11-02)
+
+Checked against ARCH-SYSTEM v1.1.0, CONST-CORE and the DISC-DOMAIN-DISCOVERY
+event catalogue: §5 and §7 match the declared api-level dependencies, and
+the boundary block matches the prose. Divergences: none. Result: passes.

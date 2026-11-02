@@ -2369,6 +2369,43 @@ claims:
 
 ---
 
+## EVD-047
+
+```yaml
+id: EVD-047
+type: conversation
+source: Owner-proxy (successor #3) round 3, 2026-11-02 (ADR-0001). ARCH-SYSTEM v1.1.0 draft; M5 domain specs
+received: 2026-11-02
+summary: >
+  The proxy approved the ARCH-SYSTEM v1.1.0 revision, after reviewing it as
+  a draft, and the twelve domain specs, allowing whole-spec freezes with
+  spike clauses for TRIP (S3), MAP (S1) and OFFLINE (S4).
+pipeline: vision
+processed: true
+claims:
+  - id: KC-163
+    statement: >
+      ARCH-SYSTEM v1.1.0 is approved by the owner proxy and Frozen: core/config
+      in the kernel with a non-user cache; ACRA ingest in BC10; app/ as the
+      composition root, holding the port adapters; the erasure mechanism;
+      the declared api-level dependencies.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-047]
+    investigation: technical-architecture
+  - id: KC-164
+    statement: >
+      All twelve M5 domain specifications (DOM-KERNEL through
+      DOM-PLATFORM-SURFACES) are approved by the owner proxy and Frozen at
+      v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-047]
+    investigation: domain-discovery
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

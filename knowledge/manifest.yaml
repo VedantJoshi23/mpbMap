@@ -80,7 +80,7 @@ documents:
     title: "Etak System Architecture"
     path: knowledge/architecture/ARCH-SYSTEM.md
     status: Frozen
-    version: 1.0.0
+    version: 1.1.0
     milestone: M3
   - id: ADR-0002
     title: "App Platform: Language, UI, DI and Build"
@@ -205,74 +205,74 @@ documents:
   - id: DOM-KERNEL
     title: "Domain: Shared Kernel"
     path: knowledge/domains/DOM-KERNEL.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-TRIP
     title: "Domain: Trip & Alarms"
     path: knowledge/domains/DOM-TRIP.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-LOCATION
     title: "Domain: Location"
     path: knowledge/domains/DOM-LOCATION.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-MAP
     title: "Domain: Map & Skins"
     path: knowledge/domains/DOM-MAP.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-EXPLORATION
     title: "Domain: Exploration"
     path: knowledge/domains/DOM-EXPLORATION.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-CODEX
     title: "Domain: Codex"
     path: knowledge/domains/DOM-CODEX.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-PLACES
     title: "Domain: Places"
     path: knowledge/domains/DOM-PLACES.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-ROUTING
     title: "Domain: Routing"
     path: knowledge/domains/DOM-ROUTING.md
-    status: Draft
-    version: 0.1.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-OFFLINE
     title: "Domain: Offline Maps"
     path: knowledge/domains/DOM-OFFLINE.md
-    status: Draft
-    version: 0.1.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-ACCOUNT
     title: "Domain: Identity & Sync"
     path: knowledge/domains/DOM-ACCOUNT.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-GATEWAY
     title: "Domain: Provider Gateway"
     path: knowledge/domains/DOM-GATEWAY.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: DOM-PLATFORM-SURFACES
     title: "Domain: Platform Surfaces (reserved)"
     path: knowledge/domains/DOM-PLATFORM-SURFACES.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M5
   - id: FEAT-ARRIVAL-ALARM
     title: "Etak — Feature: Arrival Alarm"

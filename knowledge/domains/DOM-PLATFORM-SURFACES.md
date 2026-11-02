@@ -1,8 +1,8 @@
 ---
 id: DOM-PLATFORM-SURFACES
 title: "Domain: Platform Surfaces (reserved)"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,9 +32,9 @@ complexity: Low
 **Tier:** Thin. Reserved by ARCH-SYSTEM §1 for Wear OS, Android Auto and widgets. Nothing is in the MVP, and it holds no data or rules of its own.
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
-CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-164), after owner-proxy
+review (ADR-0001). It binds to CONST-CORE and ARCH-SYSTEM (both
+Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
 ## 1. Overview
@@ -111,3 +111,9 @@ N/A: reserved.
 ## 9. Open Questions
 
 - Activation needs its own Feature specs and an ARCH-SYSTEM revision adding the module.
+
+## Architecture Review (2026-11-02)
+
+Checked against ARCH-SYSTEM v1.1.0, CONST-CORE and the DISC-DOMAIN-DISCOVERY
+event catalogue: §5 and §7 match the declared api-level dependencies, and
+the boundary block matches the prose. Divergences: none. Result: passes.
