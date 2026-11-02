@@ -1,7 +1,7 @@
 ---
 id: STD-OBSERVABILITY
 title: "Observability"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,6 +14,8 @@ priority: Medium
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - ADR-0007
+  - ADR-0009
 required_by: []
 related_documents: []
 related_domains: []
@@ -28,39 +30,55 @@ complexity: Low
 # STD-OBSERVABILITY: Observability
 
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
-CONST-CORE Law (Frozen). Lifecycle: **Draft**, under owner-proxy review
-(ADR-0001). Shape: Scope, Rules, Examples, Exceptions, Enforcement.
+CONST-CORE Law (Frozen). **Tier: Medium** (Oriveda ADR-0005). Lifecycle:
+**Draft** v0.2.0, the revision after owner-proxy round 1 (ADR-0001).
+Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope
 
-Crash reports, backend logs and metrics. Excludes user analytics, which
-are forbidden (Law 8).
+Crash reports, backend logs, metrics and the on-device safety log.
+User analytics are forbidden (Law 8).
 
 ## Rules
 
-1. **ACRA** crash reports go to the backend (ADR-0009). Logcat and
-   location fields are excluded. Reports are kept for 90 days.
-2. **Backend logs** are structured JSON: request ID, route, status and
-   latency. **No coordinates, tokens or Google IDs** (Law 5).
-3. **Metrics** come from the backend only:
-   - gateway error rate per provider (TD1, TD2, TD11 triggers);
+1. **ACRA** posts to the backend (ADR-0009) using an **explicit field
+   allowlist**: stack trace, app version, Android version, device model,
+   build. It **excludes** USER_EMAIL, DEVICE_ID, logcat, shared-preference
+   dumps and custom data. Messages are clean by STD-CODE rule 5. Reports
+   are kept 90 days.
+2. **Logs:**
+   - backend logs are structured JSON (request ID, route, status,
+     latency) and never contain coordinates, tokens or Google IDs;
+   - the API vhost's **nginx access log** omits query strings
+     (STD-SECURITY rule 7).
+3. **Metrics** (backend only):
+   - gateway error rate per provider (TD1, TD2, TD11);
    - 429 counts;
-   - Integrity quota use (TD12);
-   - JVM memory (TD8).
-4. **Alerts:** a simple threshold check (cron plus email or a GitHub
-   issue) on provider error rate, memory and disk. Zero spend.
-5. **Safety-path telemetry stays on the device.** It sits in a local
-   debug log the user can export, never uploaded automatically.
+   - **nginx `limit_req` rejections**;
+   - Integrity quota (TD12);
+   - JVM memory (TD8);
+   - **HikariCP pool saturation**.
+4. **Alerts** (cron plus email or a GitHub issue; zero spend):
+   - provider error rate, memory, disk;
+   - **failure or backlog of deletion and purge jobs** (Law 6's disclosed
+     windows);
+   - **backup job failure** (TD13).
+5. **On-device safety debug log:**
+   - records heartbeat, watchdog and alert events for R25 diagnosis;
+   - **no coordinates** (distances and timestamps only);
+   - bounded retention (7 days);
+   - **cleared by EraseLocalHistory** (Law 6);
+   - exportable by the user, never uploaded automatically.
 
 ## Examples
 
 - Compliant: `{"route":"/v1/search","status":200,"ms":184}`.
-- Non-compliant: `"q":"28.61,77.20"` in a log line.
+- Non-compliant: an ACRA report with `DEVICE_ID`.
 
 ## Exceptions
 
-None for rule 2.
+None for rules 1, 2 and 5.
 
 ## Enforcement
 
-Log-format tests; a review checklist.
+ACRA config review; log-format tests; alert test runs per release.

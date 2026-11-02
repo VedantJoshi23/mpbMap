@@ -134,73 +134,73 @@ documents:
     title: "Accessibility"
     path: knowledge/standards/STD-ACCESSIBILITY.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-API
     title: "Backend API"
     path: knowledge/standards/STD-API.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-CICD
     title: "CI/CD and Release"
     path: knowledge/standards/STD-CICD.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-CODE
     title: "Code Conventions"
     path: knowledge/standards/STD-CODE.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-COMPLIANCE
     title: "Privacy and Play Compliance"
     path: knowledge/standards/STD-COMPLIANCE.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-DATABASE
     title: "Data Storage"
     path: knowledge/standards/STD-DATABASE.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-INDEX
     title: "Standards Applicability Index"
     path: knowledge/standards/STD-INDEX.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-OBSERVABILITY
     title: "Observability"
     path: knowledge/standards/STD-OBSERVABILITY.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-PERFORMANCE
     title: "Performance Budgets"
     path: knowledge/standards/STD-PERFORMANCE.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-SECURITY
     title: "Security and Public-Repo Hygiene"
     path: knowledge/standards/STD-SECURITY.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-SKINS
     title: "Skin Authoring"
     path: knowledge/standards/STD-SKINS.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: STD-TESTING
     title: "Testing"
     path: knowledge/standards/STD-TESTING.md
     status: Draft
-    version: 0.1.0
+    version: 0.2.0
     milestone: M4
   - id: DOM-KERNEL
     title: "Domain: Shared Kernel"

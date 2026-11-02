@@ -1,7 +1,7 @@
 ---
 id: STD-DATABASE
 title: "Data Storage"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,6 +14,10 @@ priority: High
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - ADR-0006
+  - ADR-0007
+  - ADR-0008
+  - DISC-DATA-MODEL
 required_by: []
 related_documents: []
 related_domains: []
@@ -21,15 +25,16 @@ related_features: []
 related_decisions: []
 tags:
   - standard
-risk: Medium
+risk: High
 complexity: Low
 ---
 
 # STD-DATABASE: Data Storage
 
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
-CONST-CORE Law (Frozen). Lifecycle: **Draft**, under owner-proxy review
-(ADR-0001). Shape: Scope, Rules, Examples, Exceptions, Enforcement.
+CONST-CORE Law (Frozen). **Tier: High** (Oriveda ADR-0005). Lifecycle:
+**Draft** v0.2.0, the revision after owner-proxy round 1 (ADR-0001).
+Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope
 
@@ -38,37 +43,60 @@ Room databases and DataStore on the device; PostgreSQL on the server.
 ## Rules
 
 1. **One Room database per owning context.** No cross-context joins
-   (ARCH-SYSTEM §1).
-2. **TripBootRecord lives only in DP storage** (Proto DataStore,
-   ADR-0006). Nothing else goes there.
+   (ARCH-SYSTEM §1). **Settings** live in Jetpack DataStore (ADR-0006).
+2. **TripBootRecord lives only in DP storage** (Proto DataStore):
+   - its fields follow DISC-DATA-MODEL v1.2.0, including the heartbeat;
+   - it holds **no coordinates**;
+   - **proto field numbers are never reused**;
+   - nothing else goes into DP storage.
 3. **Migrations:**
-   - Room: auto-migrations or tested manual migrations, with no
-     destructive fallback in release builds;
-   - server: Flyway, forward-only.
+   - Room: tested migrations, with no destructive fallback in release
+     builds;
+   - server: Flyway, forward-only and **expand-then-contract**, so the
+     previous image still runs on the new schema. Otherwise a rollback
+     means a restore from the pre-deploy backup.
 4. **Retention is enforced in code:**
    - LocationFix is pruned to 30 days;
    - tombstones expire after 90 days;
-   - server purge 30 days after account deletion (R19);
-   - backups kept 7 days.
-5. **Server schema** holds only Account, CodexEntry, ExploredCell and
-   ExploredArea (Law 5). Adding a table for a device-only entity
-   requires a Constitution amendment.
-6. **Spatial data:** H3 resolution-9 cell IDs stored as 64-bit integers.
-7. **Backups:**
+   - the server purges 30 days after account deletion (R19);
+   - backups are kept 7 days;
+   - crash reports are kept 90 days.
+5. **Server user data** is limited to Account, CodexEntry, ExploredCell
+   and ExploredArea (Law 5). Any **operational table** must be on this
+   **closed list**, with a retention period, **no coordinates and no
+   device-only entity**:
+
+   | Table | Purpose | Retention | ADR |
+   | --- | --- | --- | --- |
+   | `session` (hashed refresh tokens) | Revocable sessions | Until expiry or revocation; deleted with the account | ADR-0008 |
+   | `crash_report` (ACRA allowlisted fields) | Diagnostics | 90 days | ADR-0009 |
+   | `deletion_job` | Purge queue | Until the purge completes, plus 30 days | ADR-0008 |
+   | `flyway_schema_history` | Migrations | Permanent | ADR-0007 |
+
+   Gateway sessions, if stateful, carry no user identity and have a short
+   TTL. Adding a table for a device-only entity requires a Constitution
+   amendment.
+6. **Data access** (ADR-0007): Exposed over HikariCP, **max pool 5**
+   (KC-086), a dedicated database, and a least-privilege role.
+7. **Erasure** (ADR-0006): EraseLocalHistory is a **persisted, idempotent
+   command**. There is one transaction per Room database, and each
+   context retries on start until it confirms.
+8. **Spatial data:** H3 resolution-9 cell IDs stored as 64-bit integers.
+9. **Backups:**
    - nightly;
-   - an encrypted off-VM copy;
-   - a restore drill before the first release and then quarterly
-     (TD13).
+   - an encrypted off-VM copy, on a **flagged free tier** (Law 7);
+   - a restore drill before the first release and then quarterly (TD13).
 
 ## Examples
 
 - Compliant: `exploration.db` owns `explored_cell`.
-- Non-compliant: the codex DAO queries `exploration.db`.
+- Non-compliant: a `trip` table on the server.
 
 ## Exceptions
 
-None for rules 2 and 5.
+None for rules 2, 5 and 7.
 
 ## Enforcement
 
-Migration tests; schema review in PRM-REVIEW; a retention job test.
+Migration tests; schema review against rule 5's closed list in
+PRM-REVIEW; tests for the retention jobs.
