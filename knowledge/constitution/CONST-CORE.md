@@ -1,7 +1,7 @@
 ---
 id: CONST-CORE
 title: Engineering Constitution
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -41,8 +41,7 @@ are asked (KC-130) and **not yet answered**. `OV-002` forbids defaulting
 them silently, so each shows the agent's recommendation, clearly marked as
 pending. Laws L11 and L12 depend on KC-116 and KC-117.
 
-Amending a Frozen version of this document requires an ADR and an
-explicit remediation statement (`OV-002` Lifecycle).
+Amendment: see §6.
 
 ## 1. Engineering Philosophy
 
@@ -92,8 +91,9 @@ BC11 (Wear OS, Auto) as later modules.
 
 ## 5. Laws
 
-Each Law cites its source. "Never silently" means that violating it is a
-defect, and so is shipping around it.
+Each Law cites its source. A Law is never violated knowingly. A found
+violation is a defect to fix, and a deliberate exception requires an
+amendment (§6).
 
 ### Law 1: No silent alarm failure
 
@@ -110,18 +110,18 @@ defect, and so is shipping around it.
 ### Law 2: Route-agnostic arrival
 
 > Arrival alarms fire on straight-line distance to the destination and
-> never depend on the route taken. One trip session holds every armed
-> alarm until each one has fired and been dismissed, or the user ends the
-> trip.
+> never depend on the route taken. A route-aware refinement may only make
+> an alarm fire earlier: never later, and never not at all. One trip
+> session holds every armed alarm until each one has fired and been
+> dismissed, or the user ends the trip.
 
-**Source:** R1, R2, R17; KC-080 (owner fact).
+**Source:** R1, R2, R17; KC-080 (owner fact); TD4 (DISC-TECHNICAL-DEBT).
 
 ### Law 3: No background location
 
 > The app never requests `ACCESS_BACKGROUND_LOCATION`. Location is
 > collected only while the app is in use or a user-started trip session
-> runs, and only through the single location gateway (BC2), after the
-> prominent disclosure.
+> runs, and only after the prominent disclosure.
 
 **Source:** DISC-RECOMMENDATIONS candidate 2; R5, R6; KC-101 (owner
 decision); DISC-DOMAIN-DISCOVERY BC2 rule.
@@ -134,11 +134,16 @@ decision); DISC-DOMAIN-DISCOVERY BC2 rule.
 
 ### Law 5: Device-only sensitive data
 
-> Alarms, trip state, the journal and raw location never leave the
-> device. Only the Codex and explored cells sync. Widening this needs a
-> Constitution amendment.
+> Alarms, trip state, the journal and raw location logs never leave the
+> device. Only the Codex and explored cells sync. Coordinates sent in
+> provider queries (search, reverse geocoding, route preview) are
+> transient: the gateway (BC10) never stores them linked to a user or
+> client, access logs omit coordinates, and cache keys use coarsened
+> coordinates. Widening any of this needs an amendment.
 
-**Source:** R8; DISC-DATA-MODEL; DISC-RECOMMENDATIONS candidate 4.
+**Source:** R8; DISC-DATA-MODEL; DISC-RECOMMENDATIONS candidate 4; KC-088
+(caching duty). The transient transfer is disclosed in the Data safety
+form (R12).
 
 ### Law 6: Complete, verifiable erasure
 
@@ -172,10 +177,10 @@ decision); DISC-DOMAIN-DISCOVERY BC2 rule.
 
 ### Law 10: Platform and provider compliance
 
-> The app complies with Play policy (declarations, disclosures, Data
-> safety, target API, target audience) and with every data provider's
-> published policy (rate limits, attribution, offline limits), enforced
-> through the provider gateway (BC10).
+> The app meets the enumerated platform and provider obligations, R10,
+> R11, R12 and R23 in DISC-HIDDEN-BUSINESS-RULES, which are the checkable
+> list. Provider limits are enforced through the provider gateway
+> (BC10).
 
 **Source:** KC-069 (owner fact: rules-compliant is success); R10–R12,
 R23.
@@ -191,20 +196,38 @@ R23.
 
 ### Law 12: Data-protection and boundary stance
 
-> *Pending KC-117.* If the owner chooses "design as if DPDP applies":
-> location collection is consented, purpose-limited and erasable. The
-> boundary rule follows the owner's choice (recommended: no country
-> boundary lines).
+> *Pending KC-117.* Consent, purpose limitation and erasure are already
+> covered by Laws 3, 5 and 6. If the owner answers "design as if DPDP
+> applies", this Law adds only the further duties as the owner's KC-117
+> answer defines them; the agent drafts no legal interpretation (ADR-0001
+> rule 5). The map-boundary depiction follows the owner's KC-117 choice
+> (recommended: no country boundary lines).
 
 **Source:** KC-117 (escalated to the owner).
 
+### Law 13: Core boundaries
+
+> The trip-alarm engine (BC1) is independent of the UI, and every alarm
+> alert goes through its AlertPort. Only the location gateway (BC2)
+> touches the platform's location APIs.
+
+**Source:** C4; DISC-DOMAIN-DISCOVERY BC1 and BC2 rules; KC-060 (owner
+fact). Holds under any §4 choice.
+
+### Law 14: The alarm is accessible
+
+> The core alarm flows (arming a trip, the alarm itself, and dismissing
+> or snoozing it) are fully usable with TalkBack and large text, and are
+> perceivable without sound.
+
+**Source:** KC-103 (owner decision); C10; J3. Broader accessibility is
+set by M4 Standards.
+
 ## 6. Amendment Process
 
-Once Frozen, this Constitution may be revised only through (1) an ADR
-stating the reason and (2) an explicit list of existing work that becomes
-non-compliant and needs remediation (`OV-002`). Ordinary version bumps do
-not apply. Under ADR-0001 rule 1, any amendment that weakens a Law
-sourced from an owner fact or decision is escalated to the owner.
+Per `OV-002` Lifecycle. In addition, under ADR-0001 rule 1, any amendment
+that weakens a Law sourced from an owner fact or decision is escalated to
+the owner.
 
 **Not Laws** (by design): debt tracking (Oriveda Principle 7 already
 binds; DISC-TECHNICAL-DEBT Q1), smoothness numbers (M4 Standards),
