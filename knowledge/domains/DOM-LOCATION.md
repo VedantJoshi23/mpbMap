@@ -1,7 +1,7 @@
 ---
 id: DOM-LOCATION
 title: "Domain: Location"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: Medium
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -103,7 +104,7 @@ The only gateway to device location (Law 13). It owns permission and disclosure 
 
 - `LocationApi.fixes(scope)`, `access: StateFlow<LocationAccess>`
 - `ConsentApi.record(kind, choice)`, `withdraw(kind)`, `current(kind)`
-- `EraseLocationHistory` command handler
+- `LocationApi.eraseFixes(): ErasureConfirmation`, called by DOM-EXPLORATION's persisted EraseLocalHistory command; it deletes every LocationFix and returns a confirmation
 
 ## 5. Events
 
@@ -116,7 +117,7 @@ The only gateway to device location (Law 13). It owns permission and disclosure 
 ### Consumes
 
 - TripStarted / TripEnded / TripResumed (DOM-TRIP), which open and close the trip scope
-- ExplorationCleared / EraseLocalHistory (DOM-EXPLORATION)
+- ExplorationCleared (DOM-EXPLORATION), as an informational event; erasure itself arrives through `eraseFixes()`
 
 ## 6. Data Ownership
 

@@ -1,7 +1,7 @@
 ---
 id: DOM-ACCOUNT
 title: "Domain: Identity & Sync"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: Medium
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -89,6 +90,7 @@ Optional accounts (Google sign-in), sync of the Codex and explored cells, sign-o
 
 - Client: `AccountApi.signIn()`, `signOut(keepLocal)`, `deleteAccount()`, `syncNow()`
 - Server: `/v1/auth/*`, `/v1/sync/codex`, `/v1/sync/cells`, `/v1/account` (DELETE) (STD-API)
+- Calls `ConsentApi.record/withdraw` (DOM-LOCATION `api/`) for the sign-in-sync consent
 
 ## 5. Events
 
@@ -101,11 +103,10 @@ Optional accounts (Google sign-in), sync of the Codex and explored cells, sign-o
 
 - CodexEntryChanged (DOM-CODEX)
 - ExploredCellsAdded / ExplorationCleared (DOM-EXPLORATION)
-- ConsentApi (DOM-LOCATION), for sign-in-sync consent
 
 ## 6. Data Ownership
 
-- Server Postgres (dedicated DB): Account, CodexEntry, ExploredCell, ExploredArea, sessions
+- Server Postgres (dedicated DB): Account, CodexEntry, ExploredCell, ExploredArea, `session` (hashed refresh tokens), `deletion_job` (STD-DATABASE rule 5)
 - Device: the Keystore-wrapped refresh token (CE)
 
 ## 7. Dependencies

@@ -1,7 +1,7 @@
 ---
 id: DOM-CODEX
 title: "Domain: Codex"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: Low
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -73,7 +74,7 @@ Saved places in gaming terminology (Waypoint … Point of Interest), including p
 
 ### Invariant 4
 
-> Parking and saved places work offline. 'Return to vehicle' falls back to bearing plus distance.
+> Parking and saved places work offline. 'Return to vehicle' falls back to bearing plus distance, using the current location supplied to `feature/codex/ui` through a port wired in `app/` from DOM-LOCATION (ARCH-SYSTEM v1.1.0). DOM-CODEX does not depend on DOM-LOCATION.
 
 **Source:** Law 9; J4
 
@@ -90,6 +91,7 @@ Saved places in gaming terminology (Waypoint … Point of Interest), including p
 ### Consumes
 
 - RemoteChangesApplied (DOM-ACCOUNT)
+- SignedIn / SignedOut / AccountDeleted (DOM-ACCOUNT), for merge or keep-or-clear
 
 ## 6. Data Ownership
 

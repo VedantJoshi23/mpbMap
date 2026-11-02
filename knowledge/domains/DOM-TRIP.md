@@ -1,7 +1,7 @@
 ---
 id: DOM-TRIP
 title: "Domain: Trip & Alarms"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: High
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -47,7 +48,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 - Trip, Alarm, TripBootRecord (DP)
 - Arming, pre-flight (R26) and the arm-inside-radius dialog logic (R4)
 - Arrival evaluation (R1, R17), location-loss estimation (R3), stale-trip detection (R24)
-- Interrupted-trip detection: the direct-boot receiver plus the heartbeat watchdog (R25, ADR-0005)
+- Interrupted-trip detection: the direct-boot receiver plus the heartbeat watchdog, both in `feature/trip/platform/boot` (R25, ADR-0005)
 - The AlertPort contract and alert semantics (insistent audio, non-audio channel)
 - The trip foreground service (type `location`)
 - The demo sandbox mode (J12)
@@ -56,7 +57,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 
 - Platform location APIs (DOM-LOCATION)
 - ConsentRecord (DOM-LOCATION)
-- Rendering the map or quest marker (DOM-MAP draws it from TRIP's public state)
+- Rendering the map. `app/` composition passes TRIP's public state to DOM-MAP as an overlay
 
 ## 3. Invariants
 
@@ -104,7 +105,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 
 ### Invariant 8
 
-> Arrival and R3 alerts loop on the alarm stream until dismissed. R25 alerts use FLAG_INSISTENT. Every alert has a non-audio channel.
+> Alerts raised by the running foreground service (arrival, R3) loop on USAGE_ALARM until dismissed. Alerts raised with no service running (R25) use a FLAG_INSISTENT notification. In both cases the Law 14 vibration repeats until dismissal, with a visual.
 
 **Source:** ADR-0005; Law 14
 
@@ -151,7 +152,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 ## 6. Data Ownership
 
 - Room `trip.db` (CE): Trip, Alarm
-- Proto DataStore in DP storage: TripBootRecord {tripId, armed, destinationLabel, alarmStates, heartbeatAt}
+- Proto DataStore in DP storage: TripBootRecord {tripId, armed, destinationLabel, alarmStates, heartbeatAt, heartbeatElapsedMs, heartbeatBootCount} (DISC-DATA-MODEL v1.2.0)
 
 ## 7. Dependencies
 
@@ -179,6 +180,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 domain: DOM-TRIP
 paths:
   - "android/feature/trip/**"
+  - "android/demo/**"
 allowed_dependencies:
   - "DOM-KERNEL"
   - "DOM-LOCATION"

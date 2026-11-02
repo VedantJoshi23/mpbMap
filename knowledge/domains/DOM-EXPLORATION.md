@@ -1,7 +1,7 @@
 ---
 id: DOM-EXPLORATION
 title: "Domain: Exploration"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: Medium
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -75,7 +76,7 @@ Explore-to-reveal (fog of war) and the journal: H3 cells revealed from in-use lo
 
 ### Invariant 4
 
-> EraseLocalHistory is persisted and idempotent, and shows as complete only when DOM-LOCATION has also confirmed.
+> EraseLocalHistory is persisted in `exploration.db`. It deletes the journal and cells, sets `clearedAt`, and calls `LocationApi.eraseFixes()`, recording the returned confirmation. It retries on start until both parts are confirmed. Only then does it publish ExplorationCleared and show complete.
 
 **Source:** Law 6; ADR-0006
 
@@ -88,6 +89,7 @@ Explore-to-reveal (fog of war) and the journal: H3 cells revealed from in-use lo
 ## 4. API Surface
 
 - `ExplorationApi.revealOn`, `cells(viewport)`, `journal()`, `eraseLocalHistory()`
+- Port `CityResolver` (journal city). It is implemented by a DOM-PLACES adapter and wired in `app/` (ARCH-SYSTEM v1.1.0), so there is no module dependency on DOM-PLACES
 
 ## 5. Events
 
@@ -101,6 +103,8 @@ Explore-to-reveal (fog of war) and the journal: H3 cells revealed from in-use lo
 - LocationFixAcquired (DOM-LOCATION)
 - TripStarted / TripEnded / TripResumed (DOM-TRIP), for R18 gating
 - RemoteChangesApplied (DOM-ACCOUNT)
+- LocationAccessChanged (DOM-LOCATION)
+- SignedIn / SignedOut / AccountDeleted (DOM-ACCOUNT), for merge or keep-or-clear
 
 ## 6. Data Ownership
 

@@ -1,7 +1,7 @@
 ---
 id: DOM-PLATFORM-SURFACES
 title: "Domain: Platform Surfaces (reserved)"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: Low
 **Tier:** Thin. Reserved by ARCH-SYSTEM §1 for Wear OS, Android Auto and widgets. Nothing is in the MVP, and it holds no data or rules of its own.
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -78,14 +79,14 @@ N/A: reserved. When activated, it inherits DOM-TRIP's alert invariants through t
 ### Allowed
 
 - `DOM-KERNEL`
-- `DOM-TRIP`
-- `DOM-MAP`
 
 ### Forbidden
 
+- `DOM-TRIP`, `DOM-MAP` (until activation)
 - `DOM-LOCATION`
 - `DOM-ACCOUNT`
 - `DOM-GATEWAY`
+- Activating BC11 requires an ARCH-SYSTEM revision that adds the module and its relationships. It will then implement DOM-TRIP's AlertPort (Law 13) and consume DOM-MAP. The path below is **provisional**
 
 ### Machine-checkable boundary
 
@@ -95,9 +96,9 @@ paths:
   - "android/surfaces/**"
 allowed_dependencies:
   - "DOM-KERNEL"
+forbidden_dependencies:
   - "DOM-TRIP"
   - "DOM-MAP"
-forbidden_dependencies:
   - "DOM-LOCATION"
   - "DOM-ACCOUNT"
   - "DOM-GATEWAY"

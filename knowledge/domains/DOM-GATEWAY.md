@@ -1,7 +1,7 @@
 ---
 id: DOM-GATEWAY
 title: "Domain: Provider Gateway"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: Medium
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -87,7 +88,8 @@ A backend anticorruption layer for third-party geo services (search, reverse geo
 
 ## 4. API Surface
 
-- `/v1/search`, `/v1/reverse`, `/v1/route` (STD-API), each rate-limited with 429 and Retry-After
+- `/v1/search`, `/v1/reverse`, `/v1/route` (STD-API): **coordinates in POST bodies only**, each rate-limited with 429 and Retry-After
+- **ACRA crash ingest** `/v1/crash`: BC10 rate limits; payloads with location fields are rejected (ARCH-SYSTEM v1.1.0)
 
 ## 5. Events
 
@@ -102,6 +104,7 @@ A backend anticorruption layer for third-party geo services (search, reverse geo
 ## 6. Data Ownership
 
 - An in-memory and short-TTL cache with coarsened keys; no persistent user data
+- `crash_report` (ACRA allowlisted fields, 90 days) and `gateway_session` (no user identity, TTL ≤ 24 h) (STD-DATABASE rule 5)
 
 ## 7. Dependencies
 

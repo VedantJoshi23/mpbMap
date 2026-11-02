@@ -1,7 +1,7 @@
 ---
 id: DOM-KERNEL
 title: "Domain: Shared Kernel"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -29,10 +29,11 @@ complexity: Low
 
 # Domain: Shared Kernel (core/kernel, core/eventbus, core/designsystem)
 
-**Tier:** Thin. It is the shared kernel declared in ARCH-SYSTEM §1 (geo primitives, IDs, the event bus, design tokens). It has no business rules of its own.
+**Tier:** Thin. DOM-KERNEL groups the `core/*` modules of ARCH-SYSTEM §4 (`kernel`, `eventbus`, `designsystem`, `config`) as the shared unit, per the ARCH-SYSTEM v1.1.0 draft. None of them holds business rules.
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -47,6 +48,7 @@ Geographic primitives (LatLng, distance), typed IDs, the in-process event bus an
 - LatLng, the distance function (great-circle), typed IDs
 - The in-process event bus
 - Design-system components and tokens (`core/designsystem`)
+- The bootstrap-config client (`core/config`): fetch, the **exact-host allowlist**, last known good, and supplying source endpoints (ADR-0009, STD-SECURITY rule 4)
 
 ### Explicitly Does NOT Own
 
@@ -61,6 +63,7 @@ N/A: a shared kernel with no business rules. Its one technical rule is that the 
 
 - `Geo.distanceMeters(a, b)`, `LatLng`, typed ID value classes
 - `EventBus.publish/subscribe` (in-process)
+- `ConfigApi.apiBaseUrl`, `sources` (tiles, glyphs, DEM)
 
 ## 5. Events
 

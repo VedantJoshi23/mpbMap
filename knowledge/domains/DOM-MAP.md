@@ -1,7 +1,7 @@
 ---
 id: DOM-MAP
 title: "Domain: Map & Skins"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,7 +32,8 @@ complexity: High
 **Tier:** Full
 
 Authored under Oriveda `OV-006` (Frozen) through `PRM-DOMAIN`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001). It binds to
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001); it waits for the ARCH-SYSTEM v1.1.0 draft. It binds to
 CONST-CORE and ARCH-SYSTEM (both Frozen). Ownership is restated from
 ARCH-SYSTEM §1, not re-derived.
 
@@ -107,6 +108,7 @@ Renders the real-world map in game-inspired skins. It owns the skin catalogue, l
 ### Consumes
 
 - OfflinePackInstalled / OfflinePackRemoved (DOM-OFFLINE)
+- LocationFixAcquired (DOM-LOCATION), for locate-me
 
 ## 6. Data Ownership
 
@@ -118,11 +120,11 @@ Renders the real-world map in game-inspired skins. It owns the skin catalogue, l
 
 - `DOM-KERNEL`
 - `DOM-OFFLINE`
+- `DOM-LOCATION` (`api/` only, for locate-me)
 
 ### Forbidden
 
 - `DOM-TRIP`
-- `DOM-LOCATION`
 - `DOM-EXPLORATION`
 - `DOM-CODEX`
 - `DOM-PLACES`
@@ -141,9 +143,9 @@ paths:
 allowed_dependencies:
   - "DOM-KERNEL"
   - "DOM-OFFLINE"
+  - "DOM-LOCATION"
 forbidden_dependencies:
   - "DOM-TRIP"
-  - "DOM-LOCATION"
   - "DOM-EXPLORATION"
   - "DOM-CODEX"
   - "DOM-PLACES"
