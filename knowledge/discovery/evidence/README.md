@@ -2201,6 +2201,37 @@ claims:
 
 ---
 
+## EVD-044
+
+```yaml
+id: EVD-044
+type: conversation
+source: Owner answer to the OV-004 stack-freedom question, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner chooses Hybrid stack freedom and delegates each per-layer
+  approval to the owner proxy "after careful considerations". The owner
+  accepts the constraint preferences the agent listed.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-151
+    statement: >
+      OV-004 stack freedom: Hybrid. For each layer the agent compares 2-3
+      production-grade options and recommends one, and the owner proxy
+      approves it on the owner's behalf after careful review (ADR-0001).
+      Constraint preferences: free and open-source first, well maintained,
+      industry-standard with active communities, avoid vendor lock-in
+      where practical, prefer self-hostable when mature, zero spend until
+      300+ downloads (KC-068).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-044]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

@@ -82,3 +82,51 @@ documents:
     status: Frozen
     version: 1.0.0
     milestone: M3
+  - id: ADR-0002
+    title: "App Platform: Language, UI, DI and Build"
+    path: knowledge/decisions/ADR-0002-app-platform.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0003
+    title: "Map Rendering and Map Data"
+    path: knowledge/decisions/ADR-0003-map-rendering-and-data.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0004
+    title: "Geo Services: Search, Reverse Geocoding, Routing, Weather"
+    path: knowledge/decisions/ADR-0004-geo-services.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0005
+    title: "Location and Background Execution"
+    path: knowledge/decisions/ADR-0005-location-and-background-execution.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0006
+    title: "On-Device Storage and Spatial Indexing"
+    path: knowledge/decisions/ADR-0006-on-device-storage.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0007
+    title: "Backend Service, Database and Deployment"
+    path: knowledge/decisions/ADR-0007-backend-service.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0008
+    title: "Identity and Gateway Protection"
+    path: knowledge/decisions/ADR-0008-identity-and-gateway-protection.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
+  - id: ADR-0009
+    title: "Hosting, Delivery and Operations"
+    path: knowledge/decisions/ADR-0009-hosting-delivery-and-operations.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
