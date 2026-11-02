@@ -1,8 +1,8 @@
 ---
 id: DISC-USER-JOURNEYS
 title: "Discovery: User Journeys"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -31,8 +31,8 @@ complexity: Medium
 # DISC-USER-JOURNEYS: User Journeys
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**.
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-120). Draft v0.1.0, then
+owner-proxy rounds 1–3 (ADR-0001), then Architecture Review, then Freeze. Suggestions are marked **[S]**.
 
 The reference app's journeys cannot be observed (KC-061), and this
 project designs its own UI and flows (KC-057). So these journeys are
@@ -111,12 +111,17 @@ All journeys are [S] designs unless they restate a Frozen rule.
   trip running.
 - **Edge: stale trip.** A notification prompt after 3 hours without
   progress (R24).
-- **Edge: phone restart.** A boot receiver needs no location permission.
-  If a trip was armed, it raises a loud **"Trip alarm interrupted: phone
-  restarted"** alert on the alarm stream (full-screen or heads-up),
-  distinct from the arrival ring. Tapping it opens the app, and the user
-  resumes the trip in the foreground. There is no automatic restart, as
-  R5 requires.
+- **Edge: phone restart.** A **direct-boot-aware** receiver
+  (`LOCKED_BOOT_COMPLETED`) needs no location permission and runs
+  **before the phone is unlocked**, because an overnight update leaves the
+  phone locked until morning. The "trip armed" flag and the minimal trip
+  state live in device-protected storage, which can be read before
+  unlock. If a trip was armed, the receiver raises a loud **"Trip alarm
+  interrupted: phone restarted"** alert on the alarm stream (full-screen
+  or heads-up), distinct from the arrival ring. It rings before unlock, as
+  alarm-clock apps do. After unlock, tapping it opens the app, and the
+  user resumes the trip in the foreground. There is no automatic restart,
+  as R5 requires.
 - **Edge: service killed** (an OEM battery killer, or location revoked
   mid-trip). While a trip is armed, an inexact system alarm (no
   exact-alarm permission) acts as a watchdog and checks the session is
@@ -172,7 +177,11 @@ All journeys are [S] designs unless they restate a Frozen rule.
 2. Web: a public deletion-request page (KC-093) for users without the app.
 
 **J11. Clear local data (R21)**
-1. Settings → Privacy → clear the journal and explored cells.
+1. Settings → Privacy → clear the journal, explored cells and the raw
+   location log (R21).
+2. When the user is signed in, clearing explored cells sets a `clearedAt`
+   epoch that syncs. This clears the server copy and the user's other
+   devices too, and the app says so before confirming.
 
 **J12. Portfolio reviewer (KC-066)**
 1. Install, then within about 30 seconds: see the map in a skin, switch
@@ -194,8 +203,9 @@ deploys, skin releases through app updates) belong to M3 and M4.
 
 ## Hidden Assumptions
 
-- The boot receiver and the inexact watchdog alarm (J3) can be relied on
-  across mainstream OEMs. This is to be confirmed by the M3 spike; some
+- The direct-boot receiver, device-protected trip state, an alert that
+  rings before unlock, and the inexact watchdog alarm (J3) can be relied
+  on across mainstream OEMs. This is to be confirmed by the M3 spike; some
   OEMs delay boot broadcasts.
 - The demo trip adds no Play exposure, because it uses no location
   services.
@@ -234,6 +244,19 @@ versioned revision (v1.1.0, R25–R26). They are not left implicit.
 - **Improve:** a loud interrupted-trip alert for reboot and service death;
   an offline bearing for parking.
 - **Remove:** any onboarding wall; silent failure modes.
+
+## Architecture Review (2026-11-02)
+
+- **Against the Frozen DISC- investigations:**
+  - J1 and J9 restate the guest-first posture (KC-102).
+  - J3 restates C4, R1–R4, R17, R22 and R24, and introduces R25 and R26.
+    Those rules were added to DISC-HIDDEN-BUSINESS-RULES as a reviewed
+    revision (v1.1.0), not left implicit.
+  - J8 restates R18. J11 restates R21 (v1.1.0).
+  - Consistent.
+- **Citations:** all current.
+- **Divergences:** none (no code).
+- **Result:** passes.
 
 ## Confidence Level
 

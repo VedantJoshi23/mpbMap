@@ -37,12 +37,18 @@ documents:
   - id: DISC-USER-JOURNEYS
     title: "Discovery: User Journeys"
     path: knowledge/discovery/DISC-USER-JOURNEYS.md
-    status: Draft
-    version: 0.2.0
+    status: Frozen
+    version: 1.0.0
     milestone: M1
   - id: DISC-DATA-MODEL
     title: "Discovery: Data Model"
     path: knowledge/discovery/DISC-DATA-MODEL.md
+    status: Draft
+    version: 0.2.0
+    milestone: M1
+  - id: DISC-DOMAIN-DISCOVERY
+    title: "Discovery: Domain Discovery"
+    path: knowledge/discovery/DISC-DOMAIN-DISCOVERY.md
     status: Draft
     version: 0.1.0
     milestone: M1

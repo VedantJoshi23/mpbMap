@@ -153,8 +153,10 @@ These are the agent's proposals, settling KC-110.
 - [S] **R20. No tracking SDKs.** No advertising or third-party analytics
   SDK. Crash reporting, if any, must be free and must not collect
   location. The tool choice goes to M3 (KC-068, KC-075).
-- [S] **R21. Local erasure.** The user can clear the journal and explored
-  cells on the device at any time, independent of account deletion.
+- [S] **R21. Local erasure.** The user can clear the journal, explored
+  cells **and the raw location log** on the device at any time,
+  independent of account deletion. *(The raw-log part was added in
+  v1.1.0.)*
 - [S] **R22. Travel mode.** The user picks the travel mode (walk, cycle,
   road, rail) when arming a trip. It defaults to the route-preview mode
   if one exists. It drives R3's speed cap and R17's arrival distance.
@@ -166,7 +168,9 @@ These are the agent's proposals, settling KC-110.
   session dies while any alarm is armed (phone restart, process killed,
   location revoked), the app raises a loud "Trip alarm interrupted" alert
   on the alarm stream, distinct from the arrival ring. Restart detection
-  uses a boot receiver. Service-death detection uses an inexact watchdog
+  uses a **direct-boot-aware** receiver (`LOCKED_BOOT_COMPLETED`) that
+  reads trip state from **device-protected storage**, so the alert rings
+  before the phone is unlocked. Service-death detection uses an inexact watchdog
   alarm, with no exact-alarm permission. Resuming always takes a user
   action in the foreground; there is no automatic restart (R5).
 - [S] **R26. Pre-flight on every start** *(v1.1.0)*. Every "Start trip"
@@ -241,11 +245,13 @@ changing R1–R24.
 
 ## Revision History
 
-- **v1.1.0 (2026-11-02):** adds R25 and R26 from DISC-USER-JOURNEYS round 1
-  (owner proxy). These are additions; no existing rule changes.
+- **v1.1.0 (2026-11-02):** adds R25 (with direct boot) and R26 from
+  DISC-USER-JOURNEYS. Extends R21 to also clear the raw location log.
+  These are additions; no existing rule is weakened. Reviewed and approved
+  by the owner proxy (KC-120).
 
 ## Confidence Level
 
 **Overall: Assumption (50)**, capped by KC-098. Breakdown: R1–R16 are
-Fact (90–100); R17 and R19–R24 are Inference (70); R18 is Assumption (55,
+Fact (90–100); R17, R19–R26 are Inference (70); R18 is Assumption (55,
 KC-118).

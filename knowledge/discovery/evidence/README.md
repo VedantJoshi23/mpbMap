@@ -638,6 +638,7 @@ claims:
     confidence: 70
     evidence_ids: [EVD-004, EVD-005, EVD-006, EVD-008, EVD-009]
     investigation: data-model
+    superseded_by: KC-121
   - id: KC-049
     statement: >
       Candidate core entities: Skin; Place (OSM POI / search result);
@@ -649,6 +650,7 @@ claims:
     confidence: 65
     evidence_ids: [EVD-004, EVD-008, EVD-009]
     investigation: data-model
+    superseded_by: KC-121
   - id: KC-050
     statement: >
       Candidate bounded contexts: Map & Skins (rendering, styling);
@@ -1630,6 +1632,48 @@ claims:
 
 ---
 
+## EVD-028
+
+```yaml
+id: EVD-028
+type: conversation
+source: Owner-proxy reviews, 2026-11-02 (ADR-0001). DISC-USER-JOURNEYS rounds 1-3; DISC-HIDDEN-BUSINESS-RULES v1.1.0; DISC-DATA-MODEL round 1
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-USER-JOURNEYS (freeze v1.0.0) and the
+  DISC-HIDDEN-BUSINESS-RULES v1.1.0 revision. Both required a
+  direct-boot-aware interrupted-trip alert, because an overnight restart
+  leaves the phone locked. v1.1.0 also extends R21 erasure to the raw
+  location log. Process note: a revision to a Frozen spec is reviewed as a
+  draft before it is marked Frozen. The proxy answered the data model's
+  Q1: a 30-day, on-device, clearable raw location log.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-120
+    statement: >
+      DISC-USER-JOURNEYS v1.0.0 and DISC-HIDDEN-BUSINESS-RULES v1.1.0
+      (R25 with direct boot, R26, R21 extended to raw location) are
+      approved by the owner proxy (ADR-0001).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-028]
+    investigation: user-journeys
+  - id: KC-121
+    statement: >
+      The project's own data model (DISC-DATA-MODEL) replaces the
+      reference-app entity inferences: Trip and Alarm live on the device
+      only, in device-protected storage; the raw LocationFix log is a
+      30-day on-device rolling log; Codex and explored cells sync; the
+      server holds only the synced entities and Account.
+    status: inference
+    confidence: 70
+    evidence_ids: [EVD-028, EVD-024, EVD-027]
+    investigation: data-model
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
@@ -1637,7 +1681,7 @@ claims:
 | `repo-structure` | KC-007, KC-008, KC-112–115 (fact) | **Frozen** as DISC-REPO-STRUCTURE v1.0.0 (KC-116). Q1 escalated. |
 | `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078, KC-103 (fact) | **Frozen** as DISC-BUSINESS-VISION v1.0.0 (KC-105). |
 | `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.1 (KC-109, KC-119). |
-| `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |
+| `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | **Frozen** as DISC-USER-JOURNEYS v1.0.0 (KC-120). Designed, not observed (KC-062). |
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
 | `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
