@@ -1,6 +1,6 @@
 # This project's specification manifest (Oriveda ADR-0004).
 # Validate with: python3 .oriveda-framework/scripts/validate.py --root .
-project: Etak (repo mpbMap)
+project: Kairos (repo mpbMap)
 framework: .oriveda-framework
 
 documents:
@@ -71,16 +71,16 @@ documents:
     version: 1.0.0
     milestone: M1
   - id: CONST-CORE
-    title: Etak Engineering Constitution
+    title: Kairos Engineering Constitution
     path: knowledge/constitution/CONST-CORE.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M2
   - id: ARCH-SYSTEM
-    title: "Etak System Architecture"
+    title: "Kairos System Architecture"
     path: knowledge/architecture/ARCH-SYSTEM.md
     status: Frozen
-    version: 1.2.0
+    version: 1.2.1
     milestone: M3
   - id: ADR-0002
     title: "App Platform: Language, UI, DI and Build"
@@ -275,80 +275,86 @@ documents:
     version: 1.0.0
     milestone: M5
   - id: DIVERGENCE-LOG
-    title: "Etak — Divergence Log"
+    title: "Kairos — Divergence Log"
     path: knowledge/decisions/DIVERGENCE-LOG.md
     status: Draft
     version: 0.1.0
     milestone: M8
   - id: FEAT-ARRIVAL-ALARM
-    title: "Etak — Feature: Arrival Alarm"
+    title: "Kairos — Feature: Arrival Alarm"
     path: knowledge/features/FEAT-ARRIVAL-ALARM.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-LOCATION-CONSENT
-    title: "Etak — Feature: Location Disclosure, Consent & Collection Scope"
+    title: "Kairos — Feature: Location Disclosure, Consent & Collection Scope"
     path: knowledge/features/FEAT-LOCATION-CONSENT.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-LOCAL-ERASURE
-    title: "Etak — Feature: Local History Erasure"
+    title: "Kairos — Feature: Local History Erasure"
     path: knowledge/features/FEAT-LOCAL-ERASURE.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-SKINNED-MAP
-    title: "Etak — Feature: Skinned Map, Locate-me & Skin Switching"
+    title: "Kairos — Feature: Skinned Map, Locate-me & Skin Switching"
     path: knowledge/features/FEAT-SKINNED-MAP.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-EXPLORE-REVEAL
-    title: "Etak — Feature: Explore-to-Reveal & Journal"
+    title: "Kairos — Feature: Explore-to-Reveal & Journal"
     path: knowledge/features/FEAT-EXPLORE-REVEAL.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-ACCOUNT-SYNC
-    title: "Etak — Feature: Optional Account, Sync & Deletion"
+    title: "Kairos — Feature: Optional Account, Sync & Deletion"
     path: knowledge/features/FEAT-ACCOUNT-SYNC.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-PROVIDER-GATEWAY
-    title: "Etak — Feature: Provider Gateway"
+    title: "Kairos — Feature: Provider Gateway"
     path: knowledge/features/FEAT-PROVIDER-GATEWAY.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-PLACE-SEARCH
-    title: "Etak — Feature: Place Search (Online + Offline)"
+    title: "Kairos — Feature: Place Search (Online + Offline)"
     path: knowledge/features/FEAT-PLACE-SEARCH.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-ROUTE-PREVIEW
-    title: "Etak — Feature: Route Preview"
+    title: "Kairos — Feature: Route Preview"
     path: knowledge/features/FEAT-ROUTE-PREVIEW.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-CODEX-PARKING
-    title: "Etak — Feature: Codex & Parking"
+    title: "Kairos — Feature: Codex & Parking"
     path: knowledge/features/FEAT-CODEX-PARKING.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-OFFLINE-PACKS
-    title: "Etak — Feature: Offline City Packs"
+    title: "Kairos — Feature: Offline City Packs"
     path: knowledge/features/FEAT-OFFLINE-PACKS.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
   - id: FEAT-DEMO-TRIP
-    title: "Etak — Feature: Demo Trip (Reviewer Showcase)"
+    title: "Kairos — Feature: Demo Trip (Reviewer Showcase)"
     path: knowledge/features/FEAT-DEMO-TRIP.md
     status: Frozen
-    version: 1.0.0
+    version: 1.0.1
     milestone: M6
+  - id: ADR-0010
+    title: Rename the App from Etak to Kairos
+    path: knowledge/decisions/ADR-0010-rename-to-kairos.md
+    status: Frozen
+    version: 1.0.0
+    milestone: M7

@@ -1,7 +1,7 @@
 ---
 id: ARCH-SYSTEM
-title: "Etak System Architecture"
-version: 1.2.0
+title: "Kairos System Architecture"
+version: 1.2.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -30,7 +30,7 @@ risk: High
 complexity: High
 ---
 
-# ARCH-SYSTEM: Etak System Architecture
+# ARCH-SYSTEM: Kairos System Architecture
 
 Authored under Oriveda `OV-003` (Frozen) through `PRM-ARCHITECTURE`.
 Lifecycle: **Frozen** v1.2.0 (2026-11-02, KC-150, KC-163, KC-165), after owner-proxy
@@ -279,3 +279,5 @@ skins/<codename>/         original or openly licensed style, fonts, icons, textu
 The additions use only edges that are already declared (BC4→BC1, BC9→BC5, BC9→BC4).
 No owner decision is narrowed. Consistent with CONST-CORE, ARCH-SYSTEM and DISC-DATA-MODEL v1.3.0.
 Result: passes (KC-165).
+
+*Revision 1.2.1 (2026-11-02): app renamed from Etak to Kairos per ADR-0010 (identity text only, non-semantic).*

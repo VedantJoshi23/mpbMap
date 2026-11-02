@@ -1,7 +1,7 @@
 ---
 id: FEAT-LOCATION-CONSENT
-title: "Etak — Feature: Location Disclosure, Consent & Collection Scope"
-version: 1.0.0
+title: "Kairos — Feature: Location Disclosure, Consent & Collection Scope"
+version: 1.0.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -54,7 +54,7 @@ enforcement path. Using frozen, already-declared APIs does not count.
 
 ### 1. Overview
 
-The single flow through which Etak asks for location and the gate that limits collection: a prominent disclosure, the system permission, every consent recorded and withdrawable, fixes only in use or in an active trip, and a 30-day device-only fix log.
+The single flow through which Kairos asks for location and the gate that limits collection: a prominent disclosure, the system permission, every consent recorded and withdrawable, fixes only in use or in an active trip, and a 30-day device-only fix log.
 
 ### 2. Owning Domain
 
@@ -142,3 +142,5 @@ Checked against the owning domain's Frozen spec: one owner; every cross-domain
 call matches the initiator's Allowed list or goes through an `app/` handoff;
 events and data stay within the domain; §8 cites the relevant Standards.
 Result: passes (KC-166).
+
+*Revision 1.0.1 (2026-11-02): app renamed from Etak to Kairos per ADR-0010 (identity text only, non-semantic).*

@@ -1,4 +1,4 @@
-# Etak
+# Kairos
 
 An Android app that reskins real-world maps in original, game-inspired
 styles. Its headline utility is a location-based arrival alarm that wakes

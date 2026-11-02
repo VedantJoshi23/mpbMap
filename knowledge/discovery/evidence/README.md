@@ -2144,6 +2144,7 @@ claims:
     confidence: 100
     evidence_ids: [EVD-042]
     investigation: business-vision
+    superseded_by: KC-167
     notes: >
       Flagged to the owner before the choice: the historic Etak company's
       assets passed into the TomTom group, so a trademark may still be
@@ -2448,6 +2449,37 @@ claims:
     confidence: 100
     evidence_ids: [EVD-048]
     investigation: recommendations
+```
+
+---
+
+## EVD-049
+
+```yaml
+id: EVD-049
+type: conversation
+source: Owner instruction, 2026-11-02 ("Let's rename the project to kairos. As Etak trademarks may cause trouble later")
+received: 2026-11-02
+summary: >
+  The owner renames the app from Etak to Kairos because of the Etak
+  trademark risk. Recorded as ADR-0010, which also serves as the
+  CONST-CORE amendment record.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-167
+    statement: >
+      The app is named "Kairos" (Greek: the opportune moment). The Play
+      package is io.github.vedantjoshi23.kairos. Supersedes KC-147.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-049]
+    investigation: business-vision
+    notes: >
+      A web search on 2026-11-02 found no Android maps or navigation app
+      named Kairos. There is an F-Droid task planner "Kairos"
+      (com.skohscripts.kairos) in a different category. A formal
+      trademark check is still due before the Play listing.
 ```
 
 ---

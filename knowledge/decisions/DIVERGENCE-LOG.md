@@ -1,6 +1,6 @@
 ---
 id: DIVERGENCE-LOG
-title: "Etak — Divergence Log"
+title: "Kairos — Divergence Log"
 version: 0.1.0
 status: Draft
 owner: Vedant Joshi

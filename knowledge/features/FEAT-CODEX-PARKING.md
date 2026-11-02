@@ -1,7 +1,7 @@
 ---
 id: FEAT-CODEX-PARKING
-title: "Etak — Feature: Codex & Parking"
-version: 1.0.0
+title: "Kairos — Feature: Codex & Parking"
+version: 1.0.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -125,3 +125,5 @@ Checked against the owning domain's Frozen spec: one owner; every cross-domain
 call matches the initiator's Allowed list or goes through an `app/` handoff;
 events and data stay within the domain; §8 cites the relevant Standards.
 Result: passes (KC-166).
+
+*Revision 1.0.1 (2026-11-02): app renamed from Etak to Kairos per ADR-0010 (identity text only, non-semantic).*

@@ -1,7 +1,7 @@
 ---
 id: CONST-CORE
-title: Etak Engineering Constitution
-version: 1.0.0
+title: Kairos Engineering Constitution
+version: 1.0.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -28,13 +28,14 @@ risk: High
 complexity: Medium
 ---
 
-# Etak Engineering Constitution
+# Kairos Engineering Constitution
 
 Authored under Oriveda `OV-002` (Frozen) through `PRM-CONSTITUTION`. The
 Laws are derived from Frozen Discovery: DISC-RECOMMENDATIONS and
 DISC-HIDDEN-BUSINESS-RULES, among others. Lifecycle: **Frozen** v1.0.0 (2026-11-02). It went through owner-proxy
 rounds (KC-131, KC-140, KC-146), an Architecture Review, and the owner's
-sign-off (KC-148, ADR-0001 rule 3).
+sign-off (KC-148, ADR-0001 rule 3). v1.0.1 renames the app per amendment
+ADR-0010.
 
 **Draft-completeness status:** §2–§4 are answered by the owner (KC-135).
 Law 11 reflects KC-132 and KC-133. Law 12's boundary clause reflects
@@ -252,3 +253,5 @@ the owner.
 **Not Laws** (by design): debt tracking (Oriveda Principle 7 already
 binds; DISC-TECHNICAL-DEBT Q1), smoothness numbers (M4 Standards),
 identity names (Q-08, Play listing).
+
+*Revision 1.0.1 (2026-11-02): app renamed from Etak to Kairos per ADR-0010 (identity text only, non-semantic).*
