@@ -843,39 +843,522 @@ claims:
 
 ---
 
+## EVD-011
+
+```yaml
+id: EVD-011
+type: conversation
+source: Owner's Discussion reply on DISC-BUSINESS-VISION v0.1.0, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner confirms the investigation's interpretations, then sets the
+  budget horizon, success measure, product posture, NFRs, skin rules,
+  personal-data storage options and the server, and introduces the app's
+  utility feature: a location-based arrival alarm.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-066
+    statement: >
+      The primary audience is people reviewing the owner's portfolio. Play
+      Store users are secondary. The owner confirms the other
+      interpretations in DISC-BUSINESS-VISION v0.1.0 as correct.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+  - id: KC-067
+    statement: >
+      After the MVP, the app is maintained, publicly available and usable.
+      It is not a frozen demo.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+  - id: KC-068
+    statement: >
+      The app stays free of cost to run until it passes 300 downloads.
+      Tech stack and methodology choices must defer any spending until
+      then. The budget is revisited after that, and no budget is presumed
+      before it.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+    notes: Refines KC-002 by adding a horizon to the zero-spend rule.
+  - id: KC-069
+    statement: >
+      Success means a published app that works correctly, complies with
+      Play's rules and provides real utility.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+  - id: KC-070
+    statement: >
+      Skinned maps must feel as smooth as native Google Maps or Apple Maps.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+    notes: >
+      This is a non-functional requirement with no number attached. It
+      needs measurable targets in Standards (M4), such as frame rate while
+      panning and zooming, and time to first render.
+  - id: KC-071
+    statement: >
+      A game inspiration whose map is 3D is used only if 3D rendering is
+      feasible for it. Otherwise that inspiration is dropped.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: feature-inventory
+  - id: KC-072
+    statement: >
+      Explore-to-reveal is an opt-in toggle available on every skin. When
+      it is on, parts of the map are revealed as the user explores them.
+      When it is off, the whole map is visible.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: feature-inventory
+  - id: KC-073
+    statement: >
+      The record of visited and explored places may be stored locally as
+      GeoJSON or in a server database. The choice is open.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: data-model
+  - id: KC-074
+    statement: >
+      Wanted features: accessibility options; offline support comparable to
+      Google Maps; saved parking spots; and marked locations named in
+      gaming terminology (e.g. waypoint, quest marker), with the terms
+      sourced from common gaming usage.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: feature-inventory
+  - id: KC-075
+    statement: >
+      Product posture: free, no ads, user accounts, a backend of the
+      project's own, and location logging.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: hidden-business-rules
+    notes: >
+      This differs from the reference app on accounts, backend and
+      location logging (KC-027, KC-042). Allowed by KC-063.
+  - id: KC-076
+    statement: >
+      Offline maps are a goal. The app is English-only.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+  - id: KC-077
+    statement: >
+      Accessibility options are in scope, even though the answer to the
+      NFR question named only offline maps. The owner listed accessibility
+      options earlier in the same message.
+    status: inference
+    confidence: 75
+    evidence_ids: [EVD-011]
+    investigation: business-vision
+    notes: To confirm with the owner.
+  - id: KC-078
+    statement: >
+      No franchise-referencing names or marks appear in the project's
+      identity: the app name, skin names, logos, store listing or in-app
+      text. The games listed in EVD-012 are design references only.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011, EVD-012]
+    investigation: business-vision
+  - id: KC-079
+    statement: >
+      Utility feature, the arrival alarm: it alerts the user by location as
+      they approach a destination, instead of at an estimated time. Its
+      purpose is to let the user sleep through overnight travel despite
+      delays. The user sets the trigger distance manually (the example
+      given is 10 km). Multiple alarms are possible.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: feature-inventory
+  - id: KC-080
+    statement: >
+      The alarm must not depend on the route actually taken. The owner's
+      example: on a trip from A to B via either C or D, an alarm set at C
+      never fires if the vehicle goes via D. The alarm must account for
+      both location and distance.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: hidden-business-rules
+  - id: KC-081
+    statement: >
+      The backend runs on the owner's current VM (see EVD-013).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: technical-architecture
+  - id: KC-082
+    statement: >
+      Research of free data providers is delegated to the agent (Q-04).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-011]
+    investigation: technical-architecture
+```
+
+---
+
+## EVD-012
+
+```yaml
+id: EVD-012
+type: other
+source: reference/image-5.png (625x413, owner-supplied table of game inspirations)
+received: 2026-11-02
+summary: >
+  The owner's list of ten games that inspire the map skins, each paired
+  with its most distinctive geographic feature.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-083
+    statement: >
+      Skin inspirations and their distinctive features: Red Dead Redemption
+      2 (natural geography); Cyberpunk 2077 (vertical urban design); Zelda:
+      BOTW (exploration-driven geography); GTA San Andreas (regional
+      diversity); Death Stranding (terrain and infrastructure); Subnautica
+      (3D underwater geography); Assassin's Creed Odyssey (archipelago
+      geography); Minecraft (procedural world generation); Hollow Knight
+      (interconnected underground topology); PUBG (large-scale tactical
+      geography).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-012]
+    investigation: feature-inventory
+  - id: KC-084
+    statement: >
+      Some inspirations rest on data that is weak or missing in
+      OpenStreetMap-derived vector tiles. Subnautica's underwater 3D needs
+      bathymetry. Hollow Knight's underground topology has only 2D
+      tunnel/subway flags. Under KC-071, these two are the likeliest to
+      drop or to be reinterpreted in 2D. 3D buildings (Cyberpunk 2077,
+      Minecraft) and terrain (Death Stranding, RDR2) look feasible.
+    status: inference
+    confidence: 65
+    evidence_ids: [EVD-012, EVD-011, EVD-014]
+    investigation: technical-architecture
+    notes: >
+      Rests on general knowledge of the OpenMapTiles schema and MapLibre's
+      building-extrusion and terrain features. To be verified by a
+      rendering spike in M3.
+```
+
+---
+
+## EVD-013
+
+```yaml
+id: EVD-013
+type: other
+source: Inspection of the owner's VM (uname, free, df, OCI instance metadata, listening ports), 2026-11-02
+received: 2026-11-02
+summary: >
+  Resources and existing services on the VM that KC-081 names as the
+  server.
+pipeline: repository
+processed: true
+claims:
+  - id: KC-085
+    statement: >
+      The VM is an Oracle Cloud VM.Standard.A1.Flex (ARM64, aarch64) in
+      ap-mumbai-1, with 2 OCPUs and 12 GB RAM. About 9.2 GB of the RAM is
+      in use, and about 2.4 GB is available. Its 96 GB disk has 31 GB
+      free. It runs Ubuntu 24.04, and Docker, PostgreSQL (localhost:5432)
+      and nginx (ports 80/443) are already running alongside other
+      services.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-013]
+    investigation: technical-architecture
+  - id: KC-086
+    statement: >
+      The VM is shared with other workloads. It can host a small API, a
+      database and static region map files. It cannot host a world-scale
+      tile set (the planet build is about 120 GB, KC-094), a global
+      geocoder, or a global routing engine within about 2.4 GB of free RAM.
+    status: inference
+    confidence: 80
+    evidence_ids: [EVD-013, EVD-021]
+    investigation: technical-architecture
+```
+
+---
+
+## EVD-014 to EVD-021: free data-provider research (Q-04)
+
+All were read on 2026-11-02 with the fetch tool (model-extracted digest),
+so claims are capped at 90. Each policy can change and must be re-checked
+before launch.
+
+```yaml
+- id: EVD-014
+  type: other
+  source: https://openfreemap.org/
+  pipeline: other
+  claims:
+    - id: KC-087
+      statement: >
+        OpenFreeMap: free vector tiles with no API key and no stated
+        request limits. Commercial use is allowed. The schema is
+        OpenMapTiles. Offline app downloads are allowed up to 3,000 tiles
+        or 50 MB per download, with at most 4 parallel requests and a
+        unique User-Agent. Attribution is required. There is no SLA. It
+        can be self-hosted.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-014]
+      investigation: technical-architecture
+- id: EVD-015
+  type: other
+  source: https://operations.osmfoundation.org/policies/nominatim/
+  pipeline: other
+  claims:
+    - id: KC-088
+      statement: >
+        Nominatim public API: at most 1 request per second, counted across
+        all of an app's users combined. Client-side autocomplete is
+        forbidden. An identifying User-Agent is required, results must be
+        cached, and a caching proxy is recommended.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-015]
+      investigation: technical-architecture
+- id: EVD-016
+  type: other
+  source: https://github.com/Project-OSRM/osrm-backend/wiki/Demo-server
+  pipeline: other
+  claims:
+    - id: KC-089
+      statement: >
+        OSRM demo server: reasonable, non-commercial use only, at most 1
+        request per second. It offers car, foot and bike profiles, with no
+        uptime or update guarantees.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-016]
+      investigation: technical-architecture
+- id: EVD-017
+  type: other
+  source: https://photon.komoot.io/
+  pipeline: other
+  claims:
+    - id: KC-090
+      statement: >
+        Photon public API: supports search-as-you-type. It is fair use,
+        with heavy use throttled, no availability guarantee, and terms that
+        may change. It is open source and can be self-hosted.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-017]
+      investigation: technical-architecture
+- id: EVD-018
+  type: other
+  source: https://open-meteo.com/en/terms
+  pipeline: other
+  claims:
+    - id: KC-091
+      statement: >
+        Open-Meteo free API: non-commercial use only, at 10,000 calls a
+        day, 5,000 an hour and 600 a minute, under a CC-BY 4.0
+        attribution licence. Apps without ads or subscriptions count as
+        non-commercial.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-018]
+      investigation: technical-architecture
+- id: EVD-019
+  type: other
+  source: https://support.google.com/googleplay/android-developer/answer/9799150
+  pipeline: other
+  claims:
+    - id: KC-092
+      statement: >
+        Play background-location policy: background location is allowed
+        only for core functionality. An app declares exactly one
+        location-based feature, and declaring several leads to rejection.
+        The declaration needs a video of 30 seconds or less and an in-app
+        prominent disclosure shown before the permission prompt. Foreground
+        use is preferred; a foreground service must start from a user
+        action and end right after it.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-019]
+      investigation: hidden-business-rules
+- id: EVD-020
+  type: other
+  source: https://support.google.com/googleplay/android-developer/answer/13327111
+  pipeline: other
+  claims:
+    - id: KC-093
+      statement: >
+        Play account-deletion policy: an app that lets users create
+        accounts must offer an in-app path to delete the account and its
+        data, plus a web link where deletion can be requested without the
+        app. The link goes in the Data safety form.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-020]
+      investigation: hidden-business-rules
+- id: EVD-021
+  type: other
+  source: https://docs.protomaps.com/basemaps/downloads
+  pipeline: other
+  claims:
+    - id: KC-094
+      statement: >
+        Protomaps: a planet PMTiles basemap of about 120 GB (zoom 0–15)
+        under ODbL. `pmtiles extract` cuts a region, and each extra zoom
+        level roughly doubles the file size. Hotlinking the download URLs
+        is discouraged.
+      status: fact
+      confidence: 85
+      evidence_ids: [EVD-021]
+      investigation: technical-architecture
+```
+
+## Synthesis claims, round 2 (2026-11-02)
+
+```yaml
+claims:
+  - id: KC-095
+    statement: >
+      The arrival alarm is route-agnostic if it fires on the device's
+      distance to the destination (a radius around B), not on passing a
+      point along the way (C). Straight-line distance needs no routing and
+      no network, so it keeps working through low-coverage stretches at
+      night. An alarm on an intermediate point (C) is inherently
+      route-dependent. If offered at all, it should be labelled that way,
+      or allow "any of these points".
+    status: inference
+    confidence: 85
+    evidence_ids: [EVD-011]
+    investigation: hidden-business-rules
+  - id: KC-096
+    statement: >
+      Play allows one declared background-location feature (KC-092). The
+      arrival alarm is this app's strongest candidate for core
+      functionality. If it runs as a foreground service that the user
+      starts (persistent notification, ending on arrival), it may not need
+      background location at all. Location logging or explore-to-reveal
+      while the app is closed would then have no declared feature to rest
+      on. So "location logging" (KC-075) should record only while the app
+      is in use or an alarm or navigation session is active.
+    status: inference
+    confidence: 80
+    evidence_ids: [EVD-019, EVD-011]
+    investigation: hidden-business-rules
+    notes: >
+      This is High-tier under ADR-0005, because it is security- and
+      policy-bearing. It needs the owner's agreement and a Constitution Law.
+  - id: KC-097
+    statement: >
+      Accounts plus a backend plus location logging (KC-075) add these
+      obligations: in-app and web account deletion (KC-093), Data safety
+      disclosure of location collection, a privacy policy URL, and TLS on
+      the API. Free hosting exists for the static pages (e.g. GitHub
+      Pages).
+    status: inference
+    confidence: 80
+    evidence_ids: [EVD-011, EVD-019, EVD-020]
+    investigation: hidden-business-rules
+  - id: KC-098
+    statement: >
+      Because the publisher and VM are in India, India's Digital Personal
+      Data Protection Act 2023 likely applies to stored location data. It
+      requires consent, purpose limitation and erasure on request. Its
+      rules on map boundaries may also constrain how the app depicts
+      India's borders.
+    status: assumption
+    confidence: 50
+    evidence_ids: [EVD-013, EVD-011]
+    investigation: hidden-business-rules
+    notes: General knowledge only, not legal advice. To check before launch.
+  - id: KC-099
+    statement: >
+      Zero-spend provider set that fits KC-068 at the ~300-download scale:
+      OpenFreeMap tiles for online maps and city-sized offline packs
+      (KC-087); Photon for typeahead search (KC-090), with Nominatim for
+      reverse geocoding at ≤1 req/s (KC-088); the OSRM demo server for
+      routing (KC-089); Open-Meteo for weather (KC-091). Search, routing
+      and weather calls pass through a caching, rate-limiting proxy on the
+      VM. That keeps aggregate traffic within each policy and lets a
+      provider be swapped without an app release. The arrival alarm needs
+      none of these services at run time (KC-095).
+    status: inference
+    confidence: 75
+    evidence_ids: [EVD-014, EVD-015, EVD-016, EVD-017, EVD-018, EVD-013]
+    investigation: technical-architecture
+    notes: >
+      This is a recommendation for M3/OV-004, not a decision. The weakest
+      links are the OSRM demo's "non-commercial, reasonable" clause and
+      Photon's throttling. The fallback once a budget exists (KC-068) is
+      self-hosting region extracts on a larger machine. Offline packs
+      larger than 50 MB (e.g. a whole region) need a self-hosted region
+      PMTiles file on the VM (KC-094, about 31 GB free).
+  - id: KC-100
+    statement: >
+      A mandatory sign-up wall would cost the primary audience (KC-066):
+      reviewers who install to try the app. Accounts should be optional,
+      with a guest mode that keeps data on-device and syncs once the user
+      signs in.
+    status: inference
+    confidence: 70
+    evidence_ids: [EVD-011]
+    investigation: user-journeys
+    notes: To confirm with the owner.
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
 | --- | --- | --- |
 | `repo-structure` | KC-007, KC-008 (fact) | Covered. The project is greenfield. |
-| `business-vision` | KC-002, KC-003, KC-056–059 (fact); reference context KC-024–026, KC-033, KC-036–037 | Covered. Q-01–Q-03 resolved. |
-| `feature-inventory` | KC-012, KC-029–031, KC-039–040 (fact) | Covered as reference inspiration only (KC-063). The project's own feature set is still to be defined. |
-| `user-journeys` | KC-061 (fact), KC-062 (inference 85) | **Visible gap, not blocking.** Reference journeys are unobservable. This project's journeys get designed in M5/M6. |
-| `data-model` | KC-048, KC-049 (inference) | Inference only, from the reference concept. |
-| `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Events check done (KC-051). |
-| `technical-architecture` | KC-038 (fact), KC-060 (fact), KC-047, KC-054 (inference) | Covered. Data providers are open (Q-04). NFRs: KC-024 (accessibility), KC-041 (offline). |
-| `hidden-business-rules` | KC-027, KC-028, KC-032, KC-042, KC-043 (fact) | Covered as reference rules. Whether the project adopts them is open (Q-09). |
-| `technical-debt` | KC-035 (inference) | Not applicable to this project yet (greenfield). Recorded as risk carried over from the reference app. |
-| `recommendations` | KC-053, KC-055, KC-063–065 (inference) | Covered. |
+| `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078 (fact) | Covered. Revised into DISC-BUSINESS-VISION v0.2.0. |
+| `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | Covered. The project's own feature set is now stated by the owner. |
+| `user-journeys` | KC-061 (fact), KC-062, KC-100 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |
+| `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
+| `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
+| `technical-architecture` | KC-081, KC-085, KC-087–091 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
+| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093 (fact); KC-095–096 (inference) | Covered. KC-098 is assumption-tier. |
+| `technical-debt` | KC-035 (inference) | Not applicable yet (greenfield). |
+| `recommendations` | KC-053, KC-055, KC-063–065, KC-096, KC-099, KC-100 (inference) | Covered. |
 
 ## Open Questions and Gaps (per OV-000 gap detection)
 
 Ranked by how much they block downstream work.
 
-- **Q-01: Replica boundary.** *Resolved* by KC-056 and KC-057: concept
-  only.
-- **Q-02: Platform scope.** *Resolved* by KC-059 and KC-060: phone first,
-  extendable later.
-- **Q-03: Distribution.** *Resolved* by KC-058: Google Play, fee already
-  paid.
-- **Q-09: Product posture (for the Constitution, M2).** Does the project
-  adopt the reference app's posture (no accounts, no backend of its own,
-  no location logging, no ads, free; KC-027, KC-042) as its own? Or does
-  it set a different one?
-- **Q-08: Identity.** The app's own name and its own skin concepts. Needed
-  before the first store listing, not before Discovery.
-- **Q-04: Data providers.** Tile, search, routing and weather sources.
-  Settled in M3 against KC-002 and KC-054.
-- **Q-05–Q-07: Reference-app details** (the swipe gesture, POI badges, Fog
-  of War, the speech-bubble and avatar buttons). *No longer needed.* The
-  project designs its own equivalents (KC-062).
+- **Q-01, Q-02, Q-03:** *Resolved* (KC-056–KC-060).
+- **Q-09: Product posture.** *Resolved* by KC-075. Follow-ups are Q-10
+  and Q-11.
+- **Q-10: Scope of location logging (blocks the Constitution).** Should
+  logging be limited to while the app is open or an alarm or navigation
+  session is running, as KC-096 recommends for Play's one-feature rule?
+- **Q-11: Optional accounts (blocks the Constitution).** Should there be
+  a guest mode, with sign-in optional (KC-100)?
+- **Q-12: Accessibility (Constitution or Standards).** Confirm it is in
+  scope (KC-077).
+- **Q-08: Identity.** The app name and its own skin names. Needed before
+  the first store listing, not before Discovery.
+- **Q-04: Data providers.** A recommendation exists (KC-099). The decision
+  is made in M3/OV-004.
+- **Q-05–Q-07:** *No longer needed* (KC-062).

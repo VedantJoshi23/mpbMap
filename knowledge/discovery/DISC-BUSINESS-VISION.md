@@ -1,13 +1,13 @@
 ---
 id: DISC-BUSINESS-VISION
 title: "Discovery: Business Vision"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
   - Vedant Joshi
 created: 2026-10-30
-updated: 2026-10-30
+updated: 2026-11-02
 milestone: M1
 category: Discovery
 priority: Critical
@@ -30,7 +30,9 @@ One of the ten M1 investigations, run under Oriveda `OV-001` (Frozen) over
 the claims in [the evidence log](evidence/README.md). Claim IDs (`KC-NNN`)
 point into that log, which holds the full statements and sources.
 
-Lifecycle: **Draft**, awaiting the owner's Discussion pass.
+Lifecycle: **Draft**. v0.1.0 went through Discussion (EVD-011). This is
+the Revision. Next come Architecture Review and then Freeze, once the
+owner approves.
 
 ## Purpose
 
@@ -40,122 +42,121 @@ Law.
 
 ## Observed Facts
 
-Owner-stated facts, at confidence 100:
+All owner-stated, at confidence 100.
 
-- **What it is.** An original Android app built on one concept: real
+- **What it is.** An original Android app on one borrowed concept: real
   streets and real GPS, reskinned in video-game-inspired styles (KC-056).
-- **What it is not.** It is not a replica of MapShifter. The name, skins,
-  art, UI, features and flows are all the project's own (KC-057).
-- **Credit.** MapShifter is credited as the source of the concept,
-  throughout the project (KC-003, KC-057).
-- **Purpose.** A personal portfolio project (KC-001). KC-056 superseded
-  KC-001's "replicate" scope but left this purpose unchanged.
-- **Cost.** Zero spend (KC-002). The Google Play account is already paid
-  for (KC-058).
-- **Distribution.** Google Play, through the owner's account (KC-058).
-- **Scope.** Phone app first (KC-059). It must stay extendable to Wear OS
-  and Android Auto, which are not built now (KC-060).
-
-Context from the reference app. These are facts (confidence ≤ 90) about
-MapShifter, not about this project:
-
-- The concept has shipped and been well received. MapShifter launched in
-  April 2026, reached 1.0.34 by October, and is rated 4.9/5 from 15
-  ratings (KC-034, KC-036).
-- MapShifter is free, with no accounts and no ads (KC-026, KC-027).
-- Its Android version is announced as "soon", with no date (KC-045).
-- It positions itself as "cosmetic" skins over a working maps engine
-  (KC-037).
+  MapShifter is credited for the concept (KC-003, KC-057).
+- **What makes it useful.** The arrival alarm wakes the user by distance
+  to the destination, not by estimated time, so overnight travellers can
+  sleep through delays (KC-079, KC-080).
+- **Who it is for.** First, people reviewing the owner's portfolio. Second,
+  Play Store users (KC-066).
+- **Why it exists.** It is a portfolio project that stays maintained,
+  public and usable after the MVP (KC-001, KC-067).
+- **Success.** A published app that works correctly, complies with Play's
+  rules and provides real utility (KC-069).
+- **Distribution.** Google Play, on the owner's already-paid account
+  (KC-058).
+- **Budget.** Zero spend until 300+ downloads, with stack and methodology
+  chosen to defer cost. The budget is revisited after that (KC-068).
+- **Scope.** Phone app first, extendable later to Wear OS and Android Auto
+  (KC-059, KC-060). The server is the owner's existing VM (KC-081).
+- **Posture.** Free, no ads, user accounts, a backend of its own, and
+  location logging (KC-075).
+- **Identity.** No franchise-referencing names or marks anywhere in the
+  app's identity. Games are design references only (KC-078, KC-083).
+- **Non-functional requirements** (the `OV-001` cross-cutting check):
+  - maps that feel as smooth as Google or Apple Maps (KC-070)
+  - offline maps (KC-076)
+  - English only, with no localisation (KC-076)
+  - accessibility options, inferred at 75 and awaiting confirmation
+    (KC-077)
+  - no availability target is stated
 
 ## Interpretation
 
-These are interpretations, not facts.
+These are interpretations, confirmed in Discussion (KC-066) unless marked
+new.
 
-- **The real audience is people evaluating the owner's work** (recruiters,
-  peers, the portfolio audience). Play Store users are a secondary
-  audience. Quality of engineering and design craft is the product's main
-  output, and download numbers are not. *(This rests on "personal
-  portfolio project" in KC-001. Needs confirming.)*
-- **The differentiator has to be the owner's own skins and identity.**
+- **Engineering and design craft is the product's main output.** The
+  portfolio audience judges code quality, architecture and polish. Play
+  users mainly test that the app is real and works.
+- **The skins and the arrival alarm are what make this the owner's work.**
   The concept is MapShifter's, and MapShifter is coming to Android
-  (KC-065). Original skin art and a distinct identity are what make this
-  project the owner's work, not just a port.
-- **Going public on Play turns a portfolio piece into a real product with
-  obligations** (KC-064, inference 75): a privacy policy, a Data safety
-  form, a content rating, target-API compliance and OSM attribution. These
-  belong to the Constitution and Standards, not later polish.
-- **Zero spend shapes the architecture.** Every map service (tiles,
-  search, routing, weather) has to be free at the expected scale
-  (KC-054, inference 70).
+  (KC-065). Original skin art plus a real utility separate this project
+  from a port.
+- **Being on Play makes compliance a product feature, not polish.**
+  KC-069 makes "rules compliant" part of success itself. Accounts and
+  location logging raise the bar further (KC-093, KC-096, KC-097).
+- **Zero spend shapes the architecture.** Every map service must be free
+  at about 300 downloads. A free provider set exists (KC-099, inference 75).
+- *(New)* **The arrival alarm sets the app's location-permission strategy.**
+  Play accepts one declared background-location feature (KC-096). The
+  alarm is the natural one, and it may not need background permission at
+  all if it runs as a user-started foreground service. This is also why
+  location logging should be limited to sessions the user is actively
+  running (Q-10, owned by `hidden-business-rules`).
 
 ## Hidden Assumptions
 
-- That "portfolio" means the app should be publicly usable, polished and
-  maintained after launch, not a frozen demo.
-- That expected usage stays small enough for free tiers and free public
-  services. If the app gets popular, zero spend and fair-use limits will
-  collide.
-- That the owner wants a game-*inspired* tone but no references to
-  specific franchises. The reference app evokes franchises it is not
-  affiliated with (KC-006, KC-028). Whether this project does the same is
-  not yet decided (Q-08).
+- About 300 downloads will stay within free-provider fair-use limits
+  (KC-087–KC-091). If usage grows faster than the budget review, the
+  zero-spend rule and provider policies collide. The VM proxy (KC-099)
+  is the control point.
+- The shared VM keeps enough headroom for the backend: about 2.4 GB of RAM
+  is free today (KC-085, KC-086).
+- Indian data-protection and map-boundary rules may apply (KC-098). This
+  is assumption-tier and must be checked before launch.
 
 ## Strengths
 
-- A proven, appealing concept with visible demand (KC-034, KC-036).
-- A free, open stack is known to be enough for it (KC-038).
-- The scope is tightly drawn: phone only, extension points named.
-- The owner has already decided how to credit MapShifter and where the
-  replica boundary sits, before writing any code.
+- A proven, appealing concept (KC-034, KC-036), plus a utility drawn from
+  the owner's own real need (KC-079).
+- A clear, measurable success definition (KC-069) and an explicit budget
+  horizon (KC-068).
+- Tight scope with named extension points (KC-059, KC-060).
+- Identity and credit rules were settled before any code (KC-057, KC-078).
 
 ## Weaknesses
 
-- No non-functional requirements are stated by the owner yet. Discovery's
-  cross-cutting check (`OV-001`) found accessibility (KC-024), offline use
-  (KC-041), localisation (KC-033) and a privacy posture (KC-027, KC-042),
-  but **only as reference-app facts**. None is yet a goal of this project.
-  No performance or availability targets exist in any evidence.
-- No success measure is stated. "Done" for a portfolio project is
-  undefined.
-- No identity yet: the app name and skin concepts are open (Q-08).
+- The smoothness target "feels like Google/Apple Maps" (KC-070) has no
+  numbers yet. Standards (M4) must make it measurable.
+- The posture (accounts, backend, location logging) carries the heaviest
+  compliance load of any option considered. This is not a reason to
+  change it, but it must be designed in from the first slice
+  (`ADR-0005`, High tier).
+- No availability target is stated for the backend. On a shared VM, a
+  realistic target should be written down, even if modest.
 
 ## Questions
 
-1. **Audience.** Is the primary audience people reviewing your portfolio,
-   with Play users secondary? Or are real Play users the primary target?
-2. **Success.** What makes this a success? For example: shipped on Play
-   with N original skins; a showcase-quality codebase; a target
-   download or rating count.
-3. **Posture (Q-09).** Do you adopt the reference app's posture as your
-   own: free, no ads, no accounts, no backend of your own, no location
-   logging? Each part becomes a Constitution Law if adopted.
-4. **NFRs.** Which of these are goals for *this* app: accessibility, as
-   MapShifter declares (KC-024); offline maps (KC-041); more than one
-   language (KC-033)? Are there any performance targets you care about?
-5. **Tone (Q-08).** Original game-*inspired* worlds (generic genres like
-   western, cyberpunk, post-apocalyptic, voxel), or nods to specific
-   games?
-6. *(For `technical-architecture`)* Which free tile, search and routing
-   providers fit zero spend at Play scale (Q-04)?
+1. *(For `hidden-business-rules`, Q-10)* Limit location logging to while
+   the app is open or an alarm or navigation session is running (KC-096)?
+2. *(For `user-journeys`, Q-11)* Make accounts optional, with a guest mode
+   that syncs on sign-in (KC-100)?
+3. *(For the Constitution, Q-12)* Is accessibility in scope (KC-077)?
+4. *(For Standards)* Is there a backend availability target, e.g. "best
+   effort; the app's core features work offline when the server is down"?
 
 ## Recommendations
 
-- **Keep:** concept-only scope with credit (KC-056, KC-057); phone-first
-  with named extension points (KC-059, KC-060); zero spend (KC-002).
-- **Keep:** free, no accounts, no ads, on-device location. These fit zero
-  spend (no server to pay for) and a portfolio's credibility. To be
-  confirmed in Q-09.
-- **Improve:** turn the owner's NFR choices from question 4 into stated
-  goals before the Constitution, so they can become Laws.
-- **Improve:** define success measures, so release checkpoints
-  (`ADR-0005`) have something to check against.
-- **Remove:** franchise-referencing names or marks from this project's
-  identity, if confirmed in question 5. This lowers Play listing risk
-  (KC-064, KC-065).
+- **Keep:** concept-only scope with credit; portfolio-first audience;
+  zero spend to 300 downloads; Play distribution; phone-first scope; the
+  arrival alarm as the headline utility.
+- **Keep:** free, no ads, accounts, own backend, location logging (KC-075),
+  scoped as in Q-10 and Q-11.
+- **Improve:** turn KC-070 into numeric performance targets in Standards.
+- **Improve:** design core features so they work when the backend is
+  unavailable. This covers the alarm, offline maps and saved places, and
+  it fits both a shared VM and the zero-spend rule.
+- **Remove:** franchise names and marks from the project's identity
+  (KC-078). This is done by rule: no identity exists yet to strip.
 
 ## Confidence Level
 
-The vision statement, scope and constraints are **Fact (100)**: they are
-owner-stated (KC-002, KC-003, KC-056–KC-060). Statements about audience,
-differentiator and Play obligations are at most **Inference (75)**, capped
-by KC-064, their weakest load-bearing claim (`OV-001` §4).
+Vision, audience, scope, budget, posture and identity: **Fact (100)**,
+owner-stated in EVD-010 and EVD-011. Interpretations confirmed in
+Discussion: **Inference (85)**. Statements that rest on Play-policy and
+provider claims: **Inference (75)**, capped by KC-099, the weakest
+load-bearing claim (`OV-001` §4).
