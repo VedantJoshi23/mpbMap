@@ -82,7 +82,8 @@ dependencies.
 - Run spikes S1–S5 before M3 freezes (DISC-TECHNICAL-ARCHITECTURE).
 - Add abuse protection to the gateway (M3).
 - Ship public-repo hygiene with the first code commit (DISC-REPO-STRUCTURE).
-- Track TD1–TD10 with repayment triggers (DISC-TECHNICAL-DEBT).
+- Track TD1–TD15 with repayment triggers and migration paths
+  (DISC-TECHNICAL-DEBT). Run the TD13 restore drill before launch.
 
 ### Remove (out of the MVP, or never)
 
@@ -100,8 +101,10 @@ dependencies.
 expensive (`OV-002`'s promotion criterion). The final wording and
 selection belong to M2.
 
-1. A silent failure of an armed alarm is never acceptable. Every failure
-   path raises an alert (R3, R25, R26).
+1. An armed alarm never fails silently on any path the app can detect.
+   Every detectable failure raises a loud alert (R3, R25, R26). The one
+   undetectable path, a force-stop, is a recorded known limit with
+   mitigations (TD6). It is not an exception to this Law.
 2. No background location. Location is collected only while the app is
    in use or a user-started trip runs (R5).
 3. Guest-first: no feature except sync requires an account (R7).
