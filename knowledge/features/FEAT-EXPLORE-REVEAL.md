@@ -1,8 +1,8 @@
 ---
 id: FEAT-EXPLORE-REVEAL
 title: "Etak — Feature: Explore-to-Reveal & Journal"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -38,8 +38,8 @@ complexity: Medium
 ## Feature: Explore-to-Reveal & Journal
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001).
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-166), after owner-proxy
+rounds 1–2 (ADR-0001). Freezing does not start implementation (KC-107).
 
 **Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
 v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
@@ -125,3 +125,10 @@ add no module dependency.
 
 - [ ] Criteria pass.
 - [ ] FEAT-LOCAL-ERASURE ships no later than this feature.
+
+### Architecture Review (2026-11-02)
+
+Checked against the owning domain's Frozen spec: one owner; every cross-domain
+call matches the initiator's Allowed list or goes through an `app/` handoff;
+events and data stay within the domain; §8 cites the relevant Standards.
+Result: passes (KC-166).

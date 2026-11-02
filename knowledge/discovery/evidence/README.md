@@ -2406,6 +2406,52 @@ claims:
 
 ---
 
+## EVD-048
+
+```yaml
+id: EVD-048
+type: conversation
+source: Owner-proxy (successor #4) M6 review, rounds 1-2, 2026-11-02 (ADR-0001)
+received: 2026-11-02
+summary: >
+  The proxy approved the twelve M6 features and four draft revisions of
+  Frozen specs, after two rounds. Main changes it drove: both spec cards
+  converted to full specs; FEAT-LOCAL-ERASURE and FEAT-PROVIDER-GATEWAY
+  split out; snooze defined (a fixed 2 minutes, stays armed); the safety
+  debug log given an owner; sync applied by the owning contexts;
+  epoch-then-union for cells; the demo publishes no BC1 events; slices
+  1-4 planned.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-165
+    statement: >
+      Approved by the owner proxy, after review as drafts:
+      DOM-TRIP v1.1.0 (snooze, the safety debug log, demo bus-silence);
+      DOM-EXPLORATION v1.1.0 (applyRemote, the safety-log erasure part);
+      DOM-CODEX v1.1.0 (applyRemote); ARCH-SYSTEM v1.2.0; DISC-DATA-MODEL
+      v1.3.0 (SafetyLogEntry); STD-DATABASE v1.0.1 (7-day log retention).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-048]
+    investigation: technical-architecture
+  - id: KC-166
+    statement: >
+      All twelve M6 feature specifications are approved by the owner proxy
+      and Frozen at v1.0.0. M6 Definition of Done: met. The Oriveda
+      examples/ worked-example item is not applicable to the target
+      project, because it is the framework's own deliverable (Oriveda
+      ADR-0002) and the project cannot write into the submodule.
+      Implementation, including spikes, still needs the owner's explicit
+      M8 approval (KC-107).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-048]
+    investigation: recommendations
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

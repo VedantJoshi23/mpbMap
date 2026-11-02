@@ -1,7 +1,7 @@
 ---
 id: DOM-EXPLORATION
 title: "Domain: Exploration"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -76,7 +76,7 @@ Explore-to-reveal (fog of war) and the journal: H3 cells revealed from in-use lo
 
 ### Invariant 4
 
-> EraseLocalHistory is persisted in `exploration.db`. It deletes the journal and cells, sets `clearedAt`, and calls `LocationApi.eraseFixes()`, recording the returned confirmation. It retries on start until both parts are confirmed. Only then does it publish ExplorationCleared and show complete.
+> EraseLocalHistory is persisted in `exploration.db`. It deletes the journal and cells, sets `clearedAt`, and calls `LocationApi.eraseFixes()`, recording the returned confirmation. It also calls `TripApi.clearSafetyLog()` (BC4→BC1, declared) and records that confirmation *(v1.1.0)*. It retries on start until every part (local deletion, eraseFixes, clearSafetyLog) is confirmed. Only then does it publish ExplorationCleared and show complete.
 
 **Source:** Law 6; ADR-0006
 
@@ -89,6 +89,7 @@ Explore-to-reveal (fog of war) and the journal: H3 cells revealed from in-use lo
 ## 4. API Surface
 
 - `ExplorationApi.revealOn`, `cells(viewport)`, `journal()`, `eraseLocalHistory()`
+- `ExplorationApi.applyRemote(cells, clearedAt)` *(v1.1.0)*, called by DOM-ACCOUNT. It applies epoch-then-union itself (Invariant 3), so DOM-ACCOUNT never writes `exploration.db`
 - Port `CityResolver` (journal city). Its adapter lives in `app/` and wraps `PlacesApi.reverse()` (ARCH-SYSTEM v1.1.0), so there is no module dependency on DOM-PLACES
 
 ## 5. Events
@@ -164,3 +165,15 @@ forbidden_dependencies:
 Checked against ARCH-SYSTEM v1.1.0, CONST-CORE and the DISC-DOMAIN-DISCOVERY
 event catalogue: §5 and §7 match the declared api-level dependencies, and
 the boundary block matches the prose. Divergences: none. Result: passes.
+
+## Revision History
+
+- **v1.1.0 (2026-11-02):** adds `applyRemote` (sync applied by the owner)
+  and the safety-log part of erasure. Additive. Reviewed as a draft and approved by the
+  owner proxy (KC-165).
+
+## Architecture Review: revision re-review (2026-11-02)
+
+The additions use only edges that are already declared (BC4→BC1, BC9→BC5, BC9→BC4).
+No owner decision is narrowed. Consistent with CONST-CORE, ARCH-SYSTEM and DISC-DATA-MODEL v1.3.0.
+Result: passes (KC-165).

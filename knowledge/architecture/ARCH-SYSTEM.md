@@ -1,7 +1,7 @@
 ---
 id: ARCH-SYSTEM
 title: "Etak System Architecture"
-version: 1.1.0
+version: 1.2.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -33,7 +33,7 @@ complexity: High
 # ARCH-SYSTEM: Etak System Architecture
 
 Authored under Oriveda `OV-003` (Frozen) through `PRM-ARCHITECTURE`.
-Lifecycle: **Frozen** v1.1.0 (2026-11-02, KC-150, KC-163), after owner-proxy
+Lifecycle: **Frozen** v1.2.0 (2026-11-02, KC-150, KC-163, KC-165), after owner-proxy
 rounds 1–2 (ADR-0001) and Architecture Review. Freezing does not
 authorise implementation (KC-107).
 
@@ -133,8 +133,13 @@ authoritative).
   - It deletes JournalEntry and ExploredCell and sets `clearedAt`.
   - It calls `LocationApi.eraseFixes()` (BC2 `api/`), which deletes
     LocationFix and returns a confirmation that BC4 records.
-  - The command retries on start until both parts are confirmed.
+  - It calls `TripApi.clearSafetyLog()` (BC1 `api/`, over the declared
+    BC4→BC1 edge), which clears the on-device safety debug log *(v1.2.0)*.
+  - The command retries on start until every part (local deletion, eraseFixes, clearSafetyLog) is confirmed.
   - BC4 publishes ExplorationCleared only after that.
+  - **Sync apply** *(v1.2.0)*: BC9 never writes another context's store. It
+  calls `CodexApi.applyRemote` (LWW) and `ExplorationApi.applyRemote`
+  (epoch-then-union) over the declared BC9→BC5 and BC9→BC4 edges.
   - Account: BC9 deletes the server copies (Account, CodexEntry,
     ExploredCell, ExploredArea), purged within 30 days, plus the disclosed
     7-day backup window, so at most 37 days.
@@ -262,3 +267,15 @@ skins/<codename>/         original or openly licensed style, fonts, icons, textu
 - Worked example under Oriveda `examples/`: **not applicable**. It belongs
   to the framework's own Definition of Done (Oriveda ADR-0002), the same
   reasoning as DISC-RECOMMENDATIONS.
+
+## Revision History
+
+- **v1.2.0 (2026-11-02):** the erasure flow includes the safety debug
+  log; sync is applied by the owning context. Additive. Reviewed as a draft and approved by the
+  owner proxy (KC-165).
+
+## Architecture Review: revision re-review (2026-11-02)
+
+The additions use only edges that are already declared (BC4→BC1, BC9→BC5, BC9→BC4).
+No owner decision is narrowed. Consistent with CONST-CORE, ARCH-SYSTEM and DISC-DATA-MODEL v1.3.0.
+Result: passes (KC-165).

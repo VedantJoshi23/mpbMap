@@ -1,8 +1,8 @@
 ---
 id: FEAT-ACCOUNT-SYNC
 title: "Etak — Feature: Optional Account, Sync & Deletion"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -40,12 +40,12 @@ complexity: Medium
 ## Feature: Optional Account, Sync & Deletion
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001).
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-166), after owner-proxy
+rounds 1–2 (ADR-0001). Freezing does not start implementation (KC-107).
 
 **Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
 v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
-its owning `DOM-ACCOUNT` v1.0.0 and `DOM-CODEX` v1.0.0, `DOM-EXPLORATION` v1.0.0, `DOM-LOCATION` v1.0.0. STD-* v1.0.0 (all Frozen). **Pending draft revisions** (staged for proxy review): DOM-CODEX v1.1.0 and DOM-EXPLORATION v1.1.0 (`applyRemote`), and ARCH-SYSTEM v1.2.0 (sync applied by the owner).
+its owning `DOM-ACCOUNT` v1.0.0 and `DOM-CODEX` v1.0.0, `DOM-EXPLORATION` v1.0.0, `DOM-LOCATION` v1.0.0. STD-* v1.0.0 (all Frozen). The revisions it relied on (DOM-CODEX v1) are now applied and Frozen (KC-165).1.0 and DOM-EXPLORATION v1.1.0 (`applyRemote`), and ARCH-SYSTEM v1.2.0 (sync applied by the owner).
 
 **Tier:** **High.** Security and data (Laws 4–6). *Tier rule (proxy ruling):* a feature "touches" a
 High-tier spec only when it adds to or changes that spec or its
@@ -138,3 +138,10 @@ add no module dependency.
 - [ ] The web deletion page is live.
 - [ ] Flagged commercial free tiers (Law 7): Play Integrity, DuckDNS, Oracle object storage.
 - [ ] The pending domain and ARCH revisions are Frozen.
+
+### Architecture Review (2026-11-02)
+
+Checked against the owning domain's Frozen spec: one owner; every cross-domain
+call matches the initiator's Allowed list or goes through an `app/` handoff;
+events and data stay within the domain; §8 cites the relevant Standards.
+Result: passes (KC-166).

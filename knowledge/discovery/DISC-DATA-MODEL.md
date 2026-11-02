@@ -1,7 +1,7 @@
 ---
 id: DISC-DATA-MODEL
 title: "Discovery: Data Model"
-version: 1.2.0
+version: 1.3.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -80,6 +80,7 @@ All entities are [S]. **Storage class** values:
 | **Alarm** | id, tripId, radiusM, state (armed / fired / snoozed / dismissed), firedAt, **snoozeUntil** | **Device only** | CE | Trip |
 | **TripBootRecord** | tripId, armed flag, destination **label only**, alarm states, **heartbeatAt** (UTC epoch ms), **heartbeatElapsedMs** (elapsedRealtime), **heartbeatBootCount** *(v1.2.0)* | **Device only** | **DP** (R25) | Trip |
 | **LocationFix** | ts, lat/lon, accuracyM, source (gps / network), context (in-use / trip) | **Device only**, 30-day rolling log | CE | none |
+| **SafetyLogEntry** *(v1.3.0)* | ts, kind (heartbeat / watchdog / alert), distanceM, detail | **Device only**, 7 days, **no coordinates** | CE (never DP; the boot path does not write it) | BC1 (DOM-TRIP) |
 | **ExploredCell** | cellId, firstSeenAt | Device; synced | CE, Srv | ExploredArea |
 | **ExploredArea** | clearedAt epoch | Device; synced | CE, Srv | ExploredArea |
 | **JournalEntry** | placeRef or cell summary, visitedAt, city | **Device only** | CE | Journal |
@@ -237,6 +238,9 @@ All entities are [S]. **Storage class** values:
   their fail-safe reading. Additive only; required by ADR-0005 (the
   watchdog). Also restores two lines lost in v1.1.0 to a script defect
   (non-semantic). Approved by the owner proxy (KC-160).
+- **v1.3.0 (2026-11-02):** adds SafetyLogEntry (DOM-TRIP v1.1.0), a
+  device-only, 7-day log with no coordinates, erased by R21. Additive.
+  Approved by the owner proxy (KC-165).
 
 ## Confidence Level
 

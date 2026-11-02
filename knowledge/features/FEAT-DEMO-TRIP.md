@@ -1,8 +1,8 @@
 ---
 id: FEAT-DEMO-TRIP
 title: "Etak — Feature: Demo Trip (Reviewer Showcase)"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,12 +32,12 @@ complexity: Low
 ## Feature: Demo Trip (Reviewer Showcase)
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001).
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-166), after owner-proxy
+rounds 1–2 (ADR-0001). Freezing does not start implementation (KC-107).
 
 **Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
 v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
-its owning `DOM-TRIP` v1.0.0. STD-* v1.0.0 (all Frozen). **Pending draft revisions** (staged for proxy review): DOM-TRIP v1.1.0 (the bus-silence wording).
+its owning `DOM-TRIP` v1.0.0. STD-* v1.0.0 (all Frozen). The revisions it relied on (DOM-TRIP v1) are now applied and Frozen (KC-165).1.0 (the bus-silence wording).
 
 **Tier:** **Medium.** *Tier rule (proxy ruling):* a feature "touches" a
 High-tier spec only when it adds to or changes that spec or its
@@ -113,3 +113,10 @@ add no module dependency.
 
 - [ ] The sandbox test passes.
 - [ ] DOM-TRIP v1.1.0 is Frozen.
+
+### Architecture Review (2026-11-02)
+
+Checked against the owning domain's Frozen spec: one owner; every cross-domain
+call matches the initiator's Allowed list or goes through an `app/` handoff;
+events and data stay within the domain; §8 cites the relevant Standards.
+Result: passes (KC-166).

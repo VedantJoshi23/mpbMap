@@ -1,7 +1,7 @@
 ---
 id: DOM-TRIP
 title: "Domain: Trip & Alarms"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -52,6 +52,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 - The AlertPort contract and alert semantics (insistent audio, non-audio channel)
 - The trip foreground service (type `location`)
 - The demo sandbox mode (J12)
+- **The on-device safety debug log** *(v1.1.0)*: heartbeat, watchdog and alert events; distances and timestamps only, **no coordinates**; kept for 7 days in CE storage (never DP; the boot path does not write it); cleared through `TripApi.clearSafetyLog(): ErasureConfirmation` (STD-OBSERVABILITY rule 5)
 
 ### Explicitly Does NOT Own
 
@@ -117,7 +118,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 
 ### Invariant 10
 
-> Demo mode never starts the foreground service, persists nothing, and emits no exploration events.
+> Demo mode never starts the foreground service, persists nothing, and publishes **no BC1 lifecycle or alarm events on the bus** (TripStarted and the rest), so DOM-LOCATION never opens trip scope (Law 3).
 
 **Source:** J12; DISC-DOMAIN-DISCOVERY demo rule
 
@@ -127,11 +128,24 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 
 **Source:** Law 5; R8
 
+### Invariant 12 *(v1.1.0)*
+
+> Snooze never disarms. A snoozed alarm re-rings the same alert when the fixed **2-minute** snooze interval ends (not user-extendable in the MVP), regardless of distance. It counts as **armed** for R2, R24 and R25 and in TripBootRecord.alarmStates. A restart during snooze raises R25.
+
+**Source:** Law 1; R2; R25 (owner-proxy ruling, adds safety)
+
+### Invariant 13 *(v1.1.0)*
+
+> The safety debug log holds no coordinates, keeps entries for at most 7 days, and is erased by `clearSafetyLog()`, which DOM-EXPLORATION's EraseLocalHistory calls over the declared BC4→BC1 edge.
+
+**Source:** Law 5; Law 6; STD-OBSERVABILITY rule 5
+
 ## 4. API Surface
 
 - `TripApi.arm(destination, mode, alarms)`, `end()`, `editAlarms()`, `state: StateFlow<TripState>`
 - `AlertPort` (implemented by adapters: phone notification/FGS audio now, BC11 later)
 - `DemoTripApi.play()`
+- `TripApi.clearSafetyLog(): ErasureConfirmation` (v1.1.0)
 
 ## 5. Events
 
@@ -151,7 +165,7 @@ The headline utility: user-started trips that hold one or more arrival alarms an
 
 ## 6. Data Ownership
 
-- Room `trip.db` (CE): Trip, Alarm
+- Room `trip.db` (CE): Trip, Alarm, SafetyLogEntry (v1.1.0)
 - Proto DataStore in DP storage: TripBootRecord {tripId, armed, destinationLabel, alarmStates, heartbeatAt, heartbeatElapsedMs, heartbeatBootCount} (DISC-DATA-MODEL v1.2.0)
 
 ## 7. Dependencies
@@ -218,3 +232,15 @@ event catalogue: §5 and §7 match the declared api-level dependencies, and
 the boundary block matches the prose. Divergences: none. Result: passes.
 
 Spike clause: open questions are settled by S3. A failure revises this spec through a reviewed draft.
+
+## Revision History
+
+- **v1.1.0 (2026-11-02):** adds snooze semantics (Invariant 12), the
+  safety debug log with its clear API (Invariant 13), and the demo
+  bus-silence wording. Additive. Reviewed as a draft and approved by the owner proxy (KC-165).
+
+## Architecture Review: revision re-review (2026-11-02)
+
+The additions use only edges that are already declared (BC4→BC1, BC9→BC5, BC9→BC4).
+No owner decision is narrowed. Consistent with CONST-CORE, ARCH-SYSTEM and DISC-DATA-MODEL v1.3.0.
+Result: passes (KC-165).

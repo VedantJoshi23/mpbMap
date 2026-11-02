@@ -1,8 +1,8 @@
 ---
 id: FEAT-ARRIVAL-ALARM
 title: "Etak — Feature: Arrival Alarm"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -40,12 +40,12 @@ complexity: High
 ## Feature: Arrival Alarm
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001).
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-166), after owner-proxy
+rounds 1–2 (ADR-0001). Freezing does not start implementation (KC-107).
 
 **Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
 v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
-its owning `DOM-TRIP` v1.0.0 and `DOM-LOCATION` v1.0.0, `DOM-MAP` v1.0.0. STD-* v1.0.0 (all Frozen). **Pending draft revisions** (staged for proxy review): DOM-TRIP v1.1.0 (snooze semantics, the safety debug log), which blocks this feature's freeze.
+its owning `DOM-TRIP` v1.0.0 and `DOM-LOCATION` v1.0.0, `DOM-MAP` v1.0.0. STD-* v1.0.0 (all Frozen). The revisions it relied on (DOM-TRIP v1) are now applied and Frozen (KC-165).1.0 (snooze semantics, the safety debug log), which blocks this feature's freeze.
 
 **Tier:** **High.** The headline utility (Laws 1, 2, 3, 14), and it relies on DOM-TRIP v1.1.0 additions. *Tier rule (proxy ruling):* a feature "touches" a
 High-tier spec only when it adds to or changes that spec or its
@@ -88,7 +88,7 @@ add no module dependency.
 - [ ] **R25 (restart):** with a trip armed, a **FLAG_INSISTENT** 'Trip alarm interrupted' notification rings **before unlock**, looping, with repeating vibration and a visual, including under DND set to 'alarms allowed' and on the lock screen.
 - [ ] **R25 (service death):** a stale heartbeat (DISC-DATA-MODEL v1.2.0 fail-safe reading) raises the same alert within the S3-measured bound.
 - [ ] **Resume:** resuming after R25 always takes a user action in the foreground. There is no automatic restart (R5). TripResumed is published then.
-- [ ] **Snooze** (DOM-TRIP Invariant 12): a fixed interval. The same alert re-rings when it ends, regardless of distance. A snoozed alarm stays armed for R2, R24 and R25. A restart during snooze raises R25.
+- [ ] **Snooze** (DOM-TRIP Invariant 12): a fixed **2 minutes**, not user-extendable in the MVP. The same alert re-rings when it ends, regardless of distance. A snoozed alarm stays armed for R2, R24 and R25. A restart during snooze raises R25.
 - [ ] Dismissing one alarm leaves the others armed. The session ends only after the last one is dismissed or the user ends the trip (R2).
 - [ ] 3 hours without progress raises a notification prompt. It never auto-ends a trip with an armed alarm (R24).
 - [ ] Arm, dismiss and snooze, **including from the lock screen**, work with TalkBack and 200% font (Law 14).
@@ -153,3 +153,10 @@ add no module dependency.
 - [ ] DOM-TRIP v1.1.0 is Frozen.
 - [ ] The FGS declaration is ready, with a real-trip video.
 - [ ] No open DIV- entries.
+
+### Architecture Review (2026-11-02)
+
+Checked against the owning domain's Frozen spec: one owner; every cross-domain
+call matches the initiator's Allowed list or goes through an `app/` handoff;
+events and data stay within the domain; §8 cites the relevant Standards.
+Result: passes (KC-166).

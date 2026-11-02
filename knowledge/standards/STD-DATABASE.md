@@ -1,7 +1,7 @@
 ---
 id: STD-DATABASE
 title: "Data Storage"
-version: 1.0.0
+version: 1.0.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -61,7 +61,8 @@ Room databases and DataStore on the device; PostgreSQL on the server.
    - tombstones expire after 90 days;
    - the server purges 30 days after account deletion (R19);
    - backups are kept 7 days;
-   - crash reports are kept 90 days.
+   - crash reports are kept 90 days;
+   - the on-device safety debug log is kept 7 days (v1.0.1).
 5. **Server user data** is limited to Account, CodexEntry, ExploredCell
    and ExploredArea (Law 5). Any **operational table** must be on this
    **closed list**, with a retention period, **no coordinates and no

@@ -1,7 +1,7 @@
 ---
 id: DOM-CODEX
 title: "Domain: Codex"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -81,6 +81,7 @@ Saved places in gaming terminology (Waypoint … Point of Interest), including p
 ## 4. API Surface
 
 - `CodexApi.add/update/delete`, `entries(category?)`, `activeParking()`
+- `CodexApi.applyRemote(entries)` *(v1.1.0)*, called by DOM-ACCOUNT. It applies last-write-wins and tombstones itself, so DOM-ACCOUNT never writes `codex.db`
 
 ## 5. Events
 
@@ -149,3 +150,15 @@ forbidden_dependencies:
 Checked against ARCH-SYSTEM v1.1.0, CONST-CORE and the DISC-DOMAIN-DISCOVERY
 event catalogue: §5 and §7 match the declared api-level dependencies, and
 the boundary block matches the prose. Divergences: none. Result: passes.
+
+## Revision History
+
+- **v1.1.0 (2026-11-02):** adds `applyRemote` (sync applied by the owner).
+  Additive. Reviewed as a draft and approved by the
+  owner proxy (KC-165).
+
+## Architecture Review: revision re-review (2026-11-02)
+
+The additions use only edges that are already declared (BC4→BC1, BC9→BC5, BC9→BC4).
+No owner decision is narrowed. Consistent with CONST-CORE, ARCH-SYSTEM and DISC-DATA-MODEL v1.3.0.
+Result: passes (KC-165).
