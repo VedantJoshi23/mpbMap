@@ -1,12 +1,12 @@
 ---
 id: CONST-CORE
-title: Engineering Constitution
-version: 0.5.0
-status: Draft
+title: Etak Engineering Constitution
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
-  - Vedant Joshi (freeze sign-off, ADR-0001 rule 3)
+  - Vedant Joshi
 created: 2026-11-02
 updated: 2026-11-02
 milestone: M2
@@ -28,17 +28,17 @@ risk: High
 complexity: Medium
 ---
 
-# Engineering Constitution
+# Etak Engineering Constitution
 
 Authored under Oriveda `OV-002` (Frozen) through `PRM-CONSTITUTION`. The
 Laws are derived from Frozen Discovery: DISC-RECOMMENDATIONS and
-DISC-HIDDEN-BUSINESS-RULES, among others. Lifecycle: **Draft**. Owner-proxy
-review comes first (ADR-0001). **Freezing requires the owner's sign-off**
-(ADR-0001 rule 3).
+DISC-HIDDEN-BUSINESS-RULES, among others. Lifecycle: **Frozen** v1.0.0 (2026-11-02). It went through owner-proxy
+rounds (KC-131, KC-140, KC-146), an Architecture Review, and the owner's
+sign-off (KC-148, ADR-0001 rule 3).
 
 **Draft-completeness status:** §2–§4 are answered by the owner (KC-135).
 Law 11 reflects KC-132 and KC-133. Law 12's boundary clause reflects
-KC-144 and KC-145.
+KC-144 and KC-149.
 
 Amendment: see §6.
 
@@ -206,10 +206,10 @@ through NOTICE, and never ship in the app (KC-132).
 > R18 reveal-during-trips opt-in, and sign-in/sync. The privacy policy
 > names the purpose of each data category. No administrative boundary
 > lines, at any level, are drawn on any map the app renders or the store
-> listing shows (KC-144, KC-145). The agent drafts no legal
+> listing shows (KC-144, KC-149). The agent drafts no legal
 > interpretation beyond this (ADR-0001 rule 5).
 
-**Source:** KC-134, KC-144 (owner decisions); KC-145; KC-117; DISC-DATA-MODEL v1.1.0
+**Source:** KC-134, KC-144, KC-149 (owner decisions); KC-117; DISC-DATA-MODEL v1.1.0
 ConsentRecord.
 
 ### Law 13: Core boundaries
@@ -241,8 +241,7 @@ set by M4 Standards.
 - **Owner choices (§2–§4):** recorded as the owner's (KC-135), not
   inferred (`OV-002`).
 - **Divergences:** none (no code).
-- **Result:** passes. The freeze waits for the owner's sign-off
-  (ADR-0001 rule 3).
+- **Result:** passes. Signed off by the owner (KC-148).
 
 ## 6. Amendment Process
 

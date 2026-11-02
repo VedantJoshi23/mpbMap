@@ -24,9 +24,8 @@ fix, not a convenience to keep.
 
 ## Constitution
 
-None yet. Once this project has a Frozen Constitution under
-`knowledge/constitution/` (this project's, not the submodule's), link it
-here. Its Laws must never be silently violated.
+Frozen: [`knowledge/constitution/CONST-CORE.md`](knowledge/constitution/CONST-CORE.md).
+Its Laws must never be silently violated. Load it for every task.
 
 ## Where this project's artifacts live
 
@@ -39,6 +38,6 @@ numbering.
 
 ## Current stage
 
-M1 Discovery is complete (`knowledge/discovery/DISC-RECOMMENDATIONS.md`).
-Next: `PRM-CONSTITUTION` (M2). Reviews and approvals follow
+M1 Discovery and M2 Constitution are complete. Next: `PRM-ARCHITECTURE`
+(M3). Implementation (M8) waits for the owner's explicit approval. Reviews and approvals follow
 `knowledge/decisions/ADR-0001-owner-proxy-review.md`.

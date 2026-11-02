@@ -2107,6 +2107,7 @@ claims:
     confidence: 90
     evidence_ids: [EVD-040, EVD-041, EVD-038]
     investigation: hidden-business-rules
+    superseded_by: KC-149
     notes: Confirmed by the owner's rule-3 sign-off on CONST-CORE (pending).
   - id: KC-146
     statement: >
@@ -2117,6 +2118,57 @@ claims:
     confidence: 100
     evidence_ids: [EVD-041]
     investigation: recommendations
+```
+
+---
+
+## EVD-042
+
+```yaml
+id: EVD-042
+type: conversation
+source: Owner decision and Constitution sign-off, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner names the app Etak and instructs the agent to freeze the
+  Constitution (ADR-0001 rule 3 sign-off).
+pipeline: vision
+processed: true
+claims:
+  - id: KC-147
+    statement: >
+      The app is named "Etak", after the Micronesian navigation technique
+      (and the 1985 Etak Navigator). The Play package is
+      io.github.vedantjoshi23.etak, which is permanent once published.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-042]
+    investigation: business-vision
+    notes: >
+      Flagged to the owner before the choice: the historic Etak company's
+      assets passed into the TomTom group, so a trademark may still be
+      live. No Android app named Etak was found (search only).
+  - id: KC-148
+    statement: >
+      The owner signs off CONST-CORE and instructs it to be frozen (v1.0.0).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-042]
+    investigation: recommendations
+  - id: KC-149
+    statement: >
+      No administrative boundary lines, at any level, maritime included,
+      are drawn on any map the app renders or the store listing shows.
+      Accepted by the owner through sign-off of CONST-CORE's Law 12 text,
+      which states this scope.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-042, EVD-041]
+    investigation: hidden-business-rules
+    notes: >
+      The owner did not restate the scope separately; it was accepted as
+      part of the Law 12 text they signed off. It can be revisited by an
+      amendment ADR.
 ```
 
 ---
