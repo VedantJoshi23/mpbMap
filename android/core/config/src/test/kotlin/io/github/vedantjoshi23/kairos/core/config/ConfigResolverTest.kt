@@ -38,6 +38,12 @@ class ConfigResolverTest {
         assertEquals(builtIn, resolver.resolve(null, null).config)
     }
 
+    /** Regression: Android (ICU) rejects an unescaped "}" in the pattern; keep both braces escaped. */
+    @Test fun placeholderPatternEscapesBothBraces() {
+        assertEquals("\\{[a-z]+\\}", ConfigResolver.PLACEHOLDER.pattern)
+        assertEquals("https://t/0/0/0.pbf", "https://t/{z}/{x}/{y}.pbf".replace(ConfigResolver.PLACEHOLDER, "0"))
+    }
+
     @Test fun refusesWildcardAllowlists() {
         assertFailsWith<IllegalArgumentException> { ConfigResolver(builtIn, setOf("*.duckdns.org")) }
     }

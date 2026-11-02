@@ -59,7 +59,8 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var location: LocationSource
     @Inject lateinit var access: LocationAccessProvider
     @Inject lateinit var consent: ConsentApi
-    @Inject lateinit var config: ConfigResolver
+    // Lazy: built inside the style error boundary, never during injection.
+    @Inject lateinit var config: dagger.Lazy<ConfigResolver>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +90,7 @@ class MainActivity : ComponentActivity() {
 
     /** Error boundary: a bad style or asset shows an error card, never a crash. */
     private fun loadStyle(): Result<String> = runCatching {
-        SkinAssets.load(this, "terrain-sepia", config.resolve(null, null).config.tileUrl)
+        SkinAssets.load(this, "terrain-sepia", config.get().resolve(null, null).config.tileUrl)
     }.onFailure { CrashGuard.record(this, "loadStyle", it) }
 
     /** Error boundary for starting the trip service (e.g. a background-start restriction). */

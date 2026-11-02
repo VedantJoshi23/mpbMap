@@ -44,6 +44,11 @@ class ConfigResolver(
     private fun parse(url: String): URI? = runCatching { URI(url) }.getOrNull()?.takeIf { it.scheme == "https" && it.host != null }
 
     // Templates such as https://host/{z}/{x}/{y}.pbf are not valid URIs until placeholders are filled.
+    // Both braces are escaped: Android's ICU regex rejects a bare "}" that desktop Java accepts.
     private fun isHttpsTemplate(url: String): Boolean =
-        parse(url.replace(Regex("\\{[a-z]+}"), "0")) != null
+        parse(url.replace(PLACEHOLDER, "0")) != null
+
+    internal companion object {
+        val PLACEHOLDER = Regex("\\{[a-z]+\\}")
+    }
 }
