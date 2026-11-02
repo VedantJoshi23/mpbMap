@@ -1,8 +1,8 @@
 ---
 id: DISC-HIDDEN-BUSINESS-RULES
 title: "Discovery: Hidden Business Rules"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -30,8 +30,9 @@ complexity: Medium
 # DISC-HIDDEN-BUSINESS-RULES: Hidden Business Rules
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**.
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-119). Draft v0.1.0, then
+owner-proxy rounds 1–2 (ADR-0001), then Architecture Review, then Freeze.
+Q1 is open with the owner. Suggestions are marked **[S]**.
 
 The project is greenfield, so no rule is yet hidden *in code*. This
 investigation surfaces rules that are implicit in the owner's decisions,
@@ -157,6 +158,10 @@ These are the agent's proposals, settling KC-110.
 - [S] **R22. Travel mode.** The user picks the travel mode (walk, cycle,
   road, rail) when arming a trip. It defaults to the route-preview mode
   if one exists. It drives R3's speed cap and R17's arrival distance.
+- [S] **R24. Stale trip.** If the device has not moved toward the
+  destination for 3 hours, the persistent notification asks whether to
+  end the trip. The trip never ends automatically while an alarm is armed
+  (R2).
 - [S] **R23. Target audience.** The app's Play target audience excludes
   children, so Play's Families policy does not apply. The app has
   accounts, a backend and location logging. This falls within Play's
@@ -193,14 +198,34 @@ These are the agent's proposals, settling KC-110.
    - **(b) Design as if DPDP applies?** (proxy's recommendation: yes).
 2. *(Resolved by the proxy)* R18 stays as an opt-in.
 
+**Dependency:** KC-117 blocks freezing the M2 Constitution and the M3
+tile-provider decision. It does not block this investigation. The owner's
+answer arrives as a versioned revision (v1.1.0) that adds rules, without
+changing R1–R24.
+
 ## Recommendations
 
 - **Keep:** R1–R16 as candidate Laws (M2) or Standards (M4).
 - **Improve:** adopt R17–R23 as proposed.
 - **Remove:** nothing.
 
+## Architecture Review (2026-11-02)
+
+- **Against DISC-BUSINESS-VISION (Frozen):** R5, R7–R9, R13 and R16
+  restate its posture (KC-101, KC-102, KC-104, KC-068). Consistent.
+- **Against DISC-FEATURE-INVENTORY (Frozen):** R1–R4 restate C4. R18
+  narrows C12 (the journal is excluded from trip-session location), which
+  was handled as a **versioned revision** of DISC-FEATURE-INVENTORY to
+  v1.0.1. It is not a silent contradiction.
+- **Against DISC-REPO-STRUCTURE (Frozen):** no overlap. Consistent.
+- **Internal:** R2, R4, R17 and R22 are mutually consistent; the arrival
+  distance never passes over an armed alarm.
+- **Citations:** all current. KC-118 logs R18's assumption.
+- **Divergences:** none (no code).
+- **Result:** passes.
+
 ## Confidence Level
 
 **Overall: Assumption (50)**, capped by KC-098. Breakdown: R1–R16 are
-Fact (90–100); R17 and R19–R23 are Inference (70); R18 is Assumption (55,
+Fact (90–100); R17 and R19–R24 are Inference (70); R18 is Assumption (55,
 KC-118).

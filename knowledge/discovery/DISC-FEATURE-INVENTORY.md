@@ -1,7 +1,7 @@
 ---
 id: DISC-FEATURE-INVENTORY
 title: "Discovery: Feature Inventory"
-version: 1.0.0
+version: 1.0.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -255,13 +255,13 @@ too** (fact/inference, 75–90):
 - In-app account deletion plus a web deletion page (KC-093).
 
 **C12. Journal (F12, F13)** [S]
-- Visited places and explored-cell count per city, from location gathered
-  within F13's scope and stored on the device.
+- Visited places and explored-cell count per city, stored on the device.
+  The journal grows from in-use location only (DISC-HIDDEN-BUSINESS-RULES
+  R18). *(v1.0.1)*
 - After the MVP: achievements and streaks.
-- Cross-investigation question for `hidden-business-rules`: is it allowed
-  to reuse location collected by the alarm's foreground service to grow
-  explored cells and the journal? It would be a secondary use under Play's
-  foreground-service and prominent-disclosure rules.
+- The secondary use of trip-session location is settled by
+  DISC-HIDDEN-BUSINESS-RULES R18. Explored cells may use it under a double
+  opt-in; the journal never does.
 
 **C13. Compliance and credit surfaces**
 - Map attribution on the map view itself, through the renderer's
@@ -377,6 +377,13 @@ offline search, without offline routing), C10, C11 (reduced sync), C12
   there too.
 - **Divergences:** none (no code).
 - **Result:** passes.
+
+## Revision History
+
+- **v1.0.1 (2026-11-02):** narrows C12 so the journal grows from in-use
+  location only, per DISC-HIDDEN-BUSINESS-RULES R18 (KC-119). This is a
+  narrowing permitted by KC-101, not a contradiction of it. There is no
+  code, so it is not a divergence.
 
 ## Confidence Level
 

@@ -1601,18 +1601,47 @@ claims:
 
 ---
 
+## EVD-027
+
+```yaml
+id: EVD-027
+type: conversation
+source: Owner-proxy review of DISC-HIDDEN-BUSINESS-RULES round 2, 2026-11-02 (ADR-0001)
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-HIDDEN-BUSINESS-RULES for freezing with its Q1
+  (KC-117) open, on condition that the downstream dependency is recorded
+  and DISC-FEATURE-INVENTORY C12 is revised to match R18. It added a
+  non-blocking stale-trip safeguard (R24).
+pipeline: vision
+processed: true
+claims:
+  - id: KC-119
+    statement: >
+      DISC-HIDDEN-BUSINESS-RULES v1.0.0 and DISC-FEATURE-INVENTORY v1.0.1
+      (C12 narrowed: the journal uses in-use location only) are approved
+      by the owner proxy (ADR-0001). KC-117 blocks the freeze of the M2
+      Constitution and the M3 tile-provider decision.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-027]
+    investigation: hidden-business-rules
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
 | --- | --- | --- |
 | `repo-structure` | KC-007, KC-008, KC-112–115 (fact) | **Frozen** as DISC-REPO-STRUCTURE v1.0.0 (KC-116). Q1 escalated. |
 | `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078, KC-103 (fact) | **Frozen** as DISC-BUSINESS-VISION v1.0.0 (KC-105). |
-| `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.0 (KC-109). |
+| `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.1 (KC-109, KC-119). |
 | `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
 | `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
-| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093, KC-101 (fact); KC-095, KC-097 (inference) | Covered. KC-098 is assumption-tier. |
+| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093, KC-101 (fact); KC-095, KC-097 (inference) | **Frozen** as DISC-HIDDEN-BUSINESS-RULES v1.0.0 (KC-119). KC-117 escalated. |
 | `technical-debt` | KC-035 (inference) | Not applicable yet (greenfield). |
 | `recommendations` | KC-053, KC-055, KC-063–065, KC-096, KC-099, KC-100 (inference) | Covered. |
 
