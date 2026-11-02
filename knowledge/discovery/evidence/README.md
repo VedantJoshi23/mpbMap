@@ -2605,6 +2605,50 @@ claims:
 
 ---
 
+## EVD-054
+
+```yaml
+id: EVD-054
+type: repository
+source: Owner report "The android app kept crashing without any warnings" (2026-11-02); CI emulator runs 41433288754 and 41434763589
+received: 2026-11-02
+summary: >
+  The slice-1 APK crashed on every launch. A new emulator smoke test
+  reproduced it: a PatternSyntaxException from the unescaped "}" in
+  ConfigResolver's placeholder regex. Desktop Java accepts it; Android's
+  ICU regex rejects it. It ran during Hilt injection, before any UI.
+  Fixed and covered by a regression test. At the owner's request, error
+  boundaries were added: a crash report shown on the next launch, map
+  and style error cards, lazy config injection, and safety-path failures
+  converted to a loud R25 alert.
+pipeline: repository
+processed: true
+claims:
+  - id: KC-174
+    statement: >
+      The launch crash is fixed. The emulator smoke test (API 34) launches
+      MainActivity, which stays resumed for 10 s with no recorded error,
+      and logcat shows no MapLibre errors (run 41434763589). JVM-only tests
+      cannot catch Android-runtime differences, so the emulator job is now
+      a permanent CI gate.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-054]
+    investigation: technical-debt
+  - id: KC-175
+    statement: >
+      The owner asked that crashes never be silent (error boundaries). This
+      is consistent with Law 1 and STD-CODE rule 5. Crash reports are kept
+      on the device without location (Law 8) until ACRA-to-backend ships in
+      slice 3.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-054]
+    investigation: hidden-business-rules
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
