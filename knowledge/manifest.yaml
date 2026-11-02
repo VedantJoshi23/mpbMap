@@ -70,3 +70,9 @@ documents:
     status: Frozen
     version: 1.0.0
     milestone: M1
+  - id: CONST-CORE
+    title: Engineering Constitution
+    path: knowledge/constitution/CONST-CORE.md
+    status: Draft
+    version: 0.1.0
+    milestone: M2
