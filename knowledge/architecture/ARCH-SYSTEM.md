@@ -1,8 +1,8 @@
 ---
 id: ARCH-SYSTEM
 title: "Etak System Architecture"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -33,8 +33,9 @@ complexity: High
 # ARCH-SYSTEM: Etak System Architecture
 
 Authored under Oriveda `OV-003` (Frozen) through `PRM-ARCHITECTURE`.
-Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
-(ADR-0001).
+Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-150), after owner-proxy
+rounds 1–2 (ADR-0001) and Architecture Review. Freezing does not
+authorise implementation (KC-107).
 
 **Context loaded:**
 - CONST-CORE v1.0.0 (**Frozen**; binds).
@@ -150,9 +151,10 @@ skins/<codename>/         original or openly licensed style, fonts, icons, textu
 2. `feature/trip/domain` depends only on `core/kernel`.
 3. Only `feature/location/platform` imports platform location APIs
    (Law 13).
-4. The direct-boot path, `feature/trip/platform/boot`, imports only
-   `feature/trip/domain`, the DP TripBootRecord store and its AlertPort
-   adapter (Law 1).
+4. The direct-boot path, `feature/trip/platform/boot`, imports only this
+   allowlist: `feature/trip/domain`, `feature/trip/data/bootrecord` (the
+   DP TripBootRecord store) and `feature/trip/platform/alert` (the boot
+   AlertPort adapter) (Law 1).
 5. There is no analytics, tracking or advertising module or dependency
    (Law 8).
 
@@ -187,6 +189,20 @@ skins/<codename>/         original or openly licensed style, fonts, icons, textu
 | L12 Consent and boundaries | BC2 owns ConsentRecord; BC3's no-boundary-lines rule |
 | L13 Core boundaries | §1; §4 rules 1–3 |
 | L14 The alarm is accessible | The AlertPort contract requires a non-audio channel (vibration and visual) that every adapter must provide |
+
+## Architecture Review (2026-11-02)
+
+- **Against CONST-CORE (Frozen):** the conformance table maps L1–L14. No
+  conflict.
+- **Against Frozen Discovery:** §1–§3 adopt DISC-DOMAIN-DISCOVERY and
+  DISC-DATA-MODEL v1.1.0, with single ownership enforced (ConsentRecord
+  → BC2).
+- **Carried to M4:**
+  - TalkBack and large-text Standards with tests for
+    `feature/trip/ui` (Law 14);
+  - CI checks implementing the §4 rules.
+- **Divergences:** none (no code).
+- **Result:** passes.
 
 ## Freeze plan (Oriveda ADR-0005)
 

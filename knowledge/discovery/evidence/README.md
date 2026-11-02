@@ -2173,6 +2173,34 @@ claims:
 
 ---
 
+## EVD-043
+
+```yaml
+id: EVD-043
+type: conversation
+source: Owner-proxy (successor #2) review of ARCH-SYSTEM rounds 1-2, 2026-11-02 (ADR-0001)
+received: 2026-11-02
+summary: >
+  The proxy approved ARCH-SYSTEM. Changes it drove: single ownership of
+  ConsentRecord (BC2); a direct-boot constraint so a cold process cannot
+  crash before the R25 alert; feature api/ boundaries checkable in CI;
+  per-context UI; one backend deployable; the L1-L14 conformance table.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-150
+    statement: >
+      ARCH-SYSTEM v1.0.0 is approved by the owner proxy (ADR-0001). All
+      sections are Frozen. Implementation still needs the owner's explicit
+      approval (KC-107).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-043]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
