@@ -16,3 +16,9 @@ documents:
     status: Frozen
     version: 1.0.0
     milestone: M1
+  - id: DISC-FEATURE-INVENTORY
+    title: "Discovery: Feature Inventory"
+    path: knowledge/discovery/DISC-FEATURE-INVENTORY.md
+    status: Frozen
+    version: 1.0.0
+    milestone: M1

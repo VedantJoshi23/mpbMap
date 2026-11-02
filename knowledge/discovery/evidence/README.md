@@ -1444,13 +1444,65 @@ claims:
 
 ---
 
+## EVD-024
+
+```yaml
+id: EVD-024
+type: conversation
+source: Owner-proxy review of DISC-FEATURE-INVENTORY, rounds 1–3, 2026-11-02 (ADR-0001)
+received: 2026-11-02
+summary: >
+  The owner proxy reviewed DISC-FEATURE-INVENTORY over three rounds. It
+  requested 6 + 2 MUST changes and 17 SHOULD changes, all applied, and
+  approved v0.3.0, frozen as v1.0.0. There were no escalations. Main
+  changes it drove: checkpoint alarms removed from the MVP (they
+  reintroduce route dependence); neutral codenames; offline search;
+  alarm Play/platform compliance; a distinct "location lost" alert in
+  place of a false arrival; and the one-trip-session rule for multiple
+  alarms.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-109
+    statement: >
+      DISC-FEATURE-INVENTORY v1.0.0 is approved by the owner proxy on the
+      owner's behalf (ADR-0001), with no escalations.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-024]
+    investigation: feature-inventory
+  - id: KC-110
+    statement: >
+      Open for hidden-business-rules: (1) the arrival distance used when
+      an alarm is armed inside its radius; (2) whether location collected
+      by the trip-session foreground service may also grow explored cells
+      and the journal (secondary use under Play's foreground-service and
+      prominent-disclosure rules).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-024]
+    investigation: hidden-business-rules
+  - id: KC-111
+    statement: >
+      Open for technical-architecture: a free elevation (DEM) source
+      without a billing account for hillshade and 3D terrain. If none
+      exists, terrain-sepia ships without hillshade and topo-mono is
+      dropped.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-024]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
 | --- | --- | --- |
 | `repo-structure` | KC-007, KC-008 (fact) | Covered. The project is greenfield. |
 | `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078, KC-103 (fact) | **Frozen** as DISC-BUSINESS-VISION v1.0.0 (KC-105). |
-| `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | Covered. The project's own feature set is now stated by the owner. |
+| `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.0 (KC-109). |
 | `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | Visible gap, not blocking. Journeys are designed in M5/M6. |
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
