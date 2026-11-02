@@ -1,0 +1,25 @@
+# Build output
+build/
+.gradle/
+.kotlin/
+*.apk
+*.aab
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local machine config
+local.properties
+.idea/
+*.iml
+.DS_Store
+
+# Secrets: never commit (STD-SECURITY rule 1)
+*.keystore
+*.jks
+*.p12
+.env
+.env.*
+keystore.properties
+play-service-account*.json
+*duckdns*token*
