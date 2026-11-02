@@ -204,9 +204,9 @@ through NOTICE, and never ship in the app (KC-132).
 > addition, every consent the app requests is recorded on the device
 > (ConsentRecord), including its withdrawal: the location disclosure, the
 > R18 reveal-during-trips opt-in, and sign-in/sync. The privacy policy
-> names the purpose of each data category. Country-boundary depiction follows the owner's choice:
-> *pending confirmation (KC-137)*. The agent drafts no legal
-> interpretation beyond this (ADR-0001 rule 5).
+> names the purpose of each data category. No administrative boundary
+> lines are drawn at any level in any skin (KC-142). The agent drafts no
+> legal interpretation beyond this (ADR-0001 rule 5).
 
 **Source:** KC-134, KC-142 (owner decisions); KC-117; DISC-DATA-MODEL v1.1.0
 ConsentRecord.
