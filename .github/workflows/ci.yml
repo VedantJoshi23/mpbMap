@@ -1,0 +1,80 @@
+name: ci
+
+on:
+  push:
+    branches: [main, "m8/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  specs:
+    name: Specs and skins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - name: Oriveda validator (target-project mode)
+        run: python3 .oriveda-framework/scripts/validate.py --root .
+      - name: Skin lint (Law 12 no boundary layer; attribution; licences)
+        run: python3 tools/lint_skins.py skins
+
+  jvm:
+    name: Domain tests (JVM)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Unit tests
+        working-directory: android
+        run: ./gradlew -PjvmOnly=true test --console=plain
+
+  android:
+    name: Android build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Assemble debug APK and run all unit tests
+        working-directory: android
+        run: ./gradlew assembleDebug testDebugUnitTest --console=plain
+      - name: Law 3 check (no background location in the merged manifest)
+        working-directory: android
+        run: |
+          manifest=$(find app/build/intermediates -path "*merged_manifest*" -name AndroidManifest.xml | head -1)
+          echo "Checking $manifest"
+          test -n "$manifest"
+          if grep -q "ACCESS_BACKGROUND_LOCATION" "$manifest"; then
+            echo "::error::ACCESS_BACKGROUND_LOCATION found in merged manifest (Law 3)"; exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kairos-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          retention-days: 14
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

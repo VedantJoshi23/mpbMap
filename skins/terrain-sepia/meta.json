@@ -1,0 +1,10 @@
+{
+  "codename": "terrain-sepia",
+  "version": "0.1.0",
+  "is3D": false,
+  "fallback2D": null,
+  "fontSet": ["NotoSans-Regular"],
+  "iconSet": [],
+  "accents": {"primary": "#7A5C3A", "water": "#1F3A4D", "land": "#E9DCC0"},
+  "attribution": "OpenFreeMap, OpenMapTiles, OpenStreetMap contributors"
+}
