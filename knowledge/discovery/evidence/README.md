@@ -2033,6 +2033,48 @@ claims:
 
 ---
 
+## EVD-040
+
+```yaml
+id: EVD-040
+type: conversation
+source: Owner answers on borders, name and package, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner chooses no border drawing. The owner asks for name suggestions
+  rooted in a historic phenomenon, person or ritual, and will pick one.
+  The package is io.github.vedantjoshi23.<name>, once the name is
+  confirmed.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-142
+    statement: >
+      Map boundaries: no boundary lines are drawn (KC-117 a: option iii).
+      The agent applies it to administrative boundaries at every level,
+      because disputed areas also affect sub-national lines. Coastlines and
+      land use are unaffected.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-040]
+    investigation: hidden-business-rules
+    notes: >
+      The owner said "no borders drawing". Applying it to every admin level
+      is the agent's reading and is surfaced for confirmation.
+  - id: KC-143
+    statement: >
+      The app name will be chosen by the owner from suggestions rooted in a
+      historic phenomenon, person or ritual. The Play package is
+      io.github.vedantjoshi23.<name>. "Orimap" is dropped because of the
+      KC-138 collision.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-040]
+    investigation: business-vision
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

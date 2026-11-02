@@ -1,7 +1,7 @@
 ---
 id: CONST-CORE
 title: Engineering Constitution
-version: 0.4.0
+version: 0.5.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -37,8 +37,8 @@ review comes first (ADR-0001). **Freezing requires the owner's sign-off**
 (ADR-0001 rule 3).
 
 **Draft-completeness status:** §2–§4 are answered by the owner (KC-135).
-Law 11 reflects KC-132 and KC-133. Law 12's boundary clause is pending
-the owner's confirmation (KC-137).
+Law 11 reflects KC-132 and KC-133. Law 12's boundary clause reflects
+KC-142.
 
 Amendment: see §6.
 
@@ -208,7 +208,7 @@ through NOTICE, and never ship in the app (KC-132).
 > *pending confirmation (KC-137)*. The agent drafts no legal
 > interpretation beyond this (ADR-0001 rule 5).
 
-**Source:** KC-134 (owner decision); KC-117; DISC-DATA-MODEL v1.1.0
+**Source:** KC-134, KC-142 (owner decisions); KC-117; DISC-DATA-MODEL v1.1.0
 ConsentRecord.
 
 ### Law 13: Core boundaries
