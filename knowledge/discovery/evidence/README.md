@@ -1849,6 +1849,37 @@ claims:
 
 ---
 
+## EVD-035
+
+```yaml
+id: EVD-035
+type: conversation
+source: Owner-proxy (successor #2) review of CONST-CORE rounds 1-2, 2026-11-02 (ADR-0001)
+received: 2026-11-02
+summary: >
+  The proxy approved CONST-CORE v0.2.0 in substance: the philosophy and
+  Laws 1-14. Changes it drove: Law 5 narrowed to raw location logs, with
+  the transient provider-query clause; route-aware refinement may only
+  fire an alarm earlier; new Law 13 (core boundaries) and Law 14 (the
+  alarm is accessible); Law 12 reduced to whatever the owner's KC-117
+  answer adds.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-131
+    statement: >
+      CONST-CORE Laws 1-14 are approved in substance by the owner proxy
+      (ADR-0001). The freeze is pending: the owner's answers to the
+      sections 2-4 choices (KC-130), KC-116 and KC-117, and the owner's
+      own sign-off (ADR-0001 rule 3).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-035]
+    investigation: recommendations
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
