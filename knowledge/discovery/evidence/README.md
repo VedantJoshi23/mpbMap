@@ -1496,6 +1496,58 @@ claims:
 
 ---
 
+## EVD-025
+
+```yaml
+id: EVD-025
+type: repository
+source: This repository and the GitHub API (repos/VedantJoshi23/mpbMap), observed 2026-11-02
+received: 2026-11-02
+summary: >
+  A second observation of the repository after M1 work began. knowledge/
+  is no longer empty; this supersedes that part of EVD-002's summary
+  (EVD-002 itself is not edited).
+pipeline: repository
+processed: true
+claims:
+  - id: KC-112
+    statement: >
+      The GitHub repository VedantJoshi23/mpbMap is public.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-025]
+    investigation: repo-structure
+  - id: KC-113
+    statement: >
+      The Oriveda submodule at .oriveda-framework/ is pinned at commit
+      a62b657.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-025]
+    investigation: repo-structure
+  - id: KC-114
+    statement: >
+      knowledge/ holds the evidence log, the frozen DISC- investigations,
+      ADR-0001 and manifest.yaml. Oriveda's validator passes in target
+      mode (--root) with 0 errors.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-025]
+    investigation: repo-structure
+  - id: KC-115
+    statement: >
+      reference/ holds five MapShifter store and in-app images (copyright
+      Filipp Bazun, KC-025), the owner's inspiration table and info.md. As
+      of 2026-11-02 it also has a credit and ownership notice
+      (reference/README.md). The repository has no LICENSE file.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-025]
+    investigation: repo-structure
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
