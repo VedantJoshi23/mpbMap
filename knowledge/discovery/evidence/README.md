@@ -662,6 +662,7 @@ claims:
     confidence: 65
     evidence_ids: [EVD-008, EVD-009]
     investigation: domain-discovery
+    superseded_by: KC-126
   - id: KC-051
     statement: >
       Candidate domain events: SkinChanged (consumed by Map, Navigation
@@ -673,6 +674,7 @@ claims:
     confidence: 60
     evidence_ids: [EVD-008, EVD-009]
     investigation: domain-discovery
+    superseded_by: KC-126
     notes: >
       This is the OV-001 cross-cutting check for events. No event catalogue
       exists in the evidence, so these are inferred from features only.
@@ -1674,6 +1676,101 @@ claims:
 
 ---
 
+## EVD-029 to EVD-031: elevation, renderer and TLS research (KC-111)
+
+```yaml
+- id: EVD-029
+  type: other
+  source: https://registry.opendata.aws/terrain-tiles/ (read 2026-11-02, fetch digest)
+  pipeline: other
+  claims:
+    - id: KC-122
+      statement: >
+        AWS Terrain Tiles (Mapzen/Tilezen) is a global bare-earth elevation
+        tile set in the public S3 bucket elevation-tiles-prod, accessible
+        with no AWS account. Attribution follows the tilezen/joerd
+        attribution document.
+      status: fact
+      confidence: 85
+      evidence_ids: [EVD-029]
+      investigation: technical-architecture
+      notes: >
+        The tile encodings (e.g. terrarium) and the URL pattern were not
+        shown on the fetched page. To be confirmed in the M3 spike.
+- id: EVD-030
+  type: other
+  source: MapLibre style spec terrain page; MapLibre newsletters Dec 2025 and Feb 2026 (web search 2026-11-02)
+  pipeline: other
+  claims:
+    - id: KC-123
+      statement: >
+        3D terrain is listed as unsupported on MapLibre Native Android and
+        is still in progress (roadmap issue #252, December 2025). Hillshade
+        from raster-dem sources is supported, with extra hillshade
+        algorithms merged by February 2026. MapLibre Android 13 defaults to
+        a Vulkan renderer, with an OpenGL ES variant available.
+      status: fact
+      confidence: 75
+      evidence_ids: [EVD-030]
+      investigation: technical-architecture
+      notes: Search digest. The current release must be checked in M3.
+- id: EVD-031
+  type: other
+  source: Read-only inspection of the VM's nginx configuration, 2026-11-02
+  pipeline: repository
+  claims:
+    - id: KC-124
+      statement: >
+        nginx on the VM already terminates TLS with Let's Encrypt
+        certificates for several of the owner's existing domains and
+        subdomains. The hostnames are deliberately not recorded in this
+        public repository (DISC-REPO-STRUCTURE hygiene rule).
+      status: fact
+      confidence: 95
+      evidence_ids: [EVD-031]
+      investigation: technical-architecture
+```
+
+---
+
+## EVD-032
+
+```yaml
+id: EVD-032
+type: conversation
+source: Owner-proxy reviews, 2026-11-02 (ADR-0001). DISC-DATA-MODEL round 2; DISC-DOMAIN-DISCOVERY round 1
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-DATA-MODEL, which is frozen with a minimal DP
+  record (TripBootRecord, no coordinates). It requested changes to
+  DISC-DOMAIN-DISCOVERY: the demo trip runs in a sandbox, BC1 owns
+  alerting, erasure crosses into BC2, five events were missing, a
+  Platform Surfaces context is reserved, and the reference-app context
+  claims are superseded.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-125
+    statement: >
+      DISC-DATA-MODEL v1.0.0 is approved by the owner proxy (ADR-0001).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-032]
+    investigation: data-model
+  - id: KC-126
+    statement: >
+      The project's own bounded contexts and domain events
+      (DISC-DOMAIN-DISCOVERY) replace the reference-app inferences:
+      BC1 Trip & Alarms (core, UI-independent, owns alerting) through
+      BC10 Provider Gateway, with a reserved Platform Surfaces context.
+    status: inference
+    confidence: 65
+    evidence_ids: [EVD-032, EVD-028]
+    investigation: domain-discovery
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
@@ -1682,7 +1779,7 @@ claims:
 | `business-vision` | KC-002, KC-003, KC-056–059, KC-066–070, KC-076, KC-078, KC-103 (fact) | **Frozen** as DISC-BUSINESS-VISION v1.0.0 (KC-105). |
 | `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.1 (KC-109, KC-119). |
 | `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | **Frozen** as DISC-USER-JOURNEYS v1.0.0 (KC-120). Designed, not observed (KC-062). |
-| `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
+| `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | **Frozen** as DISC-DATA-MODEL v1.0.0 (KC-125). |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
 | `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
 | `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093, KC-101 (fact); KC-095, KC-097 (inference) | **Frozen** as DISC-HIDDEN-BUSINESS-RULES v1.0.0 (KC-119). KC-117 escalated. |

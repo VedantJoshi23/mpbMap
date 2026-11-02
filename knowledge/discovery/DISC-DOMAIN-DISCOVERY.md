@@ -1,7 +1,7 @@
 ---
 id: DISC-DOMAIN-DISCOVERY
 title: "Discovery: Domain Discovery"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -32,10 +32,9 @@ complexity: Medium
 # DISC-DOMAIN-DISCOVERY: Domain Discovery
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft**, under owner-proxy review
-(ADR-0001). Suggestions are marked **[S]**. It replaces the earlier
-reference-app inferences KC-050 and KC-051 with this project's own
-contexts.
+log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
+owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**. The
+reference-app inferences KC-050 and KC-051 are superseded by KC-126.
 
 ## Purpose
 
@@ -62,7 +61,7 @@ All contexts are [S].
 
 | # | Context | Owns | Kind | Runs on |
 | --- | --- | --- | --- | --- |
-| BC1 | **Trip & Alarms** | Trip, Alarm, pre-flight (R26), arrival logic (R1, R17), location loss (R3), interrupted-trip alerts (R25), stale trip (R24) | **Core.** The headline utility | Device; UI-independent module |
+| BC1 | **Trip & Alarms** | Trip, Alarm, pre-flight (R26), arrival logic (R1, R17), location loss (R3), interrupted-trip alerts (R25), stale trip (R24), **alerting** (arrival ring, R3 and R25 alerts) through an `AlertPort` | **Core.** The headline utility | Device; UI-independent module |
 | BC2 | **Location** | Permission and disclosure state (R6), fix acquisition, accuracy, collection scope (R5), the rolling LocationFix log | Supporting. The only gateway to device location | Device |
 | BC3 | **Map & Skins** | Skin catalogue, rendering, 2D fallback, attribution (R11) | **Core.** The concept | Device |
 | BC4 | **Exploration** | ExploredCell, fog layer, Journal, local erasure (R21), R18 gating | Supporting | Device; cells sync |
@@ -72,10 +71,24 @@ All contexts are [S].
 | BC8 | **Offline Maps** | OfflinePack lifecycle and size limits (R10) | Supporting | Device |
 | BC9 | **Identity & Sync** | Account, sign-in and sign-out, sync protocol, deletion (R9, R19) | Generic | Device plus backend |
 | BC10 | **Provider Gateway** | Proxying, rate limits, caching and User-Agent for third-party APIs (R10) | Generic | Backend |
+| BC11 | **Platform Surfaces** *(reserved, not in the MVP)* | Wear OS, Android Auto, widgets | Supporting | Future modules that consume BC1 and BC3 (KC-060) |
 
-- No context owns "settings" as a whole. Each context owns its own
-  settings: alarm defaults belong to BC1, reveal toggles to BC4, the
-  default skin to BC3.
+- **Settings:** one storage record (DISC-DATA-MODEL). Each field is owned
+  by one context: alarm defaults belong to BC1, reveal toggles to BC4,
+  the default skin to BC3.
+- **Alerting rule:** BC1 owns *what* rings and how alerts differ, through
+  an `AlertPort`. Platform adapters implement it: phone notifications and
+  full-screen intent now, and Wear OS or Android Auto later (BC11). No
+  other context raises alarm-stream alerts.
+- **Demo rule (J12):** the demo trip runs BC1's logic against a
+  **synthetic fix source injected in place of BC2**, in a sandbox mode.
+  That mode never starts the foreground service, never persists Trip,
+  Alarm or TripBootRecord, never arms the watchdog or boot flag, and
+  never emits events to BC4. A killed demo therefore cannot trigger R25.
+- **Erasure rule (R21):** BC4 issues an `EraseLocalHistory` command. BC4
+  deletes the journal and cells and sets `clearedAt`. **BC2 deletes the
+  LocationFix log.** The command completes only when both have
+  confirmed.
 - **Ownership rule:** only BC2 talks to the platform's location APIs.
   BC1 and BC4 consume BC2's events. This makes R5 and R18 enforceable in
   one place.
@@ -87,14 +100,19 @@ This is the `OV-001` cross-cutting check (KC-051 was inference only).
 | Event | Producer | Consumers |
 | --- | --- | --- |
 | LocationFixAcquired | BC2 | BC1 (trip distance); BC4 (in-use, or a trip under R18); BC3 (locate-me) |
+| DisclosureRecorded | BC2 | BC1 (pre-flight, R6, R26) |
 | LocationAccessChanged (granted, precise, revoked, services off) | BC2 | BC1 (pre-flight; R25 if mid-trip); BC4 |
 | TripStarted / TripEnded | BC1 | BC2 (open or close the trip collection scope); BC4 (R18 gating) |
-| AlarmFired / AlarmDismissed / AlarmSnoozed | BC1 | BC1 (session lifetime, R2); notifications |
-| LocationLostNearDestination | BC1 | notifications (R3) |
-| TripInterrupted | BC1 (boot receiver, watchdog) | notifications (R25) |
+| AlarmFired / AlarmDismissed / AlarmSnoozed | BC1 | BC1 (session lifetime, R2); AlertPort adapters |
+| ArrivalReached | BC1 | BC1 (the session ends only if no alarm is armed, R2, R17); AlertPort |
+| LocationLostNearDestination | BC1 | AlertPort (R3) |
+| StaleTripDetected | BC1 | AlertPort, as a notification prompt (R24) |
+| TripInterrupted | BC1 (boot receiver, watchdog) | AlertPort (R25) |
+| TripResumed | BC1 | BC2 (reopen the trip scope); BC4 (R18 gating) |
 | SkinChanged | BC3 | BC6 (result typography); BC1 (quest-marker style) |
 | CodexEntryChanged | BC5 | BC9 (sync); BC6 (offline index) |
-| ExploredCellsAdded / ExplorationCleared | BC4 | BC9 (union sync; `clearedAt` epoch) |
+| ExploredCellsAdded / ExplorationCleared | BC4 | BC9 (union sync; `clearedAt` epoch); BC2 (deletes LocationFix, R21) |
+| RemoteChangesApplied | BC9 | BC5 (merged Codex); BC4 (merged cells, a newer `clearedAt`) |
 | OfflinePackInstalled / OfflinePackRemoved | BC8 | BC3 (offline styles); BC6 (offline index) |
 | SignedIn / SignedOut / AccountDeleted | BC9 | BC5, BC4 (merge, keep-or-clear); backend purge (R19) |
 
@@ -129,9 +147,8 @@ This is the `OV-001` cross-cutting check (KC-051 was inference only).
 
 ## Questions
 
-1. Should Map & Skins and Offline Maps be one context? Offline packs exist
-   only to feed the map. [S] Keep them separate: pack size, limits and
-   provider policy (R10) are a distinct concern.
+1. *(Resolved by the proxy)* Map & Skins and Offline Maps stay separate
+   contexts. M3 may put them in one module.
 
 ## Recommendations
 

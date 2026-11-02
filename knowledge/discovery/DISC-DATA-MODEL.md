@@ -1,8 +1,8 @@
 ---
 id: DISC-DATA-MODEL
 title: "Discovery: Data Model"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -31,8 +31,8 @@ complexity: Medium
 # DISC-DATA-MODEL: Data Model
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**. Risk is
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-125). Draft v0.1.0, then
+owner-proxy rounds 1–2 (ADR-0001), then Architecture Review, then Freeze. Suggestions are marked **[S]**. Risk is
 **High** because it fixes where location and account data live (Oriveda
 ADR-0005).
 
@@ -76,8 +76,9 @@ All entities are [S]. **Storage class** values:
 | **Place** | providerId, name, lat/lon, category | Transient (search result, cached) | CE cache | none |
 | **CodexEntry** | id, category (Waypoint…Point of Interest, Garage), name, lat/lon, note, createdAt, updatedAt, deleted | Device; synced when signed in | CE, Srv | CodexEntry |
 | **ParkingSpot** | a CodexEntry with category Garage, plus parkedAt and an `active` flag | Device; synced | CE, Srv | CodexEntry |
-| **Trip** | id, travelMode, destination (lat/lon, label), state, startedAt, endedAt, **arrivalDistanceM** (R17), **lastFixAt**, **lastKnownDistanceM** (R3), **lastProgressAt** (R24) | **Device only** | **DP** (R25) | Trip (root) |
-| **Alarm** | id, tripId, radiusM, state (armed / fired / snoozed / dismissed), firedAt, **snoozeUntil** | **Device only** | **DP** | Trip |
+| **Trip** | id, travelMode, destination (lat/lon, label), state, startedAt, endedAt, **arrivalDistanceM** (R17), **lastFixAt**, **lastKnownDistanceM** (R3), **lastProgressAt** (R24) | **Device only** | CE | Trip (root) |
+| **Alarm** | id, tripId, radiusM, state (armed / fired / snoozed / dismissed), firedAt, **snoozeUntil** | **Device only** | CE | Trip |
+| **TripBootRecord** | tripId, armed flag, destination **label only**, alarm states | **Device only** | **DP** (R25) | Trip |
 | **LocationFix** | ts, lat/lon, accuracyM, source (gps / network), context (in-use / trip) | **Device only**, 30-day rolling log | CE | none |
 | **ExploredCell** | cellId, firstSeenAt | Device; synced | CE, Srv | ExploredArea |
 | **ExploredArea** | clearedAt epoch | Device; synced | CE, Srv | ExploredArea |
@@ -90,8 +91,13 @@ All entities are [S]. **Storage class** values:
 - ParkingSpot is a CodexEntry with category Garage, so parking spots are
   visible in the Codex list for free. Several spots may be saved; the
   newest is `active`.
-- Only Trip and Alarm sit in DP storage, keeping the before-unlock surface
-  to the minimum R25 needs. No location history is stored there.
+- Only **TripBootRecord** sits in DP storage. It holds the minimum R25
+  needs to ring before unlock: no coordinates and no location history.
+  The full Trip and Alarm stay in normal (CE) storage, because resuming
+  happens after unlock, and a trip only starts after the user has
+  unlocked the phone, so CE storage is writable during it.
+- **Settings** is one storage record. Each field is owned by the context
+  that uses it (DISC-DOMAIN-DISCOVERY).
 - [S] **ExploredCell uses H3 resolution 9 cells** (edges about 174 m,
   about 0.105 km² per cell), the closest standard size to C3's "about
   150 m". The library choice goes to M3.
@@ -180,6 +186,18 @@ All entities are [S]. **Storage class** values:
 - **Improve:** a minimal DP footprint for R25; filtering by epoch before
   the union.
 - **Remove:** GeoJSON as a primary store. It stays as the export format.
+
+## Architecture Review (2026-11-02)
+
+- **Against the Frozen DISC- investigations:**
+  - Device-only and synced entities match R8.
+  - Erasure matches R21 (v1.1.0).
+  - TripBootRecord in DP serves R25 (J3).
+  - Trip fields serve R3, R17 and R24.
+  - Consistent.
+- **Citations:** all current. KC-048 and KC-049 are superseded by KC-121.
+- **Divergences:** none (no code).
+- **Result:** passes.
 
 ## Confidence Level
 
