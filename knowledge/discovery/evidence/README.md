@@ -2058,6 +2058,7 @@ claims:
     confidence: 95
     evidence_ids: [EVD-040]
     investigation: hidden-business-rules
+    superseded_by: KC-144
     notes: >
       The owner said "no borders drawing". Applying it to every admin level
       is the agent's reading and is surfaced for confirmation.
@@ -2071,6 +2072,51 @@ claims:
     confidence: 95
     evidence_ids: [EVD-040]
     investigation: business-vision
+```
+
+---
+
+## EVD-041
+
+```yaml
+id: EVD-041
+type: conversation
+source: Owner-proxy (successor #2) Law 12 confirmation round, 2026-11-02 (ADR-0001)
+received: 2026-11-02
+summary: >
+  The proxy split KC-142 into the owner's fact and the agent's reading,
+  widened the boundary clause to every map surface, and found no
+  remaining substantive blocker to freezing CONST-CORE apart from the
+  owner's sign-off, which must include confirming the every-level reading.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-144
+    statement: >
+      The owner chose "no borders drawing" (KC-117 a: option iii).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-040]
+    investigation: hidden-business-rules
+  - id: KC-145
+    statement: >
+      KC-144 applies to administrative boundaries at every level, maritime
+      included, on every map the app renders and every store-listing
+      image, because disputed areas also affect sub-national lines.
+    status: inference
+    confidence: 90
+    evidence_ids: [EVD-040, EVD-041, EVD-038]
+    investigation: hidden-business-rules
+    notes: Confirmed by the owner's rule-3 sign-off on CONST-CORE (pending).
+  - id: KC-146
+    statement: >
+      CONST-CORE v0.5.0 (Laws 1-14, Architecture Review) is approved by the
+      owner proxy. The only remaining freeze condition is the owner's own
+      sign-off, including confirmation of KC-145 (ADR-0001 rule 3).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-041]
+    investigation: recommendations
 ```
 
 ---

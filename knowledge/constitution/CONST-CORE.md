@@ -38,7 +38,7 @@ review comes first (ADR-0001). **Freezing requires the owner's sign-off**
 
 **Draft-completeness status:** §2–§4 are answered by the owner (KC-135).
 Law 11 reflects KC-132 and KC-133. Law 12's boundary clause reflects
-KC-142.
+KC-144 and KC-145.
 
 Amendment: see §6.
 
@@ -205,10 +205,11 @@ through NOTICE, and never ship in the app (KC-132).
 > (ConsentRecord), including its withdrawal: the location disclosure, the
 > R18 reveal-during-trips opt-in, and sign-in/sync. The privacy policy
 > names the purpose of each data category. No administrative boundary
-> lines are drawn at any level in any skin (KC-142). The agent drafts no
-> legal interpretation beyond this (ADR-0001 rule 5).
+> lines, at any level, are drawn on any map the app renders or the store
+> listing shows (KC-144, KC-145). The agent drafts no legal
+> interpretation beyond this (ADR-0001 rule 5).
 
-**Source:** KC-134, KC-142 (owner decisions); KC-117; DISC-DATA-MODEL v1.1.0
+**Source:** KC-134, KC-144 (owner decisions); KC-145; KC-117; DISC-DATA-MODEL v1.1.0
 ConsentRecord.
 
 ### Law 13: Core boundaries
@@ -228,6 +229,20 @@ fact). Holds under any §4 choice.
 
 **Source:** KC-103 (owner decision); C10; J3. Broader accessibility is
 set by M4 Standards.
+
+## Architecture Review (2026-11-02)
+
+- **Against Frozen Discovery (all ten DISC- investigations):** every Law
+  traces to a Frozen recommendation, a rule or an owner decision. No Law
+  contradicts a Frozen spec. Laws 3, 5, 6 and 12 match R5–R9, R19, R21
+  and DISC-DATA-MODEL v1.1.0. Law 13 matches DISC-DOMAIN-DISCOVERY. The
+  boundary clause settles DISC-TECHNICAL-ARCHITECTURE's KC-117 dependency
+  as a style-level rule that works with OpenFreeMap.
+- **Owner choices (§2–§4):** recorded as the owner's (KC-135), not
+  inferred (`OV-002`).
+- **Divergences:** none (no code).
+- **Result:** passes. The freeze waits for the owner's sign-off
+  (ADR-0001 rule 3).
 
 ## 6. Amendment Process
 
