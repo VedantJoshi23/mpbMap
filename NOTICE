@@ -1,0 +1,15 @@
+Orimap (working name)
+Copyright 2026 Vedant Joshi
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Exclusions: the files reference/image.png through reference/image-4.png
+are App Store and marketing material for "MapShifter: Stylized Game Map"
+(c) 2026 Filipp Bazun. They are NOT covered by this licence. They are
+kept only as cited concept-inspiration evidence. See reference/README.md.
+
+The .oriveda-framework/ submodule is a separate project under its own
+licence.
+
+Map data (c) OpenStreetMap contributors, available under the Open
+Database License (ODbL).

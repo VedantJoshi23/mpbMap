@@ -10,5 +10,6 @@ concept. It is not affiliated with or endorsed by MapShifter.
 
 `image-5.png` and `info.md` are the project owner's own notes.
 
-Whether these images stay in the public repository is an open decision
-for the project owner (DISC-REPO-STRUCTURE, Q1).
+The owner decided to keep them here as concept-inspiration evidence
+(KC-132). They are excluded from the project's Apache-2.0 licence (see
+NOTICE) and never ship in the app.

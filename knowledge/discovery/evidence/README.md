@@ -1880,6 +1880,121 @@ claims:
 
 ---
 
+## EVD-036
+
+```yaml
+id: EVD-036
+type: conversation
+source: Owner answers to the KC-130 decision batch, 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner settles the reference images, the licence, DPDP, rigor level,
+  AI collaboration mode and architecture ambition. The owner leans toward
+  OSM's own borders but asks why the agent recommended none before
+  confirming. The owner proposes the name "Orimap". The owner has no
+  domain, and asks whether the package name refers to the Play account
+  name.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-132
+    statement: >
+      The MapShifter images stay in the public reference/, with the credit
+      notice, because they show the concept inspiration (KC-116 Q1a: option
+      (a)).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-036]
+    investigation: repo-structure
+  - id: KC-133
+    statement: >
+      The project's own code and art are licensed under Apache-2.0
+      (KC-116 Q1b). The reference images are excluded through NOTICE.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-036]
+    investigation: repo-structure
+  - id: KC-134
+    statement: >
+      Design as if India's DPDP Act 2023 applies (KC-117 b: yes).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-036]
+    investigation: hidden-business-rules
+  - id: KC-135
+    statement: >
+      Constitution owner choices (OV-002): rigor level Production-grade; AI
+      collaboration mode Principal Engineer; architecture ambition Modular
+      Monolith.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-036]
+    investigation: recommendations
+  - id: KC-136
+    statement: >
+      The owner has no domain (KC-128). The API host must be domain-free
+      or use a free subdomain service.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-036]
+    investigation: technical-architecture
+  - id: KC-137
+    statement: >
+      Pending owner confirmation: map borders (the owner leans toward OSM
+      as-is, KC-117 a); the app name "Orimap" (Q-08); the Play package
+      name.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-036]
+    investigation: business-vision
+```
+
+---
+
+## EVD-037 to EVD-038: naming and boundary-data checks (2026-11-02)
+
+```yaml
+- id: EVD-037
+  type: other
+  source: Web search for "Orimap" app (2026-11-02)
+  pipeline: competitor
+  claims:
+    - id: KC-138
+      statement: >
+        An existing iOS/iPad App Store app is named "OriMap: Your Map
+        Diary": a map-based memory journal, free with in-app purchases,
+        whose policies are hosted at lineash.github.io. The search did not
+        cover Play Store availability.
+      status: fact
+      confidence: 80
+      evidence_ids: [EVD-037]
+      investigation: business-vision
+- id: EVD-038
+  type: other
+  source: https://openmaptiles.org/schema/ boundary layer (2026-11-02, fetch digest)
+  pipeline: other
+  claims:
+    - id: KC-139
+      statement: >
+        The OpenMapTiles boundary layer carries `disputed` (0/1),
+        `disputed_name` (e.g. IndianClaim-North,
+        IndianClaimwesternKashmir, PakistaniClaim, ChineseClaim, Demchok)
+        and `claimed_by` (the ISO2 code of the country that wants to see
+        the line) for country boundaries (admin_level 2). A map style can
+        therefore hide disputed lines, or show a specific country's
+        claimed view, at no extra cost.
+      status: fact
+      confidence: 85
+      evidence_ids: [EVD-038]
+      investigation: technical-architecture
+      notes: >
+        Whether OpenFreeMap's tiles carry these fields unchanged (KC-087
+        says "unmodified OpenMapTiles") is to be verified in M3 spike S2
+        or S4.
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

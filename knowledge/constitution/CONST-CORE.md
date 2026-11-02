@@ -1,7 +1,7 @@
 ---
 id: CONST-CORE
 title: Engineering Constitution
-version: 0.2.0
+version: 0.3.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -36,10 +36,9 @@ DISC-HIDDEN-BUSINESS-RULES, among others. Lifecycle: **Draft**. Owner-proxy
 review comes first (ADR-0001). **Freezing requires the owner's sign-off**
 (ADR-0001 rule 3).
 
-**Draft-completeness status:** §2–§4 are the three owner-only choices. They
-are asked (KC-130) and **not yet answered**. `OV-002` forbids defaulting
-them silently, so each shows the agent's recommendation, clearly marked as
-pending. Laws L11 and L12 depend on KC-116 and KC-117.
+**Draft-completeness status:** §2–§4 are answered by the owner (KC-135).
+Law 11 reflects KC-132 and KC-133. Law 12's boundary clause is pending
+the owner's confirmation (KC-137).
 
 Amendment: see §6.
 
@@ -56,9 +55,9 @@ of the product, and they are kept honest and readable.
 
 ## 2. Rigor Level
 
-**Chosen:** *pending owner (KC-130). Recommended: Production-grade.*
+**Chosen:** Production-grade (owner, KC-135).
 
-If chosen, Production-grade means:
+This means:
 - **Includes:** automated tests for every core rule (BC1 alarm logic
   above all); CI on every push; spec-first changes for High-tier areas;
   the divergence log kept; release checkpoints (Oriveda ADR-0005 rule 5);
@@ -68,10 +67,9 @@ If chosen, Production-grade means:
 
 ## 3. AI Collaboration Contract
 
-**Chosen:** *pending owner (KC-130). Recommended: Principal Engineer
-(technical partner).*
+**Chosen:** Principal Engineer, the technical partner (owner, KC-135).
 
-If chosen, the agent commits to:
+The agent commits to:
 - challenge requests that weaken a Law or a Frozen spec, and propose the
   smallest compliant alternative;
 - preserve context boundaries (BC1–BC11) and say when a change crosses
@@ -83,7 +81,7 @@ If chosen, the agent commits to:
 
 ## 4. Architecture Ambition
 
-**Chosen:** *pending owner (KC-130). Recommended: Modular Monolith.*
+**Chosen:** Modular Monolith (owner, KC-135).
 
 That is one Android app split into modules along the Frozen bounded
 contexts (DISC-DOMAIN-DISCOVERY), plus one small backend service, with
@@ -191,19 +189,23 @@ R23.
 > project's identity or the shipped app. All assets are original or
 > openly licensed. MapShifter is credited for the concept.
 
-**Source:** KC-078, KC-057, KC-003 (owner facts); R14; C2.
-*Depends on KC-116 (the reference images and the licence).*
+**Source:** KC-078, KC-057, KC-003 (owner facts); R14; C2. The project's
+own work is Apache-2.0 (KC-133). The MapShifter reference images stay in
+`reference/` as credited concept evidence, are excluded from the licence
+through NOTICE, and never ship in the app (KC-132).
 
 ### Law 12: Data-protection and boundary stance
 
-> *Pending KC-117.* Consent, purpose limitation and erasure are already
-> covered by Laws 3, 5 and 6. If the owner answers "design as if DPDP
-> applies", this Law adds only the further duties as the owner's KC-117
-> answer defines them; the agent drafts no legal interpretation (ADR-0001
-> rule 5). The map-boundary depiction follows the owner's KC-117 choice
-> (recommended: no country boundary lines).
+> The app is designed as if India's DPDP Act 2023 applies. Consent,
+> purpose limitation and erasure are covered by Laws 3, 5 and 6. In
+> addition, every location consent is recorded on the device
+> (ConsentRecord), and the privacy policy names the purpose of each data
+> category. Country-boundary depiction follows the owner's choice:
+> *pending confirmation (KC-137)*. The agent drafts no legal
+> interpretation beyond this (ADR-0001 rule 5).
 
-**Source:** KC-117 (escalated to the owner).
+**Source:** KC-134 (owner decision); KC-117; DISC-DATA-MODEL
+ConsentRecord.
 
 ### Law 13: Core boundaries
 
