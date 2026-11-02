@@ -1995,6 +1995,44 @@ claims:
 
 ---
 
+## EVD-039
+
+```yaml
+id: EVD-039
+type: conversation
+source: Owner-proxy (successor #2) review, 2026-11-02 (ADR-0001). CONST-CORE v0.4.0; draft revisions to Frozen DISC-DATA-MODEL, DISC-TECHNICAL-ARCHITECTURE and DISC-TECHNICAL-DEBT
+received: 2026-11-02
+summary: >
+  The proxy approved CONST-CORE v0.4.0. The freeze still waits on the
+  owner's boundary answer and sign-off. It also approved, as drafts before
+  application, the v1.1.0 revisions of DISC-DATA-MODEL (wider consent),
+  DISC-TECHNICAL-ARCHITECTURE (no-domain hosting with a GitHub Pages
+  bootstrap file) and DISC-TECHNICAL-DEBT (TD16, DDNS hostname risk).
+pipeline: vision
+processed: true
+claims:
+  - id: KC-140
+    statement: >
+      CONST-CORE v0.4.0 is approved by the owner proxy. The freeze is
+      pending the owner's boundary answer (KC-137), then a short proxy
+      confirmation and the owner's sign-off (ADR-0001 rule 3).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-039]
+    investigation: recommendations
+  - id: KC-141
+    statement: >
+      DISC-DATA-MODEL v1.1.0, DISC-TECHNICAL-ARCHITECTURE v1.1.0 and
+      DISC-TECHNICAL-DEBT v1.1.0 are approved by the owner proxy as
+      reviewed draft revisions of Frozen specs (ADR-0001).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-039]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

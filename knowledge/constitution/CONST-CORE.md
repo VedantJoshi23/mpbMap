@@ -208,7 +208,7 @@ through NOTICE, and never ship in the app (KC-132).
 > *pending confirmation (KC-137)*. The agent drafts no legal
 > interpretation beyond this (ADR-0001 rule 5).
 
-**Source:** KC-134 (owner decision); KC-117; DISC-DATA-MODEL
+**Source:** KC-134 (owner decision); KC-117; DISC-DATA-MODEL v1.1.0
 ConsentRecord.
 
 ### Law 13: Core boundaries

@@ -1,7 +1,7 @@
 ---
 id: DISC-TECHNICAL-ARCHITECTURE
 title: "Discovery: Technical Architecture"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -191,8 +191,8 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
 
 ## Hidden Assumptions
 
-- The API can live on a subdomain of a domain the owner already has, at
-  no cost (KC-124). Which domain to use is the owner's choice.
+- *(Superseded by KC-136 in v1.1.0)* There is no owner domain. The API
+  uses a free DDNS subdomain, plus a bootstrap file on GitHub Pages.
 - The free providers' current policies hold through launch (R10).
 - Fused location's network fallback works without mobile data in the
   places where trains lose GPS. This is plausible but unverified (S3).
@@ -213,11 +213,24 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
 
 ## Questions
 
-1. *(Pending owner input, batched with Q-08, the app name and package)*
-   Which of the owner's existing domains hosts the API subdomain. This is
-   not a rule-4 matter: the hostname and the privacy URL can be changed.
-   Interim default: GitHub Pages for the static pages, and a dedicated API
-   subdomain behind the existing nginx, to be named by the owner.
+1. *(Resolved in v1.1.0, KC-136: the owner has no domain)*
+   - **Static pages** (privacy policy, deletion request) are served from
+     the owner's GitHub Pages site (`vedantjoshi23.github.io/...`).
+   - **API host:** a free dynamic-DNS subdomain (candidate: DuckDNS)
+     pointing at the VM, with a Let's Encrypt certificate on the existing
+     nginx. This is **flagged as a volunteer or commercial free tier**.
+     Buying a domain is an ADR-0001 rule-2 escalation.
+   - **Bootstrap file:** the app reads its API base URL from a small static
+     file on the GitHub Pages site, with a built-in default as the
+     fallback. A DDNS failure or a hostname move then needs no app
+     release. The file is unauthenticated, so it is a hostname hint only:
+     certificates are validated normally, and nothing sensitive goes in
+     it.
+   - **Public hostname:** the API hostname is the **one sanctioned public
+     hostname**, because it necessarily ships in the app. The hygiene rule
+     (KC-124, DISC-REPO-STRUCTURE) still keeps the owner's *other*
+     hostnames out of the repo. Rate limits and abuse protection (BC10)
+     apply whatever the hostname.
 2. *(→ M3)* Ktor vs Go for the backend, after S5.
 
 ## Recommendations
@@ -241,7 +254,14 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
 - **Divergences:** none (no code).
 - **Result:** passes.
 
-## Confidence Level
+## Revision History
+
+- **v1.1.0 (2026-11-02):** Q1 resolved for the no-domain case (KC-136):
+  GitHub Pages for static pages and the bootstrap file, a flagged free
+  DDNS subdomain for the API, and the sanctioned public API hostname.
+  Approved by the owner proxy (KC-141).
+
+\1
 
 **Overall: Inference (65).** Provider and renderer facts are at 75–90.
 The candidate stack is a design pending spikes S1–S5.

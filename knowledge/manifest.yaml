@@ -44,7 +44,7 @@ documents:
     title: "Discovery: Data Model"
     path: knowledge/discovery/DISC-DATA-MODEL.md
     status: Frozen
-    version: 1.0.0
+    version: 1.1.0
     milestone: M1
   - id: DISC-DOMAIN-DISCOVERY
     title: "Discovery: Domain Discovery"
@@ -56,13 +56,13 @@ documents:
     title: "Discovery: Technical Architecture"
     path: knowledge/discovery/DISC-TECHNICAL-ARCHITECTURE.md
     status: Frozen
-    version: 1.0.0
+    version: 1.1.0
     milestone: M1
   - id: DISC-TECHNICAL-DEBT
     title: "Discovery: Technical Debt"
     path: knowledge/discovery/DISC-TECHNICAL-DEBT.md
     status: Frozen
-    version: 1.0.0
+    version: 1.1.0
     milestone: M1
   - id: DISC-RECOMMENDATIONS
     title: "Discovery: Recommendations"

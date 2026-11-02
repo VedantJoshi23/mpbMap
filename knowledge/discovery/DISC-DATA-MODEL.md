@@ -1,7 +1,7 @@
 ---
 id: DISC-DATA-MODEL
 title: "Discovery: Data Model"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -84,7 +84,7 @@ All entities are [S]. **Storage class** values:
 | **ExploredArea** | clearedAt epoch | Device; synced | CE, Srv | ExploredArea |
 | **JournalEntry** | placeRef or cell summary, visitedAt, city | **Device only** | CE | Journal |
 | **OfflinePack** | id, name, bbox, minZoom, maxZoom, sizeBytes, status | Device only | CE | OfflinePack |
-| **ConsentRecord** | kind (location disclosure), shownAt, choice, appVersion | Device; whether a server copy exists depends on KC-117 | CE | ConsentRecord |
+| **ConsentRecord** | kind (location-disclosure, reveal-during-trips (R18), sign-in-sync), shownAt, choice, withdrawnAt, appVersion | **Device only** (v1.1.0) | CE | ConsentRecord |
 | **Account** | id, authSubject, createdAt, deletionRequestedAt | Server | Srv | Account |
 | **Settings** | units, defaultSkin, revealOn, revealDuringTrips, alarm defaults | Device only | CE | Settings |
 
@@ -96,7 +96,8 @@ All entities are [S]. **Storage class** values:
   The full Trip and Alarm stay in normal (CE) storage, because resuming
   happens after unlock, and a trip only starts after the user has
   unlocked the phone, so CE storage is writable during it.
-- **Settings** is one storage record. Each field is owned by the context
+- **Withdrawing sign-in-sync consent** stops sync and signs the user out. Server data is deleted only through the R9 account-deletion path, so withdrawal is not erasure under CONST-CORE Law 6. *(v1.1.0)*
+\1 Each field is owned by the context
   that uses it (DISC-DOMAIN-DISCOVERY).
 - [S] **ExploredCell uses H3 resolution 9 cells** (edges about 174 m,
   about 0.105 km² per cell), the closest standard size to C3's "about
@@ -177,7 +178,8 @@ All entities are [S]. **Storage class** values:
    kept on the device only and clearable.
 2. *(→ M3)* The device database library, the H3 binding and the server
    migration tooling.
-3. *(Depends on KC-117)* Whether ConsentRecord is also kept on the server.
+3. *(Resolved in v1.1.0)* ConsentRecord is device-only. Guests have no server
+   identity, and KC-134 needs no server copy.
 
 ## Recommendations
 
@@ -199,7 +201,14 @@ All entities are [S]. **Storage class** values:
 - **Divergences:** none (no code).
 - **Result:** passes.
 
-## Confidence Level
+## Revision History
+
+- **v1.1.0 (2026-11-02):** ConsentRecord widened to every consent the
+  app requests (CONST-CORE Law 12, KC-134), with `withdrawnAt` and the
+  withdrawal semantics; Q3 closed as device-only. Additive only. Approved
+  by the owner proxy (KC-141).
+
+\1
 
 **Overall: Inference (70).** Entities are derived from Frozen capabilities,
 rules and journeys. Storage roles and retention are design proposals.
