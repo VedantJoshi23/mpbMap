@@ -76,3 +76,9 @@ documents:
     status: Frozen
     version: 1.0.0
     milestone: M2
+  - id: ARCH-SYSTEM
+    title: "Etak System Architecture"
+    path: knowledge/architecture/ARCH-SYSTEM.md
+    status: Draft
+    version: 0.1.0
+    milestone: M3
