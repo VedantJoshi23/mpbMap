@@ -2649,6 +2649,50 @@ claims:
 
 ---
 
+## EVD-055
+
+```yaml
+id: EVD-055
+type: conversation
+source: Owner messages "We can build on the different skins and UI" and "Or we can simulate moving for dev mode", 2026-11-02; CI run 41437944430
+received: 2026-11-02
+summary: >
+  The owner directed work toward the skins and UI before testing on the
+  device, and proposed a dev-mode movement simulator. Built: three more
+  original MVP skins (vertical-night and cube-3d in 3D, tactical-grid with
+  a live grid), live skin switching that keeps the camera, a derived 2D
+  fallback (low-RAM default plus a toggle), labelled shape markers, a
+  trip banner, and a debug-only simulator. All CI jobs are green,
+  including the emulator launch.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-176
+    statement: >
+      A debug-build-only movement simulator lives in BC2 (Law 13). It feeds
+      synthetic fixes along a straight line to the trip destination at 30,
+      100 or 300 km/h into the real fix stream, and is inert in release
+      builds (BuildConfig.DEBUG). It is not the J12 demo trip and is never
+      used as Play FGS declaration evidence (STD-COMPLIANCE rule 1).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-055]
+    investigation: hidden-business-rules
+  - id: KC-177
+    statement: >
+      The four MVP skins (terrain-sepia, vertical-night, cube-3d,
+      tactical-grid) are bundled, CI-linted and boundary-free. The 3D skins
+      fall back to a derived flat style. Display names are working
+      codenames until the owner chooses public names (ADR-0001 rule 4).
+      The 3D roster and fps thresholds still await spike S1 on a device.
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-055]
+    investigation: feature-inventory
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
