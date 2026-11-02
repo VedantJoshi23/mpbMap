@@ -39,4 +39,6 @@ numbering.
 
 ## Current stage
 
-`PRM-DISCOVERY` (M1): Knowledge Acquisition and Discovery.
+M1 Discovery is complete (`knowledge/discovery/DISC-RECOMMENDATIONS.md`).
+Next: `PRM-CONSTITUTION` (M2). Reviews and approvals follow
+`knowledge/decisions/ADR-0001-owner-proxy-review.md`.

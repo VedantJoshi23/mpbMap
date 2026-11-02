@@ -1808,6 +1808,47 @@ claims:
 
 ---
 
+## EVD-034
+
+```yaml
+id: EVD-034
+type: conversation
+source: Owner-proxy (successor #2) reviews, 2026-11-02 (ADR-0001); the agent's owner batch sent the same day
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-TECHNICAL-ARCHITECTURE, DISC-TECHNICAL-DEBT and
+  DISC-RECOMMENDATIONS, which completes the ten M1 investigations. Its key
+  finding: a force-stop or OEM deep clean is a residual silent-failure
+  path, recorded honestly as a known limit (TD6), with a late-detection
+  safeguard proposed for M3.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-129
+    statement: >
+      DISC-TECHNICAL-ARCHITECTURE v1.0.0, DISC-TECHNICAL-DEBT v1.0.0 and
+      DISC-RECOMMENDATIONS v1.0.0 are approved by the owner proxy
+      (ADR-0001). All ten M1 investigations are Frozen.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-034]
+    investigation: recommendations
+  - id: KC-130
+    statement: >
+      On 2026-11-02 the agent sent the owner one batch of pending decisions:
+      KC-116 (the reference images and the licence), KC-117 (boundaries and
+      DPDP), Q-08 (the app name and Play package), KC-128 (the API domain)
+      and OV-002's three owner-only Constitution choices (rigor level, AI
+      collaboration mode, architecture ambition), each with a
+      recommendation.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-034]
+    investigation: recommendations
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
@@ -1818,10 +1859,10 @@ claims:
 | `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | **Frozen** as DISC-USER-JOURNEYS v1.0.0 (KC-120). Designed, not observed (KC-062). |
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | **Frozen** as DISC-DATA-MODEL v1.0.0 (KC-125). |
 | `domain-discovery` | KC-050, KC-051 (inference) | **Frozen** as DISC-DOMAIN-DISCOVERY v1.0.0 (KC-127). |
-| `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
+| `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | **Frozen** as DISC-TECHNICAL-ARCHITECTURE v1.0.0 (KC-129). |
 | `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093, KC-101 (fact); KC-095, KC-097 (inference) | **Frozen** as DISC-HIDDEN-BUSINESS-RULES v1.0.0 (KC-119). KC-117 escalated. |
-| `technical-debt` | KC-035 (inference) | Not applicable yet (greenfield). |
-| `recommendations` | KC-053, KC-055, KC-063–065, KC-096, KC-099, KC-100 (inference) | Covered. |
+| `technical-debt` | KC-035 (inference) | **Frozen** as DISC-TECHNICAL-DEBT v1.0.0 (KC-129). |
+| `recommendations` | KC-106–108, KC-129, KC-130 (fact) | **Frozen** as DISC-RECOMMENDATIONS v1.0.0 (KC-129). **M1 complete.** |
 
 ## Open Questions and Gaps (per OV-000 gap detection)
 

@@ -1,8 +1,8 @@
 ---
 id: DISC-TECHNICAL-ARCHITECTURE
 title: "Discovery: Technical Architecture"
-version: 0.3.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -33,8 +33,9 @@ complexity: High
 # DISC-TECHNICAL-ARCHITECTURE: Technical Architecture
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.3.0, the revision after
-owner-proxy round 2 (ADR-0001). Suggestions are marked **[S]**.
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-129). Draft v0.1.0, then
+owner-proxy rounds 1–3 (ADR-0001), then Architecture Review, then Freeze.
+KC-117 and KC-128 are open dependencies for M3. Suggestions are marked **[S]**.
 
 This is Discovery, not M3. It records the constraints and evidence, and
 the agent's **candidate** stack. The binding choices are made in M3
@@ -225,6 +226,20 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
   Room with a DP database.
 - **Improve:** run S1–S5 before M3 freezes.
 - **Remove:** `topo-mono` from the MVP and the near-term roster (KC-123).
+
+## Architecture Review (2026-11-02)
+
+- **Against the Frozen DISC- investigations:**
+  - The stack candidates honour zero spend (KC-068).
+  - DP storage holds only TripBootRecord (DISC-DATA-MODEL).
+  - The watchdog mechanism matches R25 and J3.
+  - The gateway protects R10.
+  - Commercial free tiers are flagged.
+  - `topo-mono` is excluded under F3 (KC-071, KC-123).
+  - Consistent.
+- **Citations:** all current.
+- **Divergences:** none (no code).
+- **Result:** passes.
 
 ## Confidence Level
 

@@ -1,8 +1,8 @@
 ---
 id: DISC-TECHNICAL-DEBT
 title: "Discovery: Technical Debt"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -30,8 +30,8 @@ complexity: Low
 # DISC-TECHNICAL-DEBT: Technical Debt
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001).
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-129). Draft v0.1.0, then
+owner-proxy rounds 1–2 (ADR-0001), then Architecture Review, then Freeze.
 
 There is no code, so there is no debt *in code* (KC-007). This
 investigation records **debt taken on by design**: deliberate shortcuts
@@ -66,7 +66,7 @@ triggers and migration paths, so that M4 Standards and M8 can track them.
 | TD6 | The alarm depends on OEM behaviour. **Residual silent mode:** a force-stop or OEM deep clean cancels the watchdog and blocks the boot receiver until the app is reopened. Also, the watchdog's detection bound is a known limit (≤10 min target, S3) | The platform is outside the app's control | **A silent failure is possible after a force-stop.** Every other path is loud (R25) | S3 results; per-OEM user reports | Per-OEM guidance in the app (the J3 battery hint); reassess exact alarms if Play policy allows; record measured bounds |
 | TD7 | `topo-mono` excluded; hillshade only (KC-123) | No 3D terrain in MapLibre Android | A smaller skin roster | MapLibre Android ships 3D terrain | Add `topo-mono` as a 3D skin, with a 2D fallback |
 | TD8 | Backend on a shared VM with about 2.4 GB of free RAM | Zero spend (KC-068); the VM's figures (KC-085, KC-086) | Contention with other workloads | A memory alert; the budget review | A dedicated host after the budget review (rule 2) |
-| TD9 | Policy and legal assumptions: R18 (KC-118), DPDP and boundaries (KC-117) | Not verifiable yet | Play rejection or legal exposure | Play review outcome; the owner's KC-117 answer | Drop R18 (reveal in use only); apply the KC-117 rules |
+| TD9 | Policy and legal assumptions: R18 (KC-118), DPDP and boundaries (KC-117) | Not verifiable yet | Play rejection or legal exposure | Play review outcome; the owner's KC-117 answer | Drop R18 (reveal in use only), which is an escalation to the owner under ADR-0001 rule 1 if the Play review forces it; apply the KC-117 rules |
 | TD10 | Turn-by-turn navigation deferred | The reference app's fragility (KC-035) | A feature gap | First post-MVP release checkpoint | Its own Feature spec, with reroute and arrival rules |
 | TD11 | AWS Terrain Tiles and Open-Meteo have no SLA, and Open-Meteo is non-commercial (KC-122, KC-091) | Free | Hillshade or weather outage; a terms breach if monetised | Outage; any move toward monetisation | Bundle elevation tiles in packs (S4); a paid weather API is a rule-2 escalation |
 | TD12 | Gateway app identity: Play Integrity quotas, or a weaker extractable token | Zero spend | Quota exhaustion, or abuse past the token | Quota alerts; abuse seen in gateway logs | Tighter rate limits; a paid tier is a rule-2 escalation |
@@ -109,6 +109,18 @@ triggers and migration paths, so that M4 Standards and M8 can track them.
 - **Improve:** monitor TD1, TD2 and TD11 through gateway error rates from
   the first release; run the TD13 restore drill before launch.
 - **Remove:** nothing yet.
+
+## Architecture Review (2026-11-02)
+
+- **Against the Frozen DISC- investigations:**
+  - Every TD item traces to a Frozen decision or a fact-tier provider
+    claim.
+  - TD6 states the force-stop limit honestly, consistent with R25 and
+    DISC-TECHNICAL-ARCHITECTURE S3.
+  - Repayments that cost money are flagged as rule 2.
+  - Consistent.
+- **Divergences:** none (no code).
+- **Result:** passes.
 
 ## Confidence Level
 
