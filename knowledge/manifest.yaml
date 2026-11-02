@@ -56,11 +56,17 @@ documents:
     title: "Discovery: Technical Architecture"
     path: knowledge/discovery/DISC-TECHNICAL-ARCHITECTURE.md
     status: Draft
-    version: 0.2.0
+    version: 0.3.0
     milestone: M1
   - id: DISC-TECHNICAL-DEBT
     title: "Discovery: Technical Debt"
     path: knowledge/discovery/DISC-TECHNICAL-DEBT.md
+    status: Draft
+    version: 0.2.0
+    milestone: M1
+  - id: DISC-RECOMMENDATIONS
+    title: "Discovery: Recommendations"
+    path: knowledge/discovery/DISC-RECOMMENDATIONS.md
     status: Draft
     version: 0.1.0
     milestone: M1

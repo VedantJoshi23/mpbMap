@@ -1,7 +1,7 @@
 ---
 id: DISC-TECHNICAL-ARCHITECTURE
 title: "Discovery: Technical Architecture"
-version: 0.2.0
+version: 0.3.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -33,8 +33,8 @@ complexity: High
 # DISC-TECHNICAL-ARCHITECTURE: Technical Architecture
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**.
+log](evidence/README.md). Lifecycle: **Draft** v0.3.0, the revision after
+owner-proxy round 2 (ADR-0001). Suggestions are marked **[S]**.
 
 This is Discovery, not M3. It records the constraints and evidence, and
 the agent's **candidate** stack. The binding choices are made in M3
@@ -103,14 +103,15 @@ All choices are [S], to be decided in M3.
 | Map | MapLibre Native Android | Free, open, vector, fill-extrusion, hillshade, offline regions, attribution control |
 | Location | Fused location provider (Play services) | Built-in GPS→network fallback (R3); free |
 | Device store | Room (SQLite) in CE storage, plus a minimal DP store holding **TripBootRecord only** | R25 before-unlock alert (DISC-DATA-MODEL v1.0.0) |
-| Cells | H3 (Java binding) | Resolution 9 cells (DISC-DATA-MODEL) |
-| Background work | WorkManager (downloads; possibly the watchdog) | Avoids the time cap and extra declaration of a data-sync FGS (J7) |
+| Cells | H3 (Java binding); fallback: a pure-JVM hex-grid implementation if the binding lacks Android ABI native libraries (checked in S5) | Resolution 9 cells (DISC-DATA-MODEL) |
+| Background work | WorkManager for offline-pack downloads | Avoids the time cap and extra declaration of a data-sync FGS (J7) |
+| Trip watchdog | AlarmManager inexact **allow-while-idle** alarm, with no exact-alarm permission | Matches Frozen R25 and J3 |
 | Auth | Sign in with Google (Credential Manager); the backend verifies the ID token | Free, no email infrastructure, low friction for reviewers |
 | Backend | A small JVM (Ktor) or Go service in Docker, behind the existing nginx | Ktor shares the app's language (portfolio coherence); Go has a smaller footprint (about 2.4 GB of RAM is free). M3 decides |
 | Server database | A dedicated DB and role on the existing PostgreSQL | No new service, zero spend |
 | Provider gateway | Inside the backend: rate limits, cache, User-Agent | R10, KC-099 |
-| Crash reports | ACRA posting to the backend, or none | No third-party tracking SDK (R20) |
-| Static pages (privacy policy, deletion request) | GitHub Pages; the deletion-request form posts to a backend endpoint that verifies the requester (e.g. a sign-in with the same Google account) | Free; KC-093 needs the request actually processed, not just shown |
+| Crash reports | ACRA posting to the backend, or none. It is configured to exclude logcat and any location fields | No third-party tracking SDK; no location in reports (R20) |
+| Static pages (privacy policy, deletion request) | GitHub Pages; the deletion-request form posts to a backend endpoint that verifies the requester (e.g. a sign-in with the same Google account). Fallback when the backend is down (KC-104): a contact address on the page, with those requests handled by the same procedure | Free; KC-093 needs the request actually processed, not just shown |
 | CI | GitHub Actions (free for public repos) | KC-112 |
 
 ### Architecture constraints
@@ -129,16 +130,20 @@ These are added in round 1.
   is a **commercial free tier with quotas**, so it is flagged under the
   zero-spend rule, and a paid tier is never adopted without escalation
   (ADR-0001 rule 2). The alternative is a signed app token plus
-  rate-limit-only protection. M3 decides.
+  rate-limit-only protection. A token embedded in the APK can be
+  extracted, so it only deters casual misuse and is weaker than Play
+  Integrity. M3 decides.
 - **SDK levels.** [S] Candidate minSdk is 26 (Android 8.0). targetSdk must
   meet Play's current requirement for new apps (R12), believed to be
   API 35 or 36 by late 2026, to be checked at M3. targetSdk decides which
   foreground-service, full-screen-intent and exact-alarm rules apply.
 - **Backups.** [S] A nightly `pg_dump` of the project database to local
   disk on the VM, with an encrypted copy in a free off-VM store. A
-  candidate is the Oracle Always Free object storage, to be verified as
-  free. Kept for 7 days. R19 discloses this 7-day window plus the 30-day
-  purge.
+  candidate is Oracle Always Free object storage, which is a
+  **commercial free tier**: it is flagged, and any paid plan is an
+  ADR-0001 rule-2 escalation. Backups are kept for 7 days. The privacy
+  policy discloses the worst case under R19: deleted data can persist for
+  up to **37 days** (30-day purge plus 7 days of backups).
 
 ### Spikes required before M3 freezes (from the Frozen investigations)
 
@@ -153,20 +158,29 @@ These are added in round 1.
    - direct-boot alert before unlock;
    - the inexact watchdog;
    - full-screen-intent behaviour;
-   on at least two OEMs (R25, R26).
+   - force-stop and OEM "deep clean" behaviour: a force-stop cancels the
+     app's alarms and blocks its broadcasts until the app is opened again;
+   - whether the stopped state survives a reboot and so suppresses
+     `LOCKED_BOOT_COMPLETED`;
+   - Fused location's network fallback with no mobile data, on a train;
+
+   on at least two OEMs (R25, R26). Force-stop results are recorded as a
+   known limit under TD6.
 
    **Acceptance criterion for the watchdog:** detection delay of at most
-   10 minutes while a trip is armed, under Doze. Compare WorkManager (its
-   15-minute minimum is likely too slow) with AlarmManager's
-   inexact-while-idle alarm. If no option meets the bound without an
-   exact-alarm permission, record the achievable bound as a known limit
-   (TD6).
+   10 minutes while a trip is armed, under Doze, measured for the
+   AlarmManager inexact allow-while-idle alarm named in R25 and J3. The
+   bound follows from how often the platform lets allow-while-idle alarms
+   fire in Doze. A late detection still produces a loud R25 alert: late,
+   not silent. If the spike forces a different mechanism, that is a
+   revision to Frozen R25/J3 and is reviewed as a draft first.
 4. **S4 Offline packs:** the MapLibre offline API against OpenFreeMap's
    per-download limits, plus offline search over pack names (C7, C9).
    Include elevation tiles in the pack budget, so `terrain-sepia` keeps
    its hillshade offline.
 5. **S5 Backend footprint:** memory of the chosen backend on the shared VM
-   (KC-086).
+   (KC-086). Also check that the H3 binding ships Android ABI native
+   libraries.
 
 ### Open dependency
 
