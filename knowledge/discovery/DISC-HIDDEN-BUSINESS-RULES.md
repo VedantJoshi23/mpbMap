@@ -1,7 +1,7 @@
 ---
 id: DISC-HIDDEN-BUSINESS-RULES
 title: "Discovery: Hidden Business Rules"
-version: 1.0.0
+version: 1.1.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -162,6 +162,21 @@ These are the agent's proposals, settling KC-110.
   destination for 3 hours, the persistent notification asks whether to
   end the trip. The trip never ends automatically while an alarm is armed
   (R2).
+- [S] **R25. Interrupted trip is never silent** *(v1.1.0)*. If a trip
+  session dies while any alarm is armed (phone restart, process killed,
+  location revoked), the app raises a loud "Trip alarm interrupted" alert
+  on the alarm stream, distinct from the arrival ring. Restart detection
+  uses a boot receiver. Service-death detection uses an inexact watchdog
+  alarm, with no exact-alarm permission. Resuming always takes a user
+  action in the foreground; there is no automatic restart (R5).
+- [S] **R26. Pre-flight on every start** *(v1.1.0)*. Every "Start trip"
+  re-checks:
+  - location permission;
+  - precise accuracy (radii below the granted accuracy are blocked);
+  - system location on;
+  - notification permission;
+  - alarm volume above 0;
+  - full-screen-intent availability.
 - [S] **R23. Target audience.** The app's Play target audience excludes
   children, so Play's Families policy does not apply. The app has
   accounts, a backend and location logging. This falls within Play's
@@ -223,6 +238,11 @@ changing R1–R24.
 - **Citations:** all current. KC-118 logs R18's assumption.
 - **Divergences:** none (no code).
 - **Result:** passes.
+
+## Revision History
+
+- **v1.1.0 (2026-11-02):** adds R25 and R26 from DISC-USER-JOURNEYS round 1
+  (owner proxy). These are additions; no existing rule changes.
 
 ## Confidence Level
 
