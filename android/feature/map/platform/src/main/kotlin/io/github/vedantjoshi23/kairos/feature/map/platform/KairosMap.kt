@@ -201,14 +201,14 @@ private fun drawGrid(map: MapLibreMap, style: Style, show: Boolean) {
     val span = max(bounds.latitudeSpan, bounds.longitudeSpan).coerceAtLeast(1e-6)
     val step = 2.0.pow(floor(ln(span / 8) / ln(2.0)))
     val lines = mutableListOf<Feature>()
-    var lon = floor(bounds.lonWest / step) * step
-    while (lon <= bounds.lonEast && lines.size < 60) {
-        lines += Feature.fromGeometry(LineString.fromLngLats(listOf(Point.fromLngLat(lon, bounds.latSouth), Point.fromLngLat(lon, bounds.latNorth))))
+    var lon = floor(bounds.longitudeWest / step) * step
+    while (lon <= bounds.longitudeEast && lines.size < 60) {
+        lines += Feature.fromGeometry(LineString.fromLngLats(listOf(Point.fromLngLat(lon, bounds.latitudeSouth), Point.fromLngLat(lon, bounds.latitudeNorth))))
         lon += step
     }
-    var lat = floor(bounds.latSouth / step) * step
-    while (lat <= bounds.latNorth && lines.size < 120) {
-        lines += Feature.fromGeometry(LineString.fromLngLats(listOf(Point.fromLngLat(bounds.lonWest, lat), Point.fromLngLat(bounds.lonEast, lat))))
+    var lat = floor(bounds.latitudeSouth / step) * step
+    while (lat <= bounds.latitudeNorth && lines.size < 120) {
+        lines += Feature.fromGeometry(LineString.fromLngLats(listOf(Point.fromLngLat(bounds.longitudeWest, lat), Point.fromLngLat(bounds.longitudeEast, lat))))
         lat += step
     }
     val collection = FeatureCollection.fromFeatures(lines)
