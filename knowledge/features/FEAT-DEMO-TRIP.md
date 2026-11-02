@@ -1,7 +1,7 @@
 ---
 id: FEAT-DEMO-TRIP
 title: "Etak — Feature: Demo Trip (Reviewer Showcase)"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,6 +14,8 @@ priority: Medium
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - DOM-TRIP
 required_by: []
 related_documents: []
@@ -30,36 +32,42 @@ complexity: Low
 ## Feature: Demo Trip (Reviewer Showcase)
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-TRIP` v1.0.0. STD-* v1.0.0 (all Frozen). **Pending draft revisions** (staged for proxy review): DOM-TRIP v1.1.0 (the bus-silence wording).
 
-**Tier:** **Medium** (it touches the High-tier DOM-TRIP sandbox rule).
+**Tier:** **Medium.** *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **2** (the portfolio front door, KC-066).
 
 ### 1. Overview
 
-A labelled 30–60 second scripted replay that shows an alarm firing on a synthetic route, for portfolio reviewers (KC-066). It works offline and with location denied.
+A labelled 30–60 second scripted replay that shows an alarm firing on a synthetic route, for portfolio reviewers. It works offline and with location and notifications denied.
 
 ### 2. Owning Domain
 
 **Owning domain:** `DOM-TRIP`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
-- None. It uses a synthetic fix source in place of DOM-LOCATION, inside DOM-TRIP.
+- None to other domains. A synthetic fix source replaces DOM-LOCATION inside DOM-TRIP.
+- **via app/**: the demo map and route overlay over a **bundled offline synthetic area**.
 
 ### 3. Acceptance Criteria
 
-- [ ] Starting from the first screen, a reviewer sees an alarm fire within 60 seconds.
-- [ ] It uses no location, no foreground service and no mock provider, persists nothing, and emits no exploration events (J12).
-- [ ] It is refused while a real trip runs.
-- [ ] It is labelled 'Demo' throughout.
+- [ ] From the first screen, a reviewer sees an alarm fire within 60 seconds.
+- [ ] It uses no location, no foreground service and no mock provider. It persists nothing.
+- [ ] It **publishes no BC1 lifecycle or alarm events on the bus**, so DOM-LOCATION never opens trip scope (Law 3). Tested (STD-TESTING 3).
+- [ ] The alert is an in-app full-screen visual with sound and vibration while in the foreground. It works even with notifications denied, is labelled 'Demo', and can be dismissed with TalkBack (Law 14).
+- [ ] Starting a real trip ends the demo first.
+- [ ] It is never used as FGS declaration evidence (STD-COMPLIANCE 1).
 
 ### 4. API Surface
 
@@ -69,7 +77,7 @@ the Allowed list of the domain that initiates it:
 
 #### Publishes
 
-- None to other contexts.
+- None on the bus.
 
 #### Consumes
 
@@ -90,17 +98,18 @@ the Allowed list of the domain that initiates it:
 | Standard | Relevant? | Notes |
 | --- | --- | --- |
 | STD-TESTING | Yes | Rule 3. |
-| STD-COMPLIANCE | Yes | Never used as FGS evidence. |
-| STD-ACCESSIBILITY | Yes |  |
+| STD-COMPLIANCE | Yes | Rule 1. |
+| STD-ACCESSIBILITY | Yes | Rules 1–2. |
 | STD-CODE | Yes |  |
 | STD-CICD | Yes |  |
+| STD-SKINS | Yes | The bundled synthetic area. |
 | STD-PERFORMANCE | No |  |
 | STD-SECURITY | No |  |
 | STD-API | No |  |
 | STD-DATABASE | No |  |
 | STD-OBSERVABILITY | No |  |
-| STD-SKINS | Yes | A bundled synthetic area. |
 
 ### 9. Definition of Done
 
 - [ ] The sandbox test passes.
+- [ ] DOM-TRIP v1.1.0 is Frozen.

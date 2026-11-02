@@ -1,7 +1,7 @@
 ---
 id: FEAT-EXPLORE-REVEAL
-title: "Etak — Feature: Explore-to-Reveal, Journal & Local Erasure"
-version: 0.1.0
+title: "Etak — Feature: Explore-to-Reveal & Journal"
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -10,10 +10,12 @@ created: 2026-11-02
 updated: 2026-11-02
 milestone: M6
 category: Features
-priority: High
+priority: Medium
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - ADR-0006
   - DOM-EXPLORATION
 required_by: []
@@ -23,6 +25,8 @@ related_domains:
   - DOM-LOCATION
   - DOM-TRIP
   - DOM-ACCOUNT
+  - DOM-PLACES
+  - DOM-MAP
 related_features: []
 related_decisions: []
 tags:
@@ -31,59 +35,64 @@ risk: Medium
 complexity: Medium
 ---
 
-## Feature: Explore-to-Reveal, Journal & Local Erasure
+## Feature: Explore-to-Reveal & Journal
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-EXPLORATION` v1.0.0 and `DOM-LOCATION` v1.0.0, `DOM-TRIP` v1.0.0, `DOM-ACCOUNT` v1.0.0, `DOM-PLACES` v1.0.0, `DOM-MAP` v1.0.0. STD-* v1.0.0 (all Frozen).
 
-**Tier:** **Medium**, raised to High for its erasure part (Law 6), which must be frozen before slice 3.
+**Tier:** **Medium.** Erasure moved to FEAT-LOCAL-ERASURE. *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **4.**
 
 ### 1. Overview
 
-An opt-in fog of war over every skin that clears as the user explores, a journal of visited places, and complete local erasure.
+An opt-in fog of war over every skin that clears as the user explores, and a journal of visited places.
 
 ### 2. Owning Domain
 
 **Owning domain:** `DOM-EXPLORATION`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
-- DOM-EXPLORATION → DOM-LOCATION (Allowed): consumes fixes; issues EraseLocalHistory; records the R18 consent.
-- DOM-EXPLORATION → DOM-TRIP (Allowed): consumes TripStarted, TripEnded and TripResumed for R18 gating.
-- DOM-EXPLORATION consumes RemoteChangesApplied from DOM-ACCOUNT (Allowed).
+- DOM-EXPLORATION → DOM-LOCATION (Allowed): fixes; LocationAccessChanged; records the R18 consent.
+- DOM-EXPLORATION → DOM-TRIP (Allowed): TripStarted, TripEnded and TripResumed for R18 gating.
+- DOM-EXPLORATION consumes RemoteChangesApplied and SignedIn/SignedOut/AccountDeleted (DOM-ACCOUNT, Allowed).
+- **via app/**: the `CityResolver` port. Its adapter wraps `PlacesApi.reverse()`, a backend call.
+- **via app/**: the fog overlay is passed into the DOM-MAP Composable.
 
 ### 3. Acceptance Criteria
 
 - [ ] Reveal is off by default. When off, the whole map is visible (R15).
 - [ ] With reveal on, H3 resolution-9 cells clear while the app is in use.
-- [ ] Trip-time reveal happens only with the double opt-in (R18), and never adds journal entries.
-- [ ] The journal lists visited places and city counts.
-- [ ] 'Clear history' deletes cells, the journal and the raw location log, and resumes after a crash. It shows complete only when every context has confirmed (Law 6). Signed-in users are warned that clearing affects all their devices (J11).
+- [ ] Trip-time reveal happens only with the double opt-in (R18). The journal grows **from in-use location only**.
+- [ ] The journal lists visited places and city counts. The city comes from the `CityResolver`, whose reverse-geocode coordinates go in **POST bodies, coarsened** (STD-API 4). Offline: 'unknown city', filled in later.
+- [ ] The fog meets contrast over every skin (STD-ACCESSIBILITY 5).
 
 ### 4. API Surface
 
 - `ExplorationApi` (DOM-EXPLORATION §4)
+- Port `CityResolver`
 
 ### 5. Events
 
 #### Publishes
 
 - ExploredCellsAdded
-- ExplorationCleared
 
 #### Consumes
 
-- LocationFixAcquired
+- LocationFixAcquired, LocationAccessChanged
 - TripStarted, TripEnded, TripResumed
-- RemoteChangesApplied
+- RemoteChangesApplied, SignedIn/SignedOut/AccountDeleted (keep-or-clear)
 
 *(a subset of `DOM-EXPLORATION`'s declared events)*
 
@@ -93,26 +102,26 @@ the Allowed list of the domain that initiates it:
 
 ### 7. Edge Cases & Validations
 
-- An old offline device syncs pre-clear cells: they are dropped.
+- An old offline device syncs pre-clear cells: dropped by epoch.
 - Unknown city offline: filled in later.
 
 ### 8. Non-Functional Considerations
 
 | Standard | Relevant? | Notes |
 | --- | --- | --- |
-| STD-TESTING | Yes | Rule 4 erasure; rule 6 golden IDs. |
-| STD-DATABASE | Yes | Rule 7. |
-| STD-COMPLIANCE | Yes | Disclosure lists the exploration map. |
-| STD-ACCESSIBILITY | Yes | Fog contrast; labels stay legible. |
+| STD-API | Yes | Rule 4 (reverse geocoding via CityResolver). |
+| STD-COMPLIANCE | Yes | Rule 3 (transient transfer); the disclosure lists the exploration map. |
+| STD-TESTING | Yes | Rule 6 (golden IDs). |
+| STD-DATABASE | Yes | Rules 1 and 8. |
+| STD-ACCESSIBILITY | Yes | Rule 5 (fog contrast). |
+| STD-SKINS | Yes | Rule 6 (fog legible on every skin). |
 | STD-PERFORMANCE | Yes | The fog layer within the fps budget. |
 | STD-CODE | Yes |  |
 | STD-CICD | Yes |  |
-| STD-SECURITY | No |  |
-| STD-API | No | Sync is FEAT-ACCOUNT-SYNC's. |
-| STD-OBSERVABILITY | Yes | The debug log is cleared on erasure. |
-| STD-SKINS | No |  |
+| STD-SECURITY | Yes | Rule 7 (via the gateway). |
+| STD-OBSERVABILITY | No |  |
 
 ### 9. Definition of Done
 
-- [ ] Acceptance criteria pass.
-- [ ] The erasure resume test passes.
+- [ ] Criteria pass.
+- [ ] FEAT-LOCAL-ERASURE ships no later than this feature.

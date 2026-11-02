@@ -1,7 +1,7 @@
 ---
 id: FEAT-OFFLINE-PACKS
 title: "Etak — Feature: Offline City Packs"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,12 +14,15 @@ priority: Medium
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - ADR-0003
   - DOM-OFFLINE
 required_by: []
 related_documents: []
 related_domains:
   - DOM-OFFLINE
+  - DOM-KERNEL
 related_features: []
 related_decisions: []
 tags:
@@ -31,16 +34,18 @@ complexity: Medium
 ## Feature: Offline City Packs
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-OFFLINE` v1.0.0 and `DOM-KERNEL` v1.0.0. STD-* v1.0.0 (all Frozen).
 
-**Tier:** **Medium.**
+**Tier:** **Medium.** *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **3.**
 
 ### 1. Overview
 
@@ -50,17 +55,20 @@ Download city-sized areas (tiles, elevation and place names) for offline use wit
 
 **Owning domain:** `DOM-OFFLINE`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
-- None initiated. Other domains consume its events.
+- **via app/**: the map and the area picker are composed by app/, which passes a bbox to `OfflineApi`.
+- DOM-OFFLINE → DOM-KERNEL `core/config`: the tile endpoint.
 
 ### 3. Acceptance Criteria
 
-- [ ] Framing an area shows a live size estimate, and the download is blocked above 50 MB / 3,000 tiles (R10).
-- [ ] Downloads run under WorkManager and survive the app being backgrounded.
+- [ ] A live size estimate is shown, and the download is blocked above 50 MB / 3,000 tiles (R10).
+- [ ] **≤4 parallel requests**, with an identifying User-Agent (Invariant 1).
+- [ ] Downloads run under WorkManager and **never use location** (Invariant 2).
 - [ ] Packs can be named, listed and deleted.
-- [ ] Offline, maps, skins, offline search, alarms and parking work (Law 9).
+- [ ] Offline, packs render with every skin and the pack index is searchable.
 
 ### 4. API Surface
 
@@ -86,25 +94,26 @@ the Allowed list of the domain that initiates it:
 ### 7. Edge Cases & Validations
 
 - Interrupted download: resume or roll back.
-- Storage full.
+- Storage full: the download stops with a message, partial data is removed, and existing packs are kept.
 
 ### 8. Non-Functional Considerations
 
 | Standard | Relevant? | Notes |
 | --- | --- | --- |
+| STD-COMPLIANCE | Yes | Rule 6 and provider limits. |
+| STD-SECURITY | Yes | Rule 4 (the endpoint comes from config). |
 | STD-PERFORMANCE | Yes |  |
-| STD-COMPLIANCE | Yes | Provider limits, User-Agent. |
 | STD-TESTING | Yes |  |
-| STD-ACCESSIBILITY | Yes |  |
+| STD-ACCESSIBILITY | Yes | Rule 2. |
 | STD-CODE | Yes |  |
 | STD-CICD | Yes |  |
-| STD-DATABASE | Yes |  |
-| STD-SECURITY | No |  |
-| STD-API | No | Direct tile fetch, not the backend. |
+| STD-DATABASE | Yes | Rule 1. |
+| STD-SKINS | Yes | Rule 7 (bundled glyphs). |
+| STD-API | No | Direct tile fetch. |
 | STD-OBSERVABILITY | No |  |
-| STD-SKINS | Yes | Bundled glyphs. |
 
 ### 9. Definition of Done
 
 - [ ] S4 confirms the pack and DEM budget.
-- [ ] Acceptance criteria pass.
+- [ ] A **system test**: with the network off, the alarm, parking and saved places work (Law 9).
+- [ ] Criteria pass.

@@ -1,7 +1,7 @@
 ---
 id: FEAT-ACCOUNT-SYNC
 title: "Etak — Feature: Optional Account, Sync & Deletion"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,11 +14,14 @@ priority: High
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - ADR-0007
   - ADR-0008
   - DOM-ACCOUNT
   - STD-API
   - STD-SECURITY
+  - STD-DATABASE
 required_by: []
 related_documents: []
 related_domains:
@@ -37,16 +40,18 @@ complexity: Medium
 ## Feature: Optional Account, Sync & Deletion
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-ACCOUNT` v1.0.0 and `DOM-CODEX` v1.0.0, `DOM-EXPLORATION` v1.0.0, `DOM-LOCATION` v1.0.0. STD-* v1.0.0 (all Frozen). **Pending draft revisions** (staged for proxy review): DOM-CODEX v1.1.0 and DOM-EXPLORATION v1.1.0 (`applyRemote`), and ARCH-SYSTEM v1.2.0 (sync applied by the owner).
 
-**Tier:** **High.** Security and data (Laws 4–6).
+**Tier:** **High.** Security and data (Laws 4–6). *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **4.** The backend and its deployment wait for the owner's M8 approval (ADR-0001 rule 6).
 
 ### 1. Overview
 
@@ -56,20 +61,31 @@ Optional Google sign-in that syncs saved places, parking and explored cells, plu
 
 **Owning domain:** `DOM-ACCOUNT`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
-- DOM-ACCOUNT → DOM-CODEX and DOM-EXPLORATION (Allowed): consumes changes; publishes RemoteChangesApplied.
-- DOM-ACCOUNT → DOM-LOCATION (Allowed): records the sign-in-sync consent.
+- DOM-ACCOUNT → DOM-CODEX (Allowed): `CodexApi.applyRemote(entries)`. CODEX applies LWW and tombstones itself.
+- DOM-ACCOUNT → DOM-EXPLORATION (Allowed): `ExplorationApi.applyRemote(cells, clearedAt)`. EXPLORATION applies epoch-then-union itself.
+- DOM-ACCOUNT → DOM-LOCATION (Allowed): `ConsentApi.record/withdraw` (sign-in-sync).
+- DOM-ACCOUNT consumes CodexEntryChanged, ExploredCellsAdded and ExplorationCleared.
 
 ### 3. Acceptance Criteria
 
 - [ ] Every feature except sync works without signing in (Law 4).
-- [ ] Sign-in uses Credential Manager. The server verifies the ID token and issues sessions. The refresh token is Keystore-wrapped.
-- [ ] Guest data merges on sign-in (LWW for the Codex; union for cells).
+- [ ] The sign-in-sync ConsentRecord is recorded **before the first sync**. Withdrawing it stops sync and signs out, and is not erasure.
+- [ ] Sign-in uses Credential Manager. The server verifies the ID token (audience, issuer, expiry) and stores only the subject ID and **hashed** refresh tokens. On the device, the refresh token is Keystore-wrapped.
+- [ ] **Merge:** the Codex uses LWW. Cells use **epoch-then-union**: take the max `clearedAt`, drop cells first seen before it, then union and keep the earliest firstSeenAt. DOM-ACCOUNT **never writes `codex.db` or `exploration.db`**.
 - [ ] Only the Codex and cells sync (Law 5).
 - [ ] Sign-out offers to keep local data (the default) or clear it.
-- [ ] Delete account (in-app and through the web form): sessions are revoked, the server purges within 30 days, and the 37-day maximum is disclosed (Law 6).
+- [ ] **Deletion:**
+- [ ]   - idempotent, and revokes every session (STD-API 7);
+- [ ]   - purges Account, CodexEntry, ExploredCell and ExploredArea within 30 days, with **at most 37 days** including backups;
+- [ ]   - after the purge, `deletion_job` keeps only an opaque ID and timestamps;
+- [ ]   - web path: the GitHub Pages form signs in with Google and POSTs to the backend, with **CORS restricted to that exact origin**, plus the contact fallback;
+- [ ]   - device: AccountDeleted triggers keep-or-clear.
+- [ ] A CI schema test asserts the server holds only the user tables plus STD-DATABASE 5's closed list, with no coordinates and no device-only entity.
+- [ ] The sync client reaches the API through the exact-host bootstrap (STD-SECURITY 4).
 
 ### 4. API Surface
 
@@ -91,32 +107,34 @@ the Allowed list of the domain that initiates it:
 
 ### 6. Data Changes
 
-- Server: Account, CodexEntry, ExploredCell, ExploredArea, `session`, `deletion_job` (STD-DATABASE rule 5)
+- Server: Account, CodexEntry, ExploredCell, ExploredArea, `session`, `deletion_job` (STD-DATABASE 5)
 
 ### 7. Edge Cases & Validations
 
-- Deletion requested while offline: queued, with the web fallback.
+- Deletion while offline: queued, with the web fallback.
 - Integrity quota exhausted: rate-limit-only.
 
 ### 8. Non-Functional Considerations
 
 | Standard | Relevant? | Notes |
 | --- | --- | --- |
-| STD-SECURITY | Yes | Rules 5–8. |
-| STD-API | Yes | All rules. |
-| STD-DATABASE | Yes | Rules 5 and 6. |
-| STD-TESTING | Yes | Rules 4 and 5. |
-| STD-COMPLIANCE | Yes | Rules 3 and 4. |
-| STD-OBSERVABILITY | Yes | Purge alerts. |
-| STD-CICD | Yes | Backend deploy. |
-| STD-ACCESSIBILITY | Yes | Sign-in UI. |
+| STD-SECURITY | Yes | Rules 4–9. |
+| STD-API | Yes | Rules 1–7. |
+| STD-DATABASE | Yes | Rules 3, 5 and 6. |
+| STD-TESTING | Yes | Rules 4, 5 and 9. |
+| STD-COMPLIANCE | Yes | Rules 3–4. |
+| STD-OBSERVABILITY | Yes | Rule 4 (purge alerts). |
+| STD-CICD | Yes | Rule 5. |
+| STD-ACCESSIBILITY | Yes | Rule 2. |
 | STD-CODE | Yes |  |
 | STD-PERFORMANCE | No |  |
 | STD-SKINS | No |  |
 
 ### 9. Definition of Done
 
-- [ ] Backend deployed behind nginx with limit_req.
+- [ ] Criteria pass.
+- [ ] The backend is deployed behind nginx limit_req, **after the owner's M8 approval**.
 - [ ] The restore drill is done (TD13).
 - [ ] The web deletion page is live.
-- [ ] Acceptance criteria pass.
+- [ ] Flagged commercial free tiers (Law 7): Play Integrity, DuckDNS, Oracle object storage.
+- [ ] The pending domain and ARCH revisions are Frozen.

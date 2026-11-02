@@ -1,7 +1,7 @@
 ---
 id: FEAT-PLACE-SEARCH
 title: "Etak — Feature: Place Search (Online + Offline)"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,8 +14,11 @@ priority: Medium
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - ADR-0004
   - DOM-PLACES
+  - FEAT-PROVIDER-GATEWAY
 required_by: []
 related_documents: []
 related_domains:
@@ -34,41 +37,47 @@ complexity: Medium
 ## Feature: Place Search (Online + Offline)
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-PLACES` v1.0.0 and `DOM-MAP` v1.0.0, `DOM-CODEX` v1.0.0, `DOM-OFFLINE` v1.0.0. STD-* v1.0.0 (all Frozen).
 
-**Tier:** **Medium.**
+**Tier:** **Medium.** *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **3**, after FEAT-PROVIDER-GATEWAY.
 
 ### 1. Overview
 
-Find destinations with typeahead online through the gateway, or from the downloaded packs and the Codex when offline.
+Find destinations with typeahead online through the gateway, or from downloaded packs and the Codex offline.
 
 ### 2. Owning Domain
 
 **Owning domain:** `DOM-PLACES`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
 - DOM-PLACES consumes SkinChanged (DOM-MAP), CodexEntryChanged (DOM-CODEX) and the OfflinePack events (DOM-OFFLINE), all Allowed.
-- DOM-PLACES → the gateway over HTTP only (POST bodies).
+- DOM-PLACES → DOM-CODEX (Allowed): 'Mark as…'.
+- **via app/**: 'Wake me' (→ TripApi.arm) and 'Route' (→ RoutingApi), passing a kernel LatLng plus label.
+- **via app/**: the location bias (the viewport centre) is supplied by the caller and coarsened before it leaves the module.
+- → DOM-GATEWAY over HTTP only.
 
 ### 3. Acceptance Criteria
 
-- [ ] Typeahead is debounced (≥300 ms, ≥3 characters), with a coarsened bias, sent in POST bodies.
-- [ ] Results appear in the skin's typography.
+- [ ] Typeahead is debounced (≥300 ms, ≥3 characters), with a coarsened bias, in POST bodies.
+- [ ] Results use skin typography and show provider attribution (R11).
 - [ ] Offline or throttled: results come from the pack index and the Codex.
-- [ ] Choosing a result opens a place card with 'Wake me', 'Mark as…' and 'Route'.
+- [ ] The place card offers 'Wake me', 'Mark as…' and 'Route' (handoffs via app/).
 
 ### 4. API Surface
 
-- `PlacesApi.search`, `reverse`; gateway `/v1/search`, `/v1/reverse`
+- `PlacesApi.search`, `reverse`
 
 ### 5. Events
 
@@ -94,19 +103,19 @@ the Allowed list of the domain that initiates it:
 
 | Standard | Relevant? | Notes |
 | --- | --- | --- |
-| STD-API | Yes | POST bodies. |
-| STD-PERFORMANCE | Yes | Typeahead p95 ≤800 ms. |
-| STD-ACCESSIBILITY | Yes |  |
+| STD-API | Yes | Rule 4. |
+| STD-SECURITY | Yes | Rules 4 and 7. |
+| STD-COMPLIANCE | Yes | Rules 3 and 6. |
+| STD-SKINS | Yes | Rule 6 (result typography). |
+| STD-PERFORMANCE | Yes | Typeahead p95. |
+| STD-ACCESSIBILITY | Yes | Rules 2 and 5. |
 | STD-TESTING | Yes |  |
-| STD-SECURITY | Yes | Rule 7. |
-| STD-COMPLIANCE | Yes | Attribution. |
 | STD-CODE | Yes |  |
 | STD-CICD | Yes |  |
 | STD-DATABASE | Yes | Rule 1. |
-| STD-OBSERVABILITY | Yes | Provider error metrics. |
-| STD-SKINS | No |  |
+| STD-OBSERVABILITY | No | Gateway-side. |
 
 ### 9. Definition of Done
 
-- [ ] Acceptance criteria pass.
-- [ ] The gateway search endpoints are deployed.
+- [ ] Criteria pass.
+- [ ] FEAT-PROVIDER-GATEWAY is deployed.

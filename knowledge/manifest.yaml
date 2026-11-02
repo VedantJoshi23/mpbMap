@@ -274,69 +274,81 @@ documents:
     status: Frozen
     version: 1.0.0
     milestone: M5
-  - id: FEAT-ARRIVAL-ALARM
-    title: "Etak — Feature: Arrival Alarm"
-    path: knowledge/features/FEAT-ARRIVAL-ALARM.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-LOCATION-CONSENT
-    title: "Etak — Feature: Location Disclosure & Consent"
-    path: knowledge/features/FEAT-LOCATION-CONSENT.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-SKINNED-MAP
-    title: "Etak — Feature: Skinned Map & Skin Switching"
-    path: knowledge/features/FEAT-SKINNED-MAP.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-EXPLORE-REVEAL
-    title: "Etak — Feature: Explore-to-Reveal, Journal & Local Erasure"
-    path: knowledge/features/FEAT-EXPLORE-REVEAL.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-ACCOUNT-SYNC
-    title: "Etak — Feature: Optional Account, Sync & Deletion"
-    path: knowledge/features/FEAT-ACCOUNT-SYNC.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-PLACE-SEARCH
-    title: "Etak — Feature: Place Search (Online + Offline)"
-    path: knowledge/features/FEAT-PLACE-SEARCH.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-OFFLINE-PACKS
-    title: "Etak — Feature: Offline City Packs"
-    path: knowledge/features/FEAT-OFFLINE-PACKS.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-DEMO-TRIP
-    title: "Etak — Feature: Demo Trip (Reviewer Showcase)"
-    path: knowledge/features/FEAT-DEMO-TRIP.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-CODEX-PARKING
-    title: "Etak — Spec Card: Codex & Parking"
-    path: knowledge/features/FEAT-CODEX-PARKING.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
-  - id: FEAT-ROUTE-PREVIEW
-    title: "Etak — Spec Card: Route Preview"
-    path: knowledge/features/FEAT-ROUTE-PREVIEW.md
-    status: Draft
-    version: 0.1.0
-    milestone: M6
   - id: DIVERGENCE-LOG
     title: "Etak — Divergence Log"
     path: knowledge/decisions/DIVERGENCE-LOG.md
     status: Draft
     version: 0.1.0
     milestone: M8
+  - id: FEAT-ARRIVAL-ALARM
+    title: "Etak — Feature: Arrival Alarm"
+    path: knowledge/features/FEAT-ARRIVAL-ALARM.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-LOCATION-CONSENT
+    title: "Etak — Feature: Location Disclosure, Consent & Collection Scope"
+    path: knowledge/features/FEAT-LOCATION-CONSENT.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-LOCAL-ERASURE
+    title: "Etak — Feature: Local History Erasure"
+    path: knowledge/features/FEAT-LOCAL-ERASURE.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-SKINNED-MAP
+    title: "Etak — Feature: Skinned Map, Locate-me & Skin Switching"
+    path: knowledge/features/FEAT-SKINNED-MAP.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-EXPLORE-REVEAL
+    title: "Etak — Feature: Explore-to-Reveal & Journal"
+    path: knowledge/features/FEAT-EXPLORE-REVEAL.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-ACCOUNT-SYNC
+    title: "Etak — Feature: Optional Account, Sync & Deletion"
+    path: knowledge/features/FEAT-ACCOUNT-SYNC.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-PROVIDER-GATEWAY
+    title: "Etak — Feature: Provider Gateway"
+    path: knowledge/features/FEAT-PROVIDER-GATEWAY.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-PLACE-SEARCH
+    title: "Etak — Feature: Place Search (Online + Offline)"
+    path: knowledge/features/FEAT-PLACE-SEARCH.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-ROUTE-PREVIEW
+    title: "Etak — Feature: Route Preview"
+    path: knowledge/features/FEAT-ROUTE-PREVIEW.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-CODEX-PARKING
+    title: "Etak — Feature: Codex & Parking"
+    path: knowledge/features/FEAT-CODEX-PARKING.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-OFFLINE-PACKS
+    title: "Etak — Feature: Offline City Packs"
+    path: knowledge/features/FEAT-OFFLINE-PACKS.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6
+  - id: FEAT-DEMO-TRIP
+    title: "Etak — Feature: Demo Trip (Reviewer Showcase)"
+    path: knowledge/features/FEAT-DEMO-TRIP.md
+    status: Draft
+    version: 0.2.0
+    milestone: M6

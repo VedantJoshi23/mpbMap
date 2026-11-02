@@ -1,7 +1,7 @@
 ---
 id: FEAT-ARRIVAL-ALARM
 title: "Etak — Feature: Arrival Alarm"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,9 +14,15 @@ priority: Critical
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - ADR-0005
   - ADR-0006
   - DOM-TRIP
+  - DOM-LOCATION
+  - STD-TESTING
+  - STD-ACCESSIBILITY
+  - STD-COMPLIANCE
 required_by: []
 related_documents: []
 related_domains:
@@ -34,50 +40,64 @@ complexity: High
 ## Feature: Arrival Alarm
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-TRIP` v1.0.0 and `DOM-LOCATION` v1.0.0, `DOM-MAP` v1.0.0. STD-* v1.0.0 (all Frozen). **Pending draft revisions** (staged for proxy review): DOM-TRIP v1.1.0 (snooze semantics, the safety debug log), which blocks this feature's freeze.
 
-**Tier:** **High.** The headline utility; Laws 1, 2, 3, 14. Frozen before its slice is implemented. **Walking-skeleton slice 1.**
+**Tier:** **High.** The headline utility (Laws 1, 2, 3, 14), and it relies on DOM-TRIP v1.1.0 additions. *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **1** (walking skeleton). In slice 1 the destination comes **from a map long-press only**. The search and Codex sources arrive with their features (slices 2–3). **Slice 1 persists no LocationFix and no safety-debug-log entries**: those start in slice 2 together with FEAT-LOCAL-ERASURE (Law 6, R21).
 
 ### 1. Overview
 
-Lets a traveller pick a destination and arm one or more distance-based alarms that wake them, loudly and reliably, as they approach. The alarm does not depend on the route, works offline, and survives restarts and service death with a loud alert. This is Etak's core utility (KC-079).
+Lets a traveller pick a destination and arm one or more distance-based alarms that wake them, loudly and reliably, as they approach. It does not depend on the route, works offline, and survives restarts and service death with a loud alert (KC-079).
 
 ### 2. Owning Domain
 
 **Owning domain:** `DOM-TRIP`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
-- DOM-TRIP → DOM-LOCATION: `LocationApi.fixes(trip scope)`, `access`; consumes LocationFixAcquired, LocationAccessChanged, DisclosureRecorded (Allowed for DOM-TRIP).
-- `feature/trip/ui` → DOM-MAP: consumes SkinChanged for quest-marker styling (Allowed, ui only).
+- DOM-TRIP → DOM-LOCATION (Allowed, `api/`): `LocationApi.fixes(trip scope)`, `access`; consumes LocationFixAcquired, LocationAccessChanged, DisclosureRecorded.
+- `feature/trip/ui` → DOM-MAP (Allowed, ui only): consumes SkinChanged for quest-marker styling.
+- **via app/** (composition root, no module dependency): the destination (kernel `LatLng` plus label) reaches `TripApi.arm` from a map long-press (slice 1), and later from a place card or Codex entry.
+- **via app/**: the quest-marker overlay is passed into the DOM-MAP Composable.
 
 ### 3. Acceptance Criteria
 
-- [ ] Choosing a destination (map long-press, search result or Codex place) and tapping 'Wake me' opens setup with a required radius, suggested from the trip length, and a travel mode (R22).
-- [ ] Several alarms per trip can be added, edited and removed before and during the trip (J3 step 7).
-- [ ] Pre-flight (R26) runs on every Start trip: location permission and precise accuracy, system location on, notifications, alarm volume above 0, full-screen-intent availability, Play services or the fallback. A failing item explains itself and blocks or degrades as specified.
+- [ ] Setup requires a radius and a travel mode (R22). The radius is user-set, with an allowed range of **0.2–50 km**, so the owner's 10 km example (KC-079) is included. An editable suggestion scales with trip length.
+- [ ] Several alarms per trip can be added, edited and removed before and during the trip. Pre-flight reruns on every edit.
+- [ ] **Pre-flight (R26)** on every Start trip, each item **blocking** or **degrading with a warning**:
+- [ ]   - location permission missing, or the disclosure not recorded: **block**;
+- [ ]   - system location off: **block**;
+- [ ]   - Play services missing or outdated without the LocationManager fallback: **block** (a trip never starts without fixes);
+- [ ]   - approximate-only accuracy: **block** any radius below the reported accuracy (R26);
+- [ ]   - notifications denied: **block**, because there is no reliable alert channel;
+- [ ]   - alarm volume 0: **degrade with a warning**, because vibration and visual still fire (Law 14);
+- [ ]   - full-screen intent unavailable: **degrade with a warning** to a heads-up notification with looping audio and vibration.
 - [ ] Starting inside a radius shows the R4 dialog. 'Arm anyway' fires at the arrival distance (R17), which is shown.
-- [ ] On reaching a radius, the alarm rings on USAGE_ALARM, **looping until dismissed**, with the repeating Law 14 vibration and a full-screen or heads-up visual (ADR-0005).
+- [ ] **Arrival:** the foreground service rings on USAGE_ALARM, **looping until dismissed**, with the Law 14 vibration **repeating until dismissal** and a full-screen or heads-up visual.
+- [ ] **R3 (location lost near destination):** a distinct alert with the same looping audio, repeating vibration and visual. Never the arrival ring.
+- [ ] **R25 (restart):** with a trip armed, a **FLAG_INSISTENT** 'Trip alarm interrupted' notification rings **before unlock**, looping, with repeating vibration and a visual, including under DND set to 'alarms allowed' and on the lock screen.
+- [ ] **R25 (service death):** a stale heartbeat (DISC-DATA-MODEL v1.2.0 fail-safe reading) raises the same alert within the S3-measured bound.
+- [ ] **Resume:** resuming after R25 always takes a user action in the foreground. There is no automatic restart (R5). TripResumed is published then.
+- [ ] **Snooze** (DOM-TRIP Invariant 12): a fixed interval. The same alert re-rings when it ends, regardless of distance. A snoozed alarm stays armed for R2, R24 and R25. A restart during snooze raises R25.
 - [ ] Dismissing one alarm leaves the others armed. The session ends only after the last one is dismissed or the user ends the trip (R2).
-- [ ] Losing GPS falls back to network, then dead reckoning capped by mode. If the estimate crosses the radius, the distinct R3 alert sounds, never the arrival ring.
-- [ ] A phone restart with the trip armed: a FLAG_INSISTENT 'Trip alarm interrupted' alert rings **before unlock** (R25).
-- [ ] Service death (OEM kill): the watchdog detects a stale heartbeat and raises R25 within the S3-measured bound.
-- [ ] 3 hours without progress: a notification prompt; never auto-ends with an alarm armed (R24).
-- [ ] The whole flow, including dismissing from the lock screen, works with TalkBack and 200% font (Law 14).
-- [ ] No ACCESS_BACKGROUND_LOCATION is requested (Law 3).
+- [ ] 3 hours without progress raises a notification prompt. It never auto-ends a trip with an armed alarm (R24).
+- [ ] Arm, dismiss and snooze, **including from the lock screen**, work with TalkBack and 200% font (Law 14).
+- [ ] The merged manifest contains no ACCESS_BACKGROUND_LOCATION (Law 3; CI check).
 
 ### 4. API Surface
 
 - `TripApi.arm/end/editAlarms`, `state` (DOM-TRIP §4)
-- `AlertPort`: the phone adapter (FGS audio loop plus the FLAG_INSISTENT notification)
+- `AlertPort` phone adapter: FGS audio loop, the FLAG_INSISTENT notification, repeating vibration
 
 ### 5. Events
 
@@ -96,8 +116,9 @@ the Allowed list of the domain that initiates it:
 
 ### 6. Data Changes
 
-- `trip.db`: Trip, Alarm (DOM-TRIP)
+- `trip.db`: Trip, Alarm (`snoozeUntil`)
 - DP Proto DataStore: TripBootRecord with heartbeat fields (DISC-DATA-MODEL v1.2.0)
+- SafetyLogEntry (DOM-TRIP v1.1.0). It is **not persisted in slice 1**.
 
 ### 7. Edge Cases & Validations
 
@@ -105,29 +126,30 @@ the Allowed list of the domain that initiates it:
 - A tunnel near the radius: R3 path.
 - Overnight OS update: R25 before unlock.
 - Precise permission revoked mid-trip: R25.
-- DND on: rings under 'alarms allowed', and pre-flight warns otherwise.
+- A restart during snooze: R25.
 - Force-stop: a known limit (TD6). The next launch reports the interrupted trip.
-- Starting the demo during a real trip is refused.
+- Starting a real trip during a demo ends the demo first (FEAT-DEMO-TRIP).
 
 ### 8. Non-Functional Considerations
 
 | Standard | Relevant? | Notes |
 | --- | --- | --- |
-| STD-TESTING | Yes | Rules 1, 2(a)–(i) and 3 are mandatory. |
-| STD-PERFORMANCE | Yes | Fix→decision ≤1 s; decision→ring ≤2 s; battery ≤3% per hour (far mode); the R25 bound is measured. |
-| STD-ACCESSIBILITY | Yes | Rule 1 (lock-screen TalkBack, repeating vibration). |
-| STD-COMPLIANCE | Yes | FGS type location; real-trip declaration video; full-screen intent; POST_NOTIFICATIONS. |
-| STD-CODE | Yes | Direct-boot rule 3; no coordinates in messages. |
-| STD-DATABASE | Yes | DP rule 2; Trip in CE. |
-| STD-OBSERVABILITY | Yes | On-device safety debug log. |
+| STD-TESTING | Yes | Rules 1, 2(a)–(i), 3 and 8. |
+| STD-PERFORMANCE | Yes | Fix→decision ≤1 s; decision→ring ≤2 s; battery ≤3% per hour; R25 is a measured bound. |
+| STD-ACCESSIBILITY | Yes | Rules 1, 2, 3 (the quest marker is distinguished by shape and label) and 5. |
+| STD-COMPLIANCE | Yes | Rule 1: FGS type location, a real-trip declaration video, full-screen intent, POST_NOTIFICATIONS. |
+| STD-CODE | Yes | Rules 3 and 5. |
+| STD-DATABASE | Yes | Rule 2 (DP); rule 1. |
+| STD-OBSERVABILITY | Yes | Rule 5 (from slice 2). |
+| STD-SKINS | No | The quest marker uses design-system colours, not skin colours. |
 | STD-SECURITY | No | No network or auth on this path. |
 | STD-API | No | No backend calls. |
-| STD-CICD | Yes | Gates apply. |
-| STD-SKINS | No | The quest marker uses the design system. |
+| STD-CICD | Yes | Rule 1 gates, including the manifest permission check. |
 
 ### 9. Definition of Done
 
-- [ ] All acceptance criteria pass, with STD-TESTING rule 2 instrumented tests on the device matrix.
-- [ ] Spike S3 is done and its thresholds recorded (heartbeat, watchdog period).
-- [ ] The Play FGS declaration is ready, with a real-trip video.
-- [ ] No open DIV- entries against the specs this feature relies on.
+- [ ] All criteria pass, including the STD-TESTING rule 2 instrumented tests on the device matrix (rule 8).
+- [ ] S3 is done and its thresholds recorded. **S3 and all code wait for the owner's M8 approval (ADR-0001 rule 6).**
+- [ ] DOM-TRIP v1.1.0 is Frozen.
+- [ ] The FGS declaration is ready, with a real-trip video.
+- [ ] No open DIV- entries.

@@ -1,7 +1,7 @@
 ---
 id: FEAT-SKINNED-MAP
-title: "Etak — Feature: Skinned Map & Skin Switching"
-version: 0.1.0
+title: "Etak — Feature: Skinned Map, Locate-me & Skin Switching"
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -14,14 +14,20 @@ priority: High
 depends_on:
   - CONST-CORE
   - ARCH-SYSTEM
+  - DISC-HIDDEN-BUSINESS-RULES
+  - DISC-DATA-MODEL
   - ADR-0003
+  - ADR-0009
   - DOM-MAP
   - STD-SKINS
+  - STD-SECURITY
 required_by: []
 related_documents: []
 related_domains:
   - DOM-MAP
   - DOM-OFFLINE
+  - DOM-LOCATION
+  - DOM-KERNEL
 related_features: []
 related_decisions: []
 tags:
@@ -30,45 +36,57 @@ risk: Medium
 complexity: High
 ---
 
-## Feature: Skinned Map & Skin Switching
+## Feature: Skinned Map, Locate-me & Skin Switching
 
 Authored under Oriveda `OV-007` (Frozen) through `PRM-FEATURE`.
-Lifecycle: **Draft**, under owner-proxy review (ADR-0001).
+Lifecycle: **Draft** v0.2.0, the revision after owner-proxy round 1
+(ADR-0001).
 
-**Context:**
-- **Binds** (Frozen): CONST-CORE, ARCH-SYSTEM, the ADRs cited below, and
-  DISC-HIDDEN-BUSINESS-RULES v1.1.0.
-- **Informs** (Draft, marked as such per Oriveda ADR-0005): its owning
-  `DOM-` spec and the `STD-` Standards cited. A disagreement with a Draft
-  is logged as a `DIV-` entry.
+**Context.** Binds: CONST-CORE v1.0.0, ARCH-SYSTEM v1.1.0, ADR-0002..0009
+v1.0.0, DISC-HIDDEN-BUSINESS-RULES v1.1.0 and DISC-DATA-MODEL v1.2.0;
+its owning `DOM-MAP` v1.0.0 and `DOM-OFFLINE` v1.0.0, `DOM-LOCATION` v1.0.0, `DOM-KERNEL` v1.0.0. STD-* v1.0.0 (all Frozen).
 
-**Tier:** **Medium.** The concept surface; Law 12 is guarded by the lint and runtime guard. **Slice 1 ships one 2D skin (`terrain-sepia`). The remaining MVP skins come in slice 2.**
+**Tier:** **Medium.** It introduces `core/config` (bootstrap) under STD-SECURITY 4. *Tier rule (proxy ruling):* a feature "touches" a
+High-tier spec only when it adds to or changes that spec or its
+enforcement path. Using frozen, already-declared APIs does not count.
+
+**Slice:** **1:** one 2D skin (`terrain-sepia`), locate-me, `core/config`. **2:** the other three MVP skins (two 3D), S1, the 3D fallback.
 
 ### 1. Overview
 
-Renders the real map in original game-inspired skins and switches between them live. The MVP has four skins: `terrain-sepia`, `vertical-night` (3D), `cube-3d` (3D) and `tactical-grid` (C2), each with a 2D fallback where it is 3D.
+Renders the real map in original game-inspired skins, switches between them live, shows the user's position, and loads source endpoints safely from the bootstrap file.
 
 ### 2. Owning Domain
 
 **Owning domain:** `DOM-MAP`, exactly one.
 
-**Other domains involved** (dependencies only). Each call below matches
-the Allowed list of the domain that initiates it:
+**Cross-domain calls.** Each call matches the Allowed list of the domain
+that initiates it. `app/` handoffs go through the composition root and
+add no module dependency.
 
-- DOM-MAP consumes OfflinePackInstalled and OfflinePackRemoved from DOM-OFFLINE (Allowed).
+- DOM-MAP consumes OfflinePackInstalled and OfflinePackRemoved (DOM-OFFLINE, Allowed).
+- DOM-MAP → DOM-LOCATION (Allowed, `api/` only): consumes LocationFixAcquired for locate-me.
+- DOM-MAP → DOM-KERNEL `core/config`: source endpoints.
+- **via app/**: overlays are passed into the map Composable (quest marker, Codex, fog, route).
 
 ### 3. Acceptance Criteria
 
 - [ ] The map opens straight away as a guest with the default skin (J1).
-- [ ] The skin picker and swipe strip switch skins live, preserving the camera, armed alarms and route (C1, J2).
-- [ ] No boundary lines are drawn on any skin (lint plus the runtime guard; Law 12).
-- [ ] Attribution is visible on the map (R11).
-- [ ] 3D skins fall back to 2D below the low-end thresholds (STD-PERFORMANCE).
+- [ ] **Locate-me** centres on the current fix. The first use triggers the disclosure (FEAT-LOCATION-CONSENT).
+- [ ] **Bootstrap (`core/config`):**
+- [ ]   - HTTPS only, and it carries no styles (DOM-MAP Invariant 5);
+- [ ]   - an API host not on the bundled **exact-hostname** allowlist, including a different `*.duckdns.org` name, is ignored;
+- [ ]   - when a host is rejected or unreachable, the app uses **last-known-good**, then the built-in default (STD-SECURITY 4).
+- [ ] **No administrative boundary at any level, maritime included**, on any skin (Law 12, KC-149). Enforced by the CI lint and the runtime guard. The test fixture covers both a land and a maritime boundary layer.
+- [ ] Attribution is visible on **every** map view, and the lint fails if it is hidden (DOM-MAP Invariant 2, STD-SKINS 4).
+- [ ] The skin picker and swipe strip switch skins live, preserving camera, alarms and route (DOM-MAP Invariant 4).
+- [ ] *(Slice 2)* 3D skins fall back to 2D below the low-end thresholds.
 - [ ] Reduced motion and an animation scale of 0 disable transitions.
 
 ### 4. API Surface
 
 - `MapApi.setSkin`, `skins`, the map Composable with overlays
+- `ConfigApi` (kernel)
 
 ### 5. Events
 
@@ -79,17 +97,18 @@ the Allowed list of the domain that initiates it:
 #### Consumes
 
 - OfflinePackInstalled, OfflinePackRemoved
+- LocationFixAcquired
 
 *(a subset of `DOM-MAP`'s declared events)*
 
 ### 6. Data Changes
 
-- Bundled `skins/`; Settings `defaultSkin`
+- Bundled `skins/`; Settings `defaultSkin`; the `core/config` last-known-good cache (CE)
 
 ### 7. Edge Cases & Validations
 
-- An unreachable remote source endpoint: fall back to the built-in endpoint.
-- A style injected with a boundary layer: stripped (test).
+- Offline with no pack: the cached area plus an 'offline' state (DOM-MAP §8).
+- An injected boundary layer is stripped (test).
 
 ### 8. Non-Functional Considerations
 
@@ -98,17 +117,16 @@ the Allowed list of the domain that initiates it:
 | STD-SKINS | Yes | All rules. |
 | STD-PERFORMANCE | Yes | fps, cold start, skin switch. |
 | STD-ACCESSIBILITY | Yes | Rules 3–5. |
-| STD-TESTING | Yes | Rule 6 boundary guard and lint. |
-| STD-COMPLIANCE | Yes | Rules 6 and 7. |
-| STD-CODE | Yes |  |
+| STD-TESTING | Yes | Rule 6. |
+| STD-COMPLIANCE | Yes | Rules 6–7. |
+| STD-SECURITY | Yes | Rule 4 (bootstrap). |
+| STD-CODE | Yes | Rule 1. |
 | STD-CICD | Yes | Style lint. |
-| STD-SECURITY | Yes | Bootstrap allowlist (rule 4). |
 | STD-API | No |  |
 | STD-DATABASE | No |  |
 | STD-OBSERVABILITY | No |  |
 
 ### 9. Definition of Done
 
-- [ ] S1 has been run on the reference devices, with the 3D roster confirmed.
-- [ ] Skin art is original, with LICENSES.md present.
-- [ ] Acceptance criteria pass.
+- [ ] Slice 1: criteria pass for one 2D skin plus bootstrap and locate-me.
+- [ ] Slice 2: S1 is done and the 3D roster confirmed, with original art and LICENSES.md.
