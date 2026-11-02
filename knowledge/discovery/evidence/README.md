@@ -2575,6 +2575,36 @@ claims:
 
 ---
 
+## EVD-053
+
+```yaml
+id: EVD-053
+type: repository
+source: GitHub Actions run 41430378886 on branch m8/slice-1, 2026-11-02
+received: 2026-11-02
+summary: >
+  Slice 1 builds green in CI: the spec validator, the skin lint, 57 JVM
+  domain tests, an Android debug APK build with unit tests and the Law 3
+  manifest check, and the gitleaks secret scan. Five known gaps against
+  Frozen Standards are logged as DIV-001 to DIV-005.
+pipeline: repository
+processed: true
+claims:
+  - id: KC-173
+    statement: >
+      Slice 1 (FEAT-ARRIVAL-ALARM, FEAT-LOCATION-CONSENT, FEAT-SKINNED-MAP
+      with one 2D skin) compiles into a debug APK in CI, with all JVM
+      domain tests passing and no ACCESS_BACKGROUND_LOCATION in the merged
+      manifest. It is not yet verified on a device (spikes S1 and S3,
+      docs/spikes/DEVICE-CHECKLIST.md).
+    status: fact
+    confidence: 95
+    evidence_ids: [EVD-053]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

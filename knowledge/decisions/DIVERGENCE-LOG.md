@@ -54,8 +54,17 @@ This is a living log, never Frozen. Its own `status` stays `Draft`.
 
 ## Entries
 
-No entries yet: there is no code. Logging starts with M8, after the
-owner approves implementation (KC-107).
+Slice 1 code (branch `m8/slice-1`) against Frozen specs. Each row is a
+known gap with a Due date. The code is wrong until it is fixed (ADR-0005
+rule 1).
+
+| ID | Spec § | Spec says | Code does | Found in | Status | Due | Resolved |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| DIV-001 | `STD-CICD` rule 1; `STD-CODE` rules 1, 6 | CI runs ktlint, detekt (with the location-interpolation rule), module-boundary checks, the dependency denylist and Android Lint accessibility checks | CI runs the build, unit tests, the spec validator, the skin lint, the manifest Law 3 check and gitleaks only | `m8/slice-1` | open | 2026-11-30 | |
+| DIV-002 | `STD-TESTING` rules 2, 7 | Instrumented safety-path tests (a)–(i) and coverage gates (≥90% trip domain) | JVM unit tests only (57); no instrumented tests; no coverage gate | `m8/slice-1` | open | 2026-11-30 | |
+| DIV-003 | `FEAT-SKINNED-MAP` §3 (bootstrap) | Fetch the bootstrap file, enforce the allowlist, keep last-known-good | `ConfigResolver` is implemented and tested, but the app uses only the built-in config; no fetch or last-known-good persistence yet | `m8/slice-1` | open | 2026-11-30 | |
+| DIV-004 | `STD-ACCESSIBILITY` rule 3; `FEAT-ARRIVAL-ALARM` §3 | The quest marker is distinguished by shape and label, not colour alone | My-location and quest markers are circles that differ only by colour and size | `m8/slice-1` | open | 2026-11-30 | |
+| DIV-005 | `FEAT-LOCATION-CONSENT` §3 (withdrawal) | Consent can be withdrawn in Settings, with defined effects per kind | Withdrawal is supported by `ConsentApi`, but there is no Settings screen yet | `m8/slice-1` | open | 2026-11-30 | |
 
 | ID | Spec § | Spec says | Code does | Found in | Status | Due | Resolved |
 | --- | --- | --- | --- | --- | --- | --- | --- |
