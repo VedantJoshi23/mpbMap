@@ -1771,6 +1771,43 @@ claims:
 
 ---
 
+## EVD-033
+
+```yaml
+id: EVD-033
+type: conversation
+source: Owner-proxy reviews, 2026-11-02 (ADR-0001). DISC-DOMAIN-DISCOVERY round 2; DISC-TECHNICAL-ARCHITECTURE round 1
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-DOMAIN-DISCOVERY for freeze. On
+  DISC-TECHNICAL-ARCHITECTURE it required: the device-store row to match
+  the Frozen data model, and abuse protection for the gateway, with Play
+  Integrity flagged as a commercial free tier. It reframed the domain
+  question as owner input batched with Q-08, not a rule-4 escalation.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-127
+    statement: >
+      DISC-DOMAIN-DISCOVERY v1.0.0 is approved by the owner proxy
+      (ADR-0001).
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-033]
+    investigation: domain-discovery
+  - id: KC-128
+    statement: >
+      Pending owner input, to be asked together with Q-08 (the app name
+      and package): which of the owner's existing domains hosts the API
+      subdomain. Interim default: GitHub Pages for the static pages.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-033]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
@@ -1780,7 +1817,7 @@ claims:
 | `feature-inventory` | KC-071, KC-072, KC-074, KC-079, KC-083 (fact) | **Frozen** as DISC-FEATURE-INVENTORY v1.0.1 (KC-109, KC-119). |
 | `user-journeys` | KC-061, KC-102 (fact), KC-062 (inference) | **Frozen** as DISC-USER-JOURNEYS v1.0.0 (KC-120). Designed, not observed (KC-062). |
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | **Frozen** as DISC-DATA-MODEL v1.0.0 (KC-125). |
-| `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
+| `domain-discovery` | KC-050, KC-051 (inference) | **Frozen** as DISC-DOMAIN-DISCOVERY v1.0.0 (KC-127). |
 | `technical-architecture` | KC-081, KC-085, KC-087–091, KC-104 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
 | `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093, KC-101 (fact); KC-095, KC-097 (inference) | **Frozen** as DISC-HIDDEN-BUSINESS-RULES v1.0.0 (KC-119). KC-117 escalated. |
 | `technical-debt` | KC-035 (inference) | Not applicable yet (greenfield). |

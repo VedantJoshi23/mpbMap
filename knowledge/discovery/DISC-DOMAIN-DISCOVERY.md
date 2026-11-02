@@ -1,8 +1,8 @@
 ---
 id: DISC-DOMAIN-DISCOVERY
 title: "Discovery: Domain Discovery"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,8 +32,8 @@ complexity: Medium
 # DISC-DOMAIN-DISCOVERY: Domain Discovery
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
-owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**. The
+log](evidence/README.md). Lifecycle: **Frozen** v1.0.0 (2026-11-02, KC-127). Draft v0.1.0, then
+owner-proxy rounds 1–2 (ADR-0001), then Architecture Review, then Freeze. Suggestions are marked **[S]**. The
 reference-app inferences KC-050 and KC-051 are superseded by KC-126.
 
 ## Purpose
@@ -111,7 +111,8 @@ This is the `OV-001` cross-cutting check (KC-051 was inference only).
 | TripResumed | BC1 | BC2 (reopen the trip scope); BC4 (R18 gating) |
 | SkinChanged | BC3 | BC6 (result typography); BC1 (quest-marker style) |
 | CodexEntryChanged | BC5 | BC9 (sync); BC6 (offline index) |
-| ExploredCellsAdded / ExplorationCleared | BC4 | BC9 (union sync; `clearedAt` epoch); BC2 (deletes LocationFix, R21) |
+| ExploredCellsAdded | BC4 | BC9 (union sync) |
+| ExplorationCleared | BC4 | BC9 (`clearedAt` epoch); BC2 (deletes LocationFix, R21) |
 | RemoteChangesApplied | BC9 | BC5 (merged Codex); BC4 (merged cells, a newer `clearedAt`) |
 | OfflinePackInstalled / OfflinePackRemoved | BC8 | BC3 (offline styles); BC6 (offline index) |
 | SignedIn / SignedOut / AccountDeleted | BC9 | BC5, BC4 (merge, keep-or-clear); backend purge (R19) |
@@ -156,6 +157,21 @@ This is the `OV-001` cross-cutting check (KC-051 was inference only).
   gateway.
 - **Improve:** a provider gateway as the anticorruption layer.
 - **Remove:** a shared "settings" context.
+
+## Architecture Review (2026-11-02)
+
+- **Against the Frozen DISC- investigations:**
+  - BC1 covers C4, R1–R4, R17 and R22–R26.
+  - BC2 enforces R5, R6 and R18 at one gateway.
+  - The demo sandbox honours J12 and cannot trigger R25.
+  - The AlertPort serves KC-060.
+  - Erasure reaches every R21 store.
+  - Entity ownership matches DISC-DATA-MODEL, including TripBootRecord
+    in BC1.
+  - Consistent.
+- **Citations:** all current. KC-050 and KC-051 are superseded by KC-126.
+- **Divergences:** none (no code).
+- **Result:** passes.
 
 ## Confidence Level
 

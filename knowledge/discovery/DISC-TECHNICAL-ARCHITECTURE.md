@@ -1,7 +1,7 @@
 ---
 id: DISC-TECHNICAL-ARCHITECTURE
 title: "Discovery: Technical Architecture"
-version: 0.1.0
+version: 0.2.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -33,8 +33,8 @@ complexity: High
 # DISC-TECHNICAL-ARCHITECTURE: Technical Architecture
 
 One of the ten M1 investigations (`OV-001`, Frozen), over [the evidence
-log](evidence/README.md). Lifecycle: **Draft**, under owner-proxy review
-(ADR-0001). Suggestions are marked **[S]**.
+log](evidence/README.md). Lifecycle: **Draft** v0.2.0, the revision after
+owner-proxy round 1 (ADR-0001). Suggestions are marked **[S]**.
 
 This is Discovery, not M3. It records the constraints and evidence, and
 the agent's **candidate** stack. The binding choices are made in M3
@@ -102,7 +102,7 @@ All choices are [S], to be decided in M3.
 | App language and UI | Kotlin, Jetpack Compose | Platform default, and the same language is reusable for Wear OS and Auto |
 | Map | MapLibre Native Android | Free, open, vector, fill-extrusion, hillshade, offline regions, attribution control |
 | Location | Fused location provider (Play services) | Built-in GPS→network fallback (R3); free |
-| Device store | Room (SQLite); a separate DP-storage database for Trip and Alarm | R25 before-unlock reads (DISC-DATA-MODEL) |
+| Device store | Room (SQLite) in CE storage, plus a minimal DP store holding **TripBootRecord only** | R25 before-unlock alert (DISC-DATA-MODEL v1.0.0) |
 | Cells | H3 (Java binding) | Resolution 9 cells (DISC-DATA-MODEL) |
 | Background work | WorkManager (downloads; possibly the watchdog) | Avoids the time cap and extra declaration of a data-sync FGS (J7) |
 | Auth | Sign in with Google (Credential Manager); the backend verifies the ID token | Free, no email infrastructure, low friction for reviewers |
@@ -110,14 +110,42 @@ All choices are [S], to be decided in M3.
 | Server database | A dedicated DB and role on the existing PostgreSQL | No new service, zero spend |
 | Provider gateway | Inside the backend: rate limits, cache, User-Agent | R10, KC-099 |
 | Crash reports | ACRA posting to the backend, or none | No third-party tracking SDK (R20) |
-| Static pages (privacy policy, deletion request) | GitHub Pages | Free; KC-093, KC-097 |
+| Static pages (privacy policy, deletion request) | GitHub Pages; the deletion-request form posts to a backend endpoint that verifies the requester (e.g. a sign-in with the same Google account) | Free; KC-093 needs the request actually processed, not just shown |
 | CI | GitHub Actions (free for public repos) | KC-112 |
+
+### Architecture constraints
+
+These are added in round 1.
+
+- **Gateway abuse protection.** BC10 is a public endpoint on a shared VM.
+  It needs:
+  - per-client and global rate limits;
+  - request-size and request-count caps;
+  - an app-identity check.
+
+  Without them, anyone can use up the shared ≤1 request/second Nominatim
+  and OSRM budget, get our User-Agent banned (R10), or load the owner's
+  other workloads (KC-086). Candidate identity check: Play Integrity. It
+  is a **commercial free tier with quotas**, so it is flagged under the
+  zero-spend rule, and a paid tier is never adopted without escalation
+  (ADR-0001 rule 2). The alternative is a signed app token plus
+  rate-limit-only protection. M3 decides.
+- **SDK levels.** [S] Candidate minSdk is 26 (Android 8.0). targetSdk must
+  meet Play's current requirement for new apps (R12), believed to be
+  API 35 or 36 by late 2026, to be checked at M3. targetSdk decides which
+  foreground-service, full-screen-intent and exact-alarm rules apply.
+- **Backups.** [S] A nightly `pg_dump` of the project database to local
+  disk on the VM, with an encrypted copy in a free off-VM store. A
+  candidate is the Oracle Always Free object storage, to be verified as
+  free. Kept for 7 days. R19 discloses this 7-day window plus the 30-day
+  purge.
 
 ### Spikes required before M3 freezes (from the Frozen investigations)
 
 1. **S1 Rendering:** frame rate while panning and zooming for one 2D skin
-   and one 3D skin on a low-end device. Verifies the 2D fallback (KC-070,
-   C1).
+   and one 3D skin on a low-end device. Test both MapLibre Android 13's
+   Vulkan default and the OpenGL ES variant (KC-123). Verifies the 2D
+   fallback (KC-070, C1).
 2. **S2 Hillshade:** Terrain Tiles encoding and URL pattern, attribution
    text, and MapLibre Android hillshade output (KC-122, KC-123).
 3. **S3 Trip reliability:**
@@ -126,8 +154,17 @@ All choices are [S], to be decided in M3.
    - the inexact watchdog;
    - full-screen-intent behaviour;
    on at least two OEMs (R25, R26).
+
+   **Acceptance criterion for the watchdog:** detection delay of at most
+   10 minutes while a trip is armed, under Doze. Compare WorkManager (its
+   15-minute minimum is likely too slow) with AlarmManager's
+   inexact-while-idle alarm. If no option meets the bound without an
+   exact-alarm permission, record the achievable bound as a known limit
+   (TD6).
 4. **S4 Offline packs:** the MapLibre offline API against OpenFreeMap's
    per-download limits, plus offline search over pack names (C7, C9).
+   Include elevation tiles in the pack budget, so `terrain-sepia` keeps
+   its hillshade offline.
 5. **S5 Backend footprint:** memory of the chosen backend on the shared VM
    (KC-086).
 
@@ -161,10 +198,11 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
 
 ## Questions
 
-1. **For the owner (ADR-0001 rule 4, public identity):** which existing
-   domain should host the API and the privacy/deletion pages, given the
-   privacy-policy URL is shown on Play? Or should the pages use a free
-   GitHub Pages URL?
+1. *(Pending owner input, batched with Q-08, the app name and package)*
+   Which of the owner's existing domains hosts the API subdomain. This is
+   not a rule-4 matter: the hostname and the privacy URL can be changed.
+   Interim default: GitHub Pages for the static pages, and a dedicated API
+   subdomain behind the existing nginx, to be named by the owner.
 2. *(→ M3)* Ktor vs Go for the backend, after S5.
 
 ## Recommendations
