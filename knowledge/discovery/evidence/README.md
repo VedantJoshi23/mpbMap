@@ -1339,7 +1339,7 @@ claims:
 | `data-model` | KC-073 (fact), KC-048, KC-049 (inference) | Covered. Storage of the explored-area record is open. |
 | `domain-discovery` | KC-050, KC-051 (inference) | Inference only. Needs an update for the arrival alarm and accounts. |
 | `technical-architecture` | KC-081, KC-085, KC-087–091 (fact); KC-086, KC-099 (inference) | Covered. A provider recommendation exists (KC-099). |
-| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093 (fact); KC-095–096 (inference) | Covered. KC-098 is assumption-tier. |
+| `hidden-business-rules` | KC-075, KC-080, KC-092, KC-093 (fact); KC-095–097 (inference) | Covered. KC-098 is assumption-tier. |
 | `technical-debt` | KC-035 (inference) | Not applicable yet (greenfield). |
 | `recommendations` | KC-053, KC-055, KC-063–065, KC-096, KC-099, KC-100 (inference) | Covered. |
 
