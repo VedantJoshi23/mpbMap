@@ -1,8 +1,8 @@
 ---
 id: ADR-0004
 title: "Geo Services: Search, Reverse Geocoding, Routing, Weather"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: Medium
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -75,6 +77,18 @@ Photon reverse.
   - no stored coordinates (Law 5).
 - The client debounces typeahead (≥300 ms, ≥3 characters).
 
+### Amendments from owner-proxy round 1
+
+- **Coarsening:** Photon's location-bias coordinates are coarsened like
+  cache keys (Law 5).
+- **Degradation:**
+  - provider throttling or failure → search falls back to the offline pack
+    index;
+  - route preview shows "unavailable";
+  - the alarm never depends on either (Law 9).
+- **TD2 fallback:** add a research EVD entry verifying the FOSSGIS
+  Valhalla public-instance terms before M8.
+
 ## Consequences
 
 - Zero spend.
@@ -86,3 +100,9 @@ Photon reverse.
 
 Throttling or a policy change; any move toward monetisation (TD2, TD11);
 the budget review (self-hosting is a rule-2 escalation).
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 5, 9 and 10 are served through BC10.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

@@ -1,8 +1,8 @@
 ---
 id: ADR-0006
 title: "On-Device Storage and Spatial Indexing"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: Medium
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -76,6 +78,17 @@ DISC-DATA-MODEL v1.1.0 sets the storage classes:
 - Erasure runs as one transaction per database, with confirmations
   aggregated by the EraseLocalHistory flow.
 
+### Amendments from owner-proxy round 1
+
+- **Verifiable erasure (Law 6):** EraseLocalHistory is a **persisted,
+  idempotent command**. Each context retries it on start until it
+  confirms. The UI shows erasure as complete only when every context has
+  confirmed.
+- **Cell IDs:** the JVM fallback **must produce identical H3 cell IDs**
+  (a hard condition), proven by a golden-ID test in S5.
+- **Spike clause:** confirmed by S5 (H3 ABIs) and S3 (DataStore on the
+  boot path).
+
 ## Consequences
 
 - Standard, well-documented tooling, and a small direct-boot surface.
@@ -85,3 +98,9 @@ DISC-DATA-MODEL v1.1.0 sets the storage classes:
 ## Revisit Criteria
 
 S5 ABI results; S3 boot-path timing with DataStore.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 5 and 6 are satisfied; the TripBootRecord DP footprint is minimal.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

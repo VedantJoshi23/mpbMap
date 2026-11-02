@@ -1,8 +1,8 @@
 ---
 id: ADR-0002
 title: "App Platform: Language, UI, DI and Build"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: Medium
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -55,6 +57,16 @@ minSdk and targetSdk are open (DISC-TECHNICAL-ARCHITECTURE).
 - **React Native.** The same drawbacks as Flutter, plus a JS runtime in
   the safety path.
 
+**Dependency injection**
+- **Hilt.** Compile-time graph checking, Jetpack integration, the
+  largest community.
+- **Koin.** Simpler, but runtime resolution means graph errors surface
+  late.
+- **Manual DI.** No framework cost, but it does not scale to about 12
+  modules.
+
+Hilt wins on compile-time safety.
+
 ## Decision
 
 **Kotlin (2.x) with Jetpack Compose and Material 3.**
@@ -65,6 +77,15 @@ minSdk and targetSdk are open (DISC-TECHNICAL-ARCHITECTURE).
 - minSdk: **26**.
 - targetSdk: **Play's current requirement for new apps**, checked at M8
   start and bumped yearly (TD14).
+
+### Amendments from owner-proxy round 1
+
+- **Direct boot under Hilt:** `Application.onCreate`, and every
+  `@Singleton` reached eagerly from it, must not touch CE storage. CE
+  stores are injected lazily (`Lazy<T>` or `Provider<T>`). This makes
+  ARCH-SYSTEM's lazy-CE rule concrete.
+- **Spike clause:** confirmed by S3 (boot path under Hilt). A failure
+  moves the boot path to manual DI through a draft revision.
 
 ## Consequences
 
@@ -77,3 +98,9 @@ minSdk and targetSdk are open (DISC-TECHNICAL-ARCHITECTURE).
 
 An iOS port is requested (not in scope), or Hilt's startup cost breaks
 the direct-boot path in spike S3.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Law 13 is served by module-per-context.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

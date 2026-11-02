@@ -2232,6 +2232,93 @@ claims:
 
 ---
 
+## EVD-045
+
+```yaml
+id: EVD-045
+type: conversation
+source: Owner-proxy (successor #2) technology decisions, ADR-0002 to ADR-0009, 2026-11-02 (ADR-0001, KC-151)
+received: 2026-11-02
+summary: >
+  The proxy decided all eight technology ADRs and froze them now, with
+  spike-confirmation clauses (a spike can only choose among named
+  fallbacks). Key changes: insistent looping alarm audio (the FGS on the
+  alarm stream, or FLAG_INSISTENT); a heartbeat-based watchdog; remote
+  config limited to source endpoints, with bundled linted styles and a
+  runtime boundary guard; persisted idempotent erasure; Keystore-wrapped
+  refresh tokens. All choices are zero-spend. Flagged free tiers: Play
+  Integrity, Oracle object storage, DuckDNS.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-152
+    statement: >
+      ADR-0002 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-153
+    statement: >
+      ADR-0003 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-154
+    statement: >
+      ADR-0004 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-155
+    statement: >
+      ADR-0005 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-156
+    statement: >
+      ADR-0006 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-157
+    statement: >
+      ADR-0007 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-158
+    statement: >
+      ADR-0008 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+  - id: KC-159
+    statement: >
+      ADR-0009 is decided and approved by the owner proxy under KC-151
+      (Hybrid stack freedom) and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-045]
+    investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

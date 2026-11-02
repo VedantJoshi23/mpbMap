@@ -1,8 +1,8 @@
 ---
 id: ADR-0009
 title: "Hosting, Delivery and Operations"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: Low
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -80,6 +82,18 @@ from CI with Play App Signing.
 - **Play App Signing**, with the upload key kept out of the repo
   (DISC-REPO-STRUCTURE hygiene).
 
+### Amendments from owner-proxy round 1
+
+- **The bootstrap file** carries only the API base URL plus the tile,
+  glyph and DEM source endpoints, **never a whole style** (ADR-0003). The
+  app treats it as an untrusted hint: normal TLS validation and the
+  runtime boundary guard still apply.
+- **Release upload:** Gradle Play Publisher (the Play Developer API,
+  free). The Play service-account key lives only in GitHub encrypted
+  secrets, with release-manager permissions only.
+- **Dependency updates:** Renovate or Dependabot.
+- **ACRA endpoint:** gets the same rate limits as BC10.
+
 ## Consequences
 
 - Zero spend, a reproducible public CI, and self-owned crash data.
@@ -87,3 +101,9 @@ from CI with Play App Signing.
 ## Revisit Criteria
 
 DuckDNS incidents (TD16); the budget review (a purchased domain, rule 2).
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 5, 7, 8 and 12 are satisfied.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

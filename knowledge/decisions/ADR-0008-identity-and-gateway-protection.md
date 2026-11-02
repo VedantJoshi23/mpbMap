@@ -1,8 +1,8 @@
 ---
 id: ADR-0008
 title: "Identity and Gateway Protection"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: Medium
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -77,6 +79,16 @@ refresh token after verifying the ID token.
     exhaustion degrades to rate-limit-only, never to an outage);
   - **never a paid tier** without the owner (rule 2).
 
+### Amendments from owner-proxy round 1
+
+- **Refresh token:** stored in CE storage, wrapped with an **Android
+  Keystore** key (not the deprecated EncryptedSharedPreferences). Account
+  deletion revokes every server session.
+- **Disclosure:** the Data safety form and privacy policy disclose the
+  device-integrity data sent to Google by Play Integrity and by
+  Credential Manager sign-in (R12, STD-COMPLIANCE).
+- No spike dependency.
+
 ## Consequences
 
 - No passwords or emails to protect.
@@ -88,3 +100,9 @@ refresh token after verifying the ID token.
 
 Integrity quota pressure (TD12); demand from devices without Google
 services (TD15).
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 4, 6, 7 and 10 are satisfied.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

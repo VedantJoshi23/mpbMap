@@ -1,8 +1,8 @@
 ---
 id: ADR-0003
 title: "Map Rendering and Map Data"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: High
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -77,6 +79,22 @@ DEM.
   layer.
 - 3D terrain stays excluded until MapLibre Android supports it (TD7).
 
+### Amendments from owner-proxy round 1
+
+- **Remote config scope (Law 12):** remote config (the bootstrap file)
+  may change only **tile, glyph and DEM source endpoints**. Skin styles
+  are **bundled and CI-linted**, never fetched whole.
+- **Runtime boundary guard:** BC3 removes any layer whose `source-layer`
+  is `boundary` before rendering. This is defence in depth against
+  mistakes and upstream schema changes.
+- **Glyphs and sprites** are bundled as app assets (`asset://`), so labels
+  work offline (Law 9) and nothing needs hosting.
+- **The CI style lint also fails** any skin that hides or removes the
+  attribution control (R11).
+- **Spike clause:** confirmed by S1 (Vulkan or GL ES; the 3D roster) and
+  S4 (packs plus DEM). A failure picks the named fallback through a draft
+  revision.
+
 ## Consequences
 
 - Zero spend, no keys, and an open stack end to end.
@@ -90,3 +108,9 @@ DEM.
 OpenFreeMap's policy or availability changes (TD1); MapLibre Android
 ships 3D terrain (TD7); S1 misses the smoothness targets on target
 devices.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 7, 9, 11 and 12 are satisfied (bundled linted styles plus the runtime guard).
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

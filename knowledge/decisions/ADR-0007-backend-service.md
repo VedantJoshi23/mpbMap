@@ -1,8 +1,8 @@
 ---
 id: ADR-0007
 title: "Backend Service, Database and Deployment"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: Medium
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -69,6 +71,19 @@ at most).
   copy (the flagged free tier, rule 2 if paid).
 - The restore drill runs before the first release (TD13).
 
+### Amendments from owner-proxy round 1
+
+- **Data access:** **Exposed** (Kotlin SQL DSL) over **HikariCP**, with a
+  **small pool** (max 5), because the shared PostgreSQL serves other
+  workloads (KC-086).
+- **Database access:** the container reaches the host PostgreSQL through
+  the Docker host gateway, as a dedicated **least-privilege role** limited
+  to the project database.
+- **nginx `limit_req`** in front of the service: a defence-in-depth layer
+  below BC10's limits.
+- **Spike clause:** confirmed by S5 (memory). A failure adopts the
+  pre-approved **Go** fallback through a draft revision.
+
 ## Consequences
 
 - One language across app and server.
@@ -78,3 +93,9 @@ at most).
 ## Revisit Criteria
 
 S5 memory; VM contention (TD8); the budget review.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 5 and 7 are satisfied; one deployable service.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.

@@ -1,8 +1,8 @@
 ---
 id: ADR-0005
 title: "Location and Background Execution"
-version: 0.1.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,9 @@ complexity: High
 Technology decision under Oriveda `OV-004`, with **Hybrid** stack freedom
 (KC-151): options are compared, one is recommended, and the owner proxy
 decides (ADR-0001). Constraints: CONST-CORE (Frozen), especially Law 7
-(zero spend) and the KC-151 preferences. Lifecycle: **Draft**.
+(zero spend) and the KC-151 preferences. Lifecycle: **Frozen** v1.0.0 (2026-11-02), decided by the owner proxy
+under KC-151 (EVD-045). Freezing does not authorise spikes or code
+(KC-107).
 
 ## Context
 
@@ -82,6 +84,35 @@ versus background location (forbidden by Law 3).
 - Every mechanism is **confirmed by S3**. If S3 forces a change, R25 and
   J3 are revised as drafts first (precedent).
 
+### Amendments from owner-proxy round 1
+
+- **Insistent alerts** (Laws 1, 14):
+  - The arrival ring and the R3 alert are played **by the running
+    foreground service** on the alarm stream (`USAGE_ALARM`), **looping
+    until the user dismisses them**.
+  - Alerts raised with no service running (R25, from the boot receiver or
+    the watchdog) use a notification with **`FLAG_INSISTENT`**, so the
+    system loops the sound.
+  - Both use the Law 14 vibration patterns.
+  - S3 verifies both with DND set to "alarms allowed" and on the lock
+    screen.
+- **Watchdog mechanism (R25):**
+  - the foreground service writes a **heartbeat timestamp** into the DP
+    TripBootRecord;
+  - the direct-boot-aware watchdog receiver **reschedules itself** on
+    every firing;
+  - if a trip is armed and the heartbeat is older than the threshold, it
+    raises the R25 alert;
+  - the foreground service cancels the watchdog when the trip ends.
+
+  This requires a heartbeat field in TripBootRecord: a DISC-DATA-MODEL
+  v1.2.0 revision, reviewed as a draft.
+- **Missing or outdated Play services:** pre-flight (R26) switches to the
+  LocationManager adapter, or blocks with an explanation. It never starts
+  a trip that cannot get fixes.
+- **Spike clause:** confirmed by S3. A failure changes R25 and J3 through
+  draft revisions first.
+
 ## Consequences
 
 - No background-location declaration is needed.
@@ -94,3 +125,9 @@ versus background location (forbidden by Law 3).
 
 S3 results; Play policy changes to FGS types or full-screen intent; each
 targetSdk bump (TD14).
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE and ARCH-SYSTEM (both Frozen), with no conflict. Laws 1, 3, 13 and 14 are satisfied; ARCH-SYSTEM's direct-boot constraint is concretised.
+Divergences: none (no code). Worked example under Oriveda `examples/`: not
+applicable (Oriveda ADR-0002). Result: passes.
