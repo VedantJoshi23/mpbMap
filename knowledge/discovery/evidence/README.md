@@ -2484,6 +2484,97 @@ claims:
 
 ---
 
+## EVD-050
+
+```yaml
+id: EVD-050
+type: conversation
+source: Owner instruction "Proceed for M8.", 2026-11-02
+received: 2026-11-02
+summary: >
+  The owner explicitly approves starting M8 implementation (ADR-0001 rule
+  6; KC-107).
+pipeline: vision
+processed: true
+claims:
+  - id: KC-168
+    statement: >
+      The owner explicitly approved M8 implementation on 2026-11-02. The
+      spikes and slices run in the order set by the Frozen features:
+      spikes first, then slices 1 to 4.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-050]
+    investigation: recommendations
+```
+
+---
+
+## EVD-051 to EVD-052: M8 build environment and data spikes (2026-11-02)
+
+```yaml
+- id: EVD-051
+  type: repository
+  source: Inspection of the VM toolchain, 2026-11-02
+  pipeline: repository
+  claims:
+    - id: KC-169
+      statement: >
+        The VM (aarch64) has OpenJDK 17, Docker and an authenticated gh
+        CLI, but no Android SDK; the ANDROID_HOME path is stale. Android's
+        aapt2 ships only as x86_64 for Linux, so APKs cannot be packaged
+        on this VM. Pure-Kotlin modules build and test on the VM. Android
+        modules build in GitHub Actions (ADR-0009). Spikes S1 and S3 need
+        the owner's physical phone.
+      status: fact
+      confidence: 90
+      evidence_ids: [EVD-051]
+      investigation: technical-architecture
+    - id: KC-170
+      statement: >
+        The VM's Docker and PostgreSQL (container jwel-data-postgres-1)
+        belong to the owner's other project. Any Kairos database or role
+        must be created only with care and the owner's awareness at slice 3
+        or 4. Nothing is touched in slices 1 and 2.
+      status: fact
+      confidence: 95
+      evidence_ids: [EVD-051]
+      investigation: technical-architecture
+- id: EVD-052
+  type: other
+  source: Live checks of the OpenFreeMap planet TileJSON, AWS Terrain Tiles and the Maven h3 4.5.1 jar, 2026-11-02
+  pipeline: other
+  claims:
+    - id: KC-171
+      statement: >
+        Spike S2 and S4 data checks:
+        - The OpenFreeMap planet TileJSON serves z0-14 vector tiles. Its
+          `boundary` layer carries admin_level, disputed, claimed_by and
+          maritime; its `building` layer carries render_height and
+          render_min_height; attribution is OpenFreeMap, OpenMapTiles and
+          OSM.
+        - AWS Terrain Tiles serve 256-pixel terrarium PNGs at
+          elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png,
+          with no account needed.
+      status: fact
+      confidence: 95
+      evidence_ids: [EVD-052]
+      investigation: technical-architecture
+      notes: Verifies KC-139 and the URL/encoding gap in KC-122.
+    - id: KC-172
+      statement: >
+        Spike S5 partial: h3-java 4.5.1 bundles native libraries for
+        android-arm and android-arm64, but not android-x86/x86_64. Physical
+        phones are covered; emulators need the ADR-0006 pure-JVM fallback,
+        with golden-ID parity.
+      status: fact
+      confidence: 95
+      evidence_ids: [EVD-052]
+      investigation: technical-architecture
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |
