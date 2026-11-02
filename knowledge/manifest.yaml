@@ -334,3 +334,9 @@ documents:
     status: Draft
     version: 0.1.0
     milestone: M6
+  - id: DIVERGENCE-LOG
+    title: "Etak — Divergence Log"
+    path: knowledge/decisions/DIVERGENCE-LOG.md
+    status: Draft
+    version: 0.1.0
+    milestone: M8
