@@ -97,7 +97,7 @@ the Allowed list of the domain that initiates it:
 ### 6. Data Changes
 
 - `trip.db`: Trip, Alarm (DOM-TRIP)
-- DP Proto DataStore: TripBootRecord with heartbeat fields (DISC-DATA-MODEL v1.2.0, pending)
+- DP Proto DataStore: TripBootRecord with heartbeat fields (DISC-DATA-MODEL v1.2.0)
 
 ### 7. Edge Cases & Validations
 
