@@ -1,7 +1,7 @@
 ---
 id: CONST-CORE
 title: Engineering Constitution
-version: 0.3.0
+version: 0.4.0
 status: Draft
 owner: Vedant Joshi
 reviewers:
@@ -186,8 +186,11 @@ R23.
 ### Law 11: Original identity, credited concept
 
 > No franchise or MapShifter names, marks or assets appear in the
-> project's identity or the shipped app. All assets are original or
-> openly licensed. MapShifter is credited for the concept.
+> project's identity or the shipped app. The one exception is the
+> credited concept-reference images in `reference/`, which are excluded
+> from the project licence and never ship in the app (KC-132, KC-133).
+> All other assets are original or openly licensed. MapShifter is
+> credited for the concept.
 
 **Source:** KC-078, KC-057, KC-003 (owner facts); R14; C2. The project's
 own work is Apache-2.0 (KC-133). The MapShifter reference images stay in
@@ -198,9 +201,10 @@ through NOTICE, and never ship in the app (KC-132).
 
 > The app is designed as if India's DPDP Act 2023 applies. Consent,
 > purpose limitation and erasure are covered by Laws 3, 5 and 6. In
-> addition, every location consent is recorded on the device
-> (ConsentRecord), and the privacy policy names the purpose of each data
-> category. Country-boundary depiction follows the owner's choice:
+> addition, every consent the app requests is recorded on the device
+> (ConsentRecord), including its withdrawal: the location disclosure, the
+> R18 reveal-during-trips opt-in, and sign-in/sync. The privacy policy
+> names the purpose of each data category. Country-boundary depiction follows the owner's choice:
 > *pending confirmation (KC-137)*. The agent drafts no legal
 > interpretation beyond this (ADR-0001 rule 5).
 
