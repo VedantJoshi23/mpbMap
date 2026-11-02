@@ -2319,6 +2319,56 @@ claims:
 
 ---
 
+## EVD-046
+
+```yaml
+id: EVD-046
+type: conversation
+source: Owner-proxy (successor #3) rounds 1-2, 2026-11-02 (ADR-0001). DISC-DATA-MODEL v1.2.0; the repair of commit b482fe8; M4 Standards
+received: 2026-11-02
+summary: >
+  The proxy approved DISC-DATA-MODEL v1.2.0 (TripBootRecord heartbeat with
+  a fail-safe reading). It found that the agent's revision script in
+  commit b482fe8 had written a literal "\\1" over five lines of three
+  Frozen files, deleting the TD15 row among them, and required a verbatim
+  restoration as non-semantic patches. It also approved all twelve M4
+  Standards after two rounds.
+pipeline: vision
+processed: true
+claims:
+  - id: KC-168
+    statement: >
+      DISC-DATA-MODEL v1.2.0 is approved by the owner proxy. The watchdog
+      receiver lives in feature/trip/platform/boot; ARCH-SYSTEM §2 cites
+      v1.1.0 and will be updated at its next revision.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-046]
+    investigation: data-model
+  - id: KC-169
+    statement: >
+      Lines lost in commit b482fe8 (a regex callback that inserted a
+      literal backreference) were restored verbatim from b482fe8^:
+      DISC-DATA-MODEL (2 lines, inside v1.2.0), DISC-TECHNICAL-ARCHITECTURE
+      v1.1.1 (1 heading) and DISC-TECHNICAL-DEBT v1.1.1 (the TD15 row and
+      1 heading). A repository-wide grep for backreferences is clean. The
+      one-off script lived only in the scratchpad and is not reused.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-046]
+    investigation: technical-debt
+  - id: KC-170
+    statement: >
+      All twelve M4 Standards (STD-INDEX and STD-CODE through STD-SKINS)
+      are approved by the owner proxy and Frozen at v1.0.0.
+    status: fact
+    confidence: 100
+    evidence_ids: [EVD-046]
+    investigation: recommendations
+```
+
+---
+
 ## Investigation Coverage (OV-000 exit criteria)
 
 | Investigation | Best claims | Status |

@@ -1,8 +1,8 @@
 ---
 id: STD-SKINS
 title: "Skin Authoring"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -32,7 +32,8 @@ complexity: Low
 
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
 CONST-CORE Law (Frozen). **Tier: Medium** (Oriveda ADR-0005). Lifecycle:
-**Draft** v0.2.0, the revision after owner-proxy round 1 (ADR-0001).
+**Frozen** v1.0.0 (2026-11-02), approved by the owner proxy after rounds
+1–2 (KC-170, ADR-0001).
 Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope
@@ -92,3 +93,8 @@ CI style lint (boundary layer, attribution control, `meta.json` schema,
 ADR-0003 makes glyph endpoints remote-configurable, yet bundles glyphs as
 `asset://`. Suggested reading: `asset://` is the default, and a remote
 glyph endpoint is an optional override.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE Laws 1–14, ARCH-SYSTEM, and ADR-0002..0009 as
+amended: no contradiction. Result: passes.

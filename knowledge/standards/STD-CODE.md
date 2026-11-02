@@ -1,8 +1,8 @@
 ---
 id: STD-CODE
 title: "Code Conventions"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -31,7 +31,8 @@ complexity: Low
 
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
 CONST-CORE Law (Frozen). **Tier: Medium** (Oriveda ADR-0005). Lifecycle:
-**Draft** v0.2.0, the revision after owner-proxy round 1 (ADR-0001).
+**Frozen** v1.0.0 (2026-11-02), approved by the owner proxy after rounds
+1–2 (KC-170, ADR-0001).
 Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope
@@ -43,7 +44,8 @@ Kotlin code in `android/` and `backend/`. Excludes skin style JSON
 
 1. **Module boundaries** (ARCH-SYSTEM §4 rules 1–5) are enforced at
    build time. A feature imports only `core/*` and other features'
-   `api/`. *Rationale: Law 13.*
+   `api/`. **`feature/*/api` depends only on `core/*`**, which keeps
+   mutual api-level dependencies acyclic in Gradle. *Rationale: Law 13.*
 2. **Domain purity.** `feature/*/domain` holds no Android framework
    imports. Time, location and storage come in through interfaces.
 3. **Direct boot under Hilt** (ADR-0002, Law 1):
@@ -90,3 +92,8 @@ CI:
 - a **dependency denylist** for ads, analytics, Firebase Analytics and
   Crashlytics (ARCH-SYSTEM §4 rule 5; Law 8). Play Integrity and
   Credential Manager are explicitly allowed.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE Laws 1–14, ARCH-SYSTEM, and ADR-0002..0009 as
+amended: no contradiction. Result: passes.

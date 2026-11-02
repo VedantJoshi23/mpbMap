@@ -1,8 +1,8 @@
 ---
 id: STD-DATABASE
 title: "Data Storage"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -33,7 +33,8 @@ complexity: Low
 
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
 CONST-CORE Law (Frozen). **Tier: High** (Oriveda ADR-0005). Lifecycle:
-**Draft** v0.2.0, the revision after owner-proxy round 1 (ADR-0001).
+**Frozen** v1.0.0 (2026-11-02), approved by the owner proxy after rounds
+1–2 (KC-170, ADR-0001).
 Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope
@@ -70,11 +71,11 @@ Room databases and DataStore on the device; PostgreSQL on the server.
    | --- | --- | --- | --- |
    | `session` (hashed refresh tokens) | Revocable sessions | Until expiry or revocation; deleted with the account | ADR-0008 |
    | `crash_report` (ACRA allowlisted fields) | Diagnostics | 90 days | ADR-0009 |
-   | `deletion_job` | Purge queue | Until the purge completes, plus 30 days | ADR-0008 |
+   | `deletion_job` | Purge queue | While pending it holds the account link. **Once the purge completes, the row keeps only an opaque job ID and timestamps** (no authSubject, no account link), for 30 days | ADR-0008 |
+| `gateway_session` | Gateway access after an Integrity check | **No user identity**; TTL ≤ 24 h | ADR-0008 |
    | `flyway_schema_history` | Migrations | Permanent | ADR-0007 |
 
-   Gateway sessions, if stateful, carry no user identity and have a short
-   TTL. Adding a table for a device-only entity requires a Constitution
+   The list is closed: nothing else is stored server-side. Adding a table for a device-only entity requires a Constitution
    amendment.
 6. **Data access** (ADR-0007): Exposed over HikariCP, **max pool 5**
    (KC-086), a dedicated database, and a least-privilege role.
@@ -100,3 +101,8 @@ None for rules 2, 5 and 7.
 
 Migration tests; schema review against rule 5's closed list in
 PRM-REVIEW; tests for the retention jobs.
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE Laws 1–14, ARCH-SYSTEM, and ADR-0002..0009 as
+amended: no contradiction. Result: passes.

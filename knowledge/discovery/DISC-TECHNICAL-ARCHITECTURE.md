@@ -1,7 +1,7 @@
 ---
 id: DISC-TECHNICAL-ARCHITECTURE
 title: "Discovery: Technical Architecture"
-version: 1.1.0
+version: 1.1.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -260,8 +260,10 @@ works with OpenFreeMap. Option (ii) may need custom tiles.
   GitHub Pages for static pages and the bootstrap file, a flagged free
   DDNS subdomain for the API, and the sanctioned public API hostname.
   Approved by the owner proxy (KC-141).
+- **v1.1.1 (2026-11-02):** restores a heading lost in v1.1.0 to a
+  script defect (non-semantic). Approved by the owner proxy (KC-169).
 
-\1
+## Confidence Level
 
 **Overall: Inference (65).** Provider and renderer facts are at 75–90.
 The candidate stack is a design pending spikes S1–S5.

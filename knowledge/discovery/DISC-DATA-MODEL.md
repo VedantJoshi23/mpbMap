@@ -1,7 +1,7 @@
 ---
 id: DISC-DATA-MODEL
 title: "Discovery: Data Model"
-version: 1.1.0
+version: 1.2.0
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -78,7 +78,7 @@ All entities are [S]. **Storage class** values:
 | **ParkingSpot** | a CodexEntry with category Garage, plus parkedAt and an `active` flag | Device; synced | CE, Srv | CodexEntry |
 | **Trip** | id, travelMode, destination (lat/lon, label), state, startedAt, endedAt, **arrivalDistanceM** (R17), **lastFixAt**, **lastKnownDistanceM** (R3), **lastProgressAt** (R24) | **Device only** | CE | Trip (root) |
 | **Alarm** | id, tripId, radiusM, state (armed / fired / snoozed / dismissed), firedAt, **snoozeUntil** | **Device only** | CE | Trip |
-| **TripBootRecord** | tripId, armed flag, destination **label only**, alarm states | **Device only** | **DP** (R25) | Trip |
+| **TripBootRecord** | tripId, armed flag, destination **label only**, alarm states, **heartbeatAt** (UTC epoch ms), **heartbeatElapsedMs** (elapsedRealtime), **heartbeatBootCount** *(v1.2.0)* | **Device only** | **DP** (R25) | Trip |
 | **LocationFix** | ts, lat/lon, accuracyM, source (gps / network), context (in-use / trip) | **Device only**, 30-day rolling log | CE | none |
 | **ExploredCell** | cellId, firstSeenAt | Device; synced | CE, Srv | ExploredArea |
 | **ExploredArea** | clearedAt epoch | Device; synced | CE, Srv | ExploredArea |
@@ -91,13 +91,32 @@ All entities are [S]. **Storage class** values:
 - ParkingSpot is a CodexEntry with category Garage, so parking spots are
   visible in the Codex list for free. Several spots may be saved; the
   newest is `active`.
+- **Heartbeat** *(v1.2.0, required by ADR-0005's watchdog)*:
+  - **What it means:** liveness of the trip foreground service. The
+    service writes it on its own timer, independent of whether fixes
+    arrive. Fix loss is R3's job; the watchdog is R25's.
+  - **Clock:** within one boot (same `heartbeatBootCount`), staleness is
+    judged on the monotonic `heartbeatElapsedMs`. A different boot count
+    means the boot-receiver path applies. If the boot count cannot be
+    read, the record is treated as a different boot (boot path) or as
+    STALE.
+  - **Fail-safe reading:** an armed record whose heartbeat is missing,
+    unparseable, older than the threshold, or (by wall clock) later than
+    now plus tolerance counts as **STALE** and raises R25 ("an uncertain
+    alert over silence").
+  - **Thresholds and cadence:** set by spike S3, with the threshold at
+    least twice the write interval.
+  - **Storage:** the Proto DataStore field numbers are new and never
+    reused. No coordinates and no location history, so the minimal-DP
+    footprint holds. The writer is the trip FGS. The reader (the
+    watchdog receiver) lives in `feature/trip/platform/boot`.
 - Only **TripBootRecord** sits in DP storage. It holds the minimum R25
   needs to ring before unlock: no coordinates and no location history.
   The full Trip and Alarm stay in normal (CE) storage, because resuming
   happens after unlock, and a trip only starts after the user has
   unlocked the phone, so CE storage is writable during it.
 - **Withdrawing sign-in-sync consent** stops sync and signs the user out. Server data is deleted only through the R9 account-deletion path, so withdrawal is not erasure under CONST-CORE Law 6. *(v1.1.0)*
-\1 Each field is owned by the context
+- **Settings** is one storage record. Each field is owned by the context
   that uses it (DISC-DOMAIN-DISCOVERY).
 - [S] **ExploredCell uses H3 resolution 9 cells** (edges about 174 m,
   about 0.105 km² per cell), the closest standard size to C3's "about
@@ -201,14 +220,25 @@ All entities are [S]. **Storage class** values:
 - **Divergences:** none (no code).
 - **Result:** passes.
 
+## Architecture Review: v1.2.0 re-review (2026-11-02)
+
+- Consistent with ADR-0005, R25 and J3.
+- The DP footprint is still minimal (no coordinates).
+- ARCH-SYSTEM §2 cites v1.1.0. That will be updated at ARCH-SYSTEM's
+  next revision.
+
 ## Revision History
 
 - **v1.1.0 (2026-11-02):** ConsentRecord widened to every consent the
   app requests (CONST-CORE Law 12, KC-134), with `withdrawnAt` and the
   withdrawal semantics; Q3 closed as device-only. Additive only. Approved
   by the owner proxy (KC-141).
+- **v1.2.0 (2026-11-02):** adds the TripBootRecord heartbeat fields and
+  their fail-safe reading. Additive only; required by ADR-0005 (the
+  watchdog). Also restores two lines lost in v1.1.0 to a script defect
+  (non-semantic). Approved by the owner proxy (KC-168).
 
-\1
+## Confidence Level
 
 **Overall: Inference (70).** Entities are derived from Frozen capabilities,
 rules and journeys. Storage roles and retention are design proposals.

@@ -1,8 +1,8 @@
 ---
 id: STD-SECURITY
 title: "Security and Public-Repo Hygiene"
-version: 0.2.0
-status: Draft
+version: 1.0.0
+status: Frozen
 owner: Vedant Joshi
 reviewers:
   - Owner proxy (ADR-0001)
@@ -33,7 +33,8 @@ complexity: Low
 
 A Standard under Oriveda `OV-005` (Frozen). It may never contradict a
 CONST-CORE Law (Frozen). **Tier: High** (Oriveda ADR-0005). Lifecycle:
-**Draft** v0.2.0, the revision after owner-proxy round 1 (ADR-0001).
+**Frozen** v1.0.0 (2026-11-02), approved by the owner proxy after rounds
+1–2 (KC-170, ADR-0001).
 Shape: Scope, Rules, Examples, Exceptions, Enforcement.
 
 ## Scope
@@ -59,9 +60,12 @@ the shared VM.
    the tile, glyph and DEM source endpoints, never secrets or styles.
    - **Threat:** a compromised Pages repo could redirect the API to a
      host with a valid certificate.
-   - **Mitigation:** HTTPS only, and the API host must match a bundled
-     allowlist pattern (the DDNS domain). Otherwise the app keeps its
-     last known good value or the built-in default. A residual risk is
+   - **Mitigation:** HTTPS only, and the API host must be on a bundled
+     **allowlist of exact hostnames**: the current API host plus any
+     pre-planned successors. The allowlist **never** uses a wildcard over
+     a public DDNS zone, because anyone can register a `*.duckdns.org`
+     name. A host outside the list is ignored, and the app keeps its last
+     known good value or the built-in default. A residual risk is
      recorded with TD16.
 5. **Auth** (ADR-0008):
    - verify the Google ID token server-side (audience, issuer, expiry);
@@ -105,3 +109,8 @@ None for rules 1, 2, 5, 7 and 8. Others need an ADR.
 
 gitleaks in CI; Renovate or Dependabot; the release checklist; backend
 and nginx log-format tests (STD-TESTING rule 5).
+
+## Architecture Review (2026-11-02)
+
+Checked against CONST-CORE Laws 1–14, ARCH-SYSTEM, and ADR-0002..0009 as
+amended: no contradiction. Result: passes.

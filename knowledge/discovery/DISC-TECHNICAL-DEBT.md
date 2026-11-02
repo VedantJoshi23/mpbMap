@@ -1,7 +1,7 @@
 ---
 id: DISC-TECHNICAL-DEBT
 title: "Discovery: Technical Debt"
-version: 1.1.0
+version: 1.1.1
 status: Frozen
 owner: Vedant Joshi
 reviewers:
@@ -72,7 +72,8 @@ triggers and migration paths, so that M4 Standards and M8 can track them.
 | TD12 | Gateway app identity: Play Integrity quotas, or a weaker extractable token | Zero spend | Quota exhaustion, or abuse past the token | Quota alerts; abuse seen in gateway logs | Tighter rate limits; a paid tier is a rule-2 escalation |
 | TD13 | A single VM with no redundancy, and an untested backup restore | Zero spend; KC-104 best effort | Data loss on VM failure | Before the first public release | A scripted restore drill; off-VM backups (flagged free tier) |
 | TD14 | Play's yearly targetSdk bump | Play policy (R12) | Forced updates; behaviour changes to FGS and alarms | Each Play deadline | Recurring maintenance task; rerun S3 on each bump |
-\1| TD16 | The API hostname is a free DDNS subdomain (KC-136) | No domain, zero spend | Provider shutdown; **hostname hijack** through takeover of the DDNS account (an attacker could get a valid certificate for our name) | The budget review; any DDNS incident | The bootstrap file on GitHub Pages redirects without a release. Mitigations: 2FA on the DDNS account; the update token kept on the VM, never in the repo; optional public-key pinning with a reused key and a backup pin. Repayment: a purchased domain (rule 2) |
+| TD15 | Dependence on Google Play services (Fused location, Credential Manager, Integrity) | Free and robust | Devices without Google services are excluded | User demand from such devices | Fall back to platform LocationManager behind BC2; alternative sign-in |
+| TD16 | The API hostname is a free DDNS subdomain (KC-136) | No domain, zero spend | Provider shutdown; **hostname hijack** through takeover of the DDNS account (an attacker could get a valid certificate for our name) | The budget review; any DDNS incident | The bootstrap file on GitHub Pages redirects without a release. Mitigations: 2FA on the DDNS account; the update token kept on the VM, never in the repo; optional public-key pinning with a reused key and a backup pin. Repayment: a purchased domain (rule 2) |
 
 - [S] **Tracking:** each TD item becomes a dated entry in the project's
   shortcut register (Oriveda Principle 7). Release checkpoints check that
@@ -127,8 +128,11 @@ triggers and migration paths, so that M4 Standards and M8 can track them.
 - **v1.1.0 (2026-11-02):** adds TD16 (the DDNS API hostname), after
   DISC-TECHNICAL-ARCHITECTURE v1.1.0. Approved by the owner proxy
   (KC-141).
+- **v1.1.1 (2026-11-02):** restores the TD15 row and a heading lost in
+  v1.1.0 to a script defect (non-semantic). Approved by the owner proxy
+  (KC-169).
 
-\1
+## Confidence Level
 
 **Overall: Inference (65).** The debts derive from Frozen specs and
 fact-tier provider claims. The risk ratings are judgements.
