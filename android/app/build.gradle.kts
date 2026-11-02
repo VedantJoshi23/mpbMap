@@ -29,6 +29,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -51,6 +52,8 @@ dependencies {
     implementation(project(":feature:map:api"))
     implementation(project(":feature:map:ui"))
     implementation(project(":feature:map:platform"))
+    implementation(project(":feature:map:domain"))
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime)

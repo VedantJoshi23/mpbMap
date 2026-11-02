@@ -1,0 +1,16 @@
+{
+  "codename": "cube-3d",
+  "version": "0.1.0",
+  "is3D": true,
+  "fallback2D": "derived:flatten",
+  "fontSet": [
+    "NotoSans-Regular"
+  ],
+  "iconSet": [],
+  "accents": {
+    "primary": "#5D8C2B",
+    "secondary": "#3F76E4",
+    "land": "#7CB342"
+  },
+  "attribution": "OpenFreeMap, OpenMapTiles, OpenStreetMap contributors"
+}

@@ -1,0 +1,16 @@
+{
+  "codename": "vertical-night",
+  "version": "0.1.0",
+  "is3D": true,
+  "fallback2D": "derived:flatten",
+  "fontSet": [
+    "NotoSans-Regular"
+  ],
+  "iconSet": [],
+  "accents": {
+    "primary": "#FF3EA5",
+    "secondary": "#22E3F2",
+    "land": "#0B1020"
+  },
+  "attribution": "OpenFreeMap, OpenMapTiles, OpenStreetMap contributors"
+}

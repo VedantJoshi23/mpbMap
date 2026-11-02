@@ -25,6 +25,7 @@ kotlin {
 
 dependencies {
     implementation(project(":feature:map:platform"))
+    implementation(project(":feature:map:domain"))
     implementation(project(":core:designsystem"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

@@ -1,0 +1,17 @@
+{
+  "codename": "tactical-grid",
+  "version": "0.1.0",
+  "is3D": false,
+  "fallback2D": null,
+  "fontSet": [
+    "NotoSans-Regular"
+  ],
+  "iconSet": [],
+  "accents": {
+    "primary": "#3B3B30",
+    "secondary": "#C2A23A",
+    "land": "#C8C2A3"
+  },
+  "attribution": "OpenFreeMap, OpenMapTiles, OpenStreetMap contributors",
+  "grid": true
+}

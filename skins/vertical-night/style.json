@@ -1,0 +1,408 @@
+{
+ "version": 8,
+ "name": "vertical-night",
+ "metadata": {
+  "kairos:codename": "vertical-night",
+  "kairos:note": "Original Kairos skin. No boundary layer by design (CONST-CORE Law 12)."
+ },
+ "sources": {
+  "openmaptiles": {
+   "type": "vector",
+   "url": "https://tiles.openfreemap.org/planet",
+   "attribution": "<a href=\"https://openfreemap.org\">OpenFreeMap</a> <a href=\"https://www.openmaptiles.org/\">&copy; OpenMapTiles</a> Data from <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
+  }
+ },
+ "glyphs": "asset://glyphs/{fontstack}/{range}.pbf",
+ "layers": [
+  {
+   "id": "background",
+   "type": "background",
+   "paint": {
+    "background-color": "#0B1020"
+   }
+  },
+  {
+   "id": "park",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "park",
+   "paint": {
+    "fill-color": "#0F2A2A",
+    "fill-opacity": 0.8
+   }
+  },
+  {
+   "id": "water",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "water",
+   "paint": {
+    "fill-color": "#060A14",
+    "fill-opacity": 1.0
+   }
+  },
+  {
+   "id": "road-minor",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "minor",
+      "service"
+     ]
+    ]
+   ],
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#1E2A4A",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     12,
+     0.4,
+     16,
+     3
+    ]
+   },
+   "minzoom": 12
+  },
+  {
+   "id": "road-major-glow",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "primary",
+      "secondary",
+      "tertiary",
+      "trunk"
+     ]
+    ]
+   ],
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#22E3F2",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     6,
+     1.5,
+     16,
+     10
+    ]
+   }
+  },
+  {
+   "id": "road-major",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "primary",
+      "secondary",
+      "tertiary",
+      "trunk"
+     ]
+    ]
+   ],
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#0B1020",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     6,
+     0.4,
+     16,
+     3
+    ]
+   }
+  },
+  {
+   "id": "road-motorway",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "motorway"
+     ]
+    ]
+   ],
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#FF3EA5",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     5,
+     1,
+     16,
+     8
+    ]
+   }
+  },
+  {
+   "id": "rail",
+   "type": "line",
+   "source": "openmaptiles",
+   "source-layer": "transportation",
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "rail"
+     ]
+    ]
+   ],
+   "layout": {
+    "line-cap": "round",
+    "line-join": "round"
+   },
+   "paint": {
+    "line-color": "#8A5CFF",
+    "line-width": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     8,
+     0.6,
+     16,
+     2
+    ],
+    "line-dasharray": [
+     2,
+     2
+    ]
+   }
+  },
+  {
+   "id": "building-3d",
+   "type": "fill-extrusion",
+   "source": "openmaptiles",
+   "source-layer": "building",
+   "minzoom": 13,
+   "filter": [
+    "!=",
+    [
+     "get",
+     "hide_3d"
+    ],
+    true
+   ],
+   "paint": {
+    "fill-extrusion-color": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "coalesce",
+      [
+       "get",
+       "render_height"
+      ],
+      0
+     ],
+     0,
+     "#1B2440",
+     40,
+     "#3A2A6B",
+     120,
+     "#6B2A8C",
+     250,
+     "#B0307F"
+    ],
+    "fill-extrusion-height": [
+     "coalesce",
+     [
+      "get",
+      "render_height"
+     ],
+     0
+    ],
+    "fill-extrusion-base": [
+     "coalesce",
+     [
+      "get",
+      "render_min_height"
+     ],
+     0
+    ],
+    "fill-extrusion-opacity": 0.9
+   }
+  },
+  {
+   "id": "place-label",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "place",
+   "layout": {
+    "text-field": [
+     "coalesce",
+     [
+      "get",
+      "name:en"
+     ],
+     [
+      "get",
+      "name"
+     ]
+    ],
+    "text-font": [
+     "NotoSans-Regular"
+    ],
+    "text-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     4,
+     11,
+     12,
+     16
+    ],
+    "text-transform": "uppercase",
+    "text-letter-spacing": 0.15
+   },
+   "paint": {
+    "text-color": "#22E3F2",
+    "text-halo-color": "#0B1020",
+    "text-halo-width": 1.6
+   },
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "city",
+      "town",
+      "village",
+      "suburb"
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "water-label",
+   "type": "symbol",
+   "source": "openmaptiles",
+   "source-layer": "water_name",
+   "layout": {
+    "text-field": [
+     "coalesce",
+     [
+      "get",
+      "name:en"
+     ],
+     [
+      "get",
+      "name"
+     ]
+    ],
+    "text-font": [
+     "NotoSans-Regular"
+    ],
+    "text-size": [
+     "interpolate",
+     [
+      "linear"
+     ],
+     [
+      "zoom"
+     ],
+     8,
+     11,
+     14,
+     13
+    ],
+    "text-transform": "none",
+    "text-letter-spacing": 0.05
+   },
+   "paint": {
+    "text-color": "#6C7CA8",
+    "text-halo-color": "#060A14",
+    "text-halo-width": 1.6
+   }
+  }
+ ]
+}

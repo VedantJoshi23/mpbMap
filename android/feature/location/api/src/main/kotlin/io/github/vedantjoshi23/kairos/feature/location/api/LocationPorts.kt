@@ -22,3 +22,16 @@ interface ConsentApi {
     suspend fun withdraw(kind: ConsentKind)
     suspend fun isInForce(kind: ConsentKind): Boolean
 }
+
+/**
+ * Debug-build-only movement simulator (owner request, EVD-055): feeds synthetic fixes
+ * moving from [from] to [to] into the real fix stream so the real trip engine can be
+ * tested without travelling. Inert in release builds. It is not the J12 demo and is
+ * never used as Play declaration evidence (STD-COMPLIANCE rule 1).
+ */
+interface DevMovementSimulator {
+    val available: Boolean
+    val active: kotlinx.coroutines.flow.StateFlow<Boolean>
+    fun start(from: io.github.vedantjoshi23.kairos.core.kernel.LatLng, to: io.github.vedantjoshi23.kairos.core.kernel.LatLng, speedMps: Double)
+    fun stop()
+}
