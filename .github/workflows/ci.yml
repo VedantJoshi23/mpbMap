@@ -48,7 +48,8 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
+      # The ubuntu runner ships an Android SDK with licences accepted (ANDROID_HOME).
+      - run: echo "ANDROID_HOME=$ANDROID_HOME"
       - uses: gradle/actions/setup-gradle@v4
       - name: Assemble debug APK and run all unit tests
         working-directory: android
