@@ -69,6 +69,10 @@ private fun evaluateAndAlert(context: Context, afterBoot: Boolean, done: () -> U
                 InterruptedNotifier.raise(appContext, record.destinationLabel)
             }
             if (verdict != BootVerdict.NOT_ARMED) Watchdog.schedule(appContext)
+        } catch (e: Exception) {
+            // Never crash the receiver; keep the watchdog alive so it can try again.
+            android.util.Log.e("KairosWatchdog", "evaluation failed: ${e::class.java.simpleName}", e)
+            runCatching { Watchdog.schedule(appContext) }
         } finally {
             done()
         }

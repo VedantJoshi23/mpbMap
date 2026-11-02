@@ -44,12 +44,21 @@ fun KairosMap(
     overlays: List<Overlay>,
     centerOn: Pair<Double, Double>?,
     onLongPress: (lat: Double, lon: Double) -> Unit,
+    onError: (Throwable) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val mapView = remember {
-        MapLibre.getInstance(context)
-        MapView(context).also { it.onCreate(Bundle()) }
+    // Error boundary: native map start-up failures surface as an error, not a crash.
+    val created = remember {
+        runCatching {
+            MapLibre.getInstance(context)
+            MapView(context).also { it.onCreate(Bundle()) }
+        }
+    }
+    val mapView = created.getOrNull()
+    if (mapView == null) {
+        LaunchedEffect(Unit) { onError(created.exceptionOrNull() ?: IllegalStateException("map unavailable")) }
+        return
     }
     val holder = remember { arrayOfNulls<MapLibreMap>(1) }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -74,7 +83,7 @@ fun KairosMap(
             map.uiSettings.isAttributionEnabled = true
             map.uiSettings.isLogoEnabled = false
             map.cameraPosition = CameraPosition.Builder().target(LatLng(22.0, 79.0)).zoom(4.0).build()
-            map.setStyle(Style.Builder().fromJson(styleJson))
+            runCatching { map.setStyle(Style.Builder().fromJson(styleJson)) }.onFailure(onError)
             map.addOnMapLongClickListener { p -> onLongPress(p.latitude, p.longitude); true }
         }
         mapView
@@ -82,7 +91,7 @@ fun KairosMap(
 
     LaunchedEffect(overlays) {
         mapView.getMapAsync { map ->
-            map.getStyle { style -> overlays.forEach { draw(style, it) } }
+            map.getStyle { style -> runCatching { overlays.forEach { draw(style, it) } }.onFailure(onError) }
         }
     }
     LaunchedEffect(centerOn) {

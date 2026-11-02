@@ -14,6 +14,7 @@ import io.github.vedantjoshi23.kairos.feature.map.platform.Overlay
 
 @Composable
 fun MapScreen(
+    onMapError: (Throwable) -> Unit,
     styleJson: String,
     overlays: List<Overlay>,
     centerOn: Pair<Double, Double>?,
@@ -21,7 +22,7 @@ fun MapScreen(
     onLocateMe: () -> Unit,
 ) {
     Box(Modifier.fillMaxSize()) {
-        KairosMap(styleJson, overlays, centerOn, onLongPress, Modifier.fillMaxSize())
+        KairosMap(styleJson, overlays, centerOn, onLongPress, onMapError, Modifier.fillMaxSize())
         ExtendedFloatingActionButton(
             onClick = onLocateMe,
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),

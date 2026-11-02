@@ -65,11 +65,40 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (intent.getBooleanExtra(AlarmActivity.EXTRA_RESUME, false)) {
             // Resume after an interruption is always a foreground user action (R25, R5).
-            ContextCompat.startForegroundService(this, Intent(this, TripService::class.java).setAction(TripService.ACTION_RESUME))
+            startTripService(Intent(this, TripService::class.java).setAction(TripService.ACTION_RESUME))
         }
-        val style = SkinAssets.load(this, "terrain-sepia", config.resolve(null, null).config.tileUrl)
-        setContent { KairosTheme { Surface(Modifier.fillMaxSize()) { AppRoot(style) } } }
+        val crash = CrashGuard.lastCrash(this)
+        setContent {
+            KairosTheme {
+                Surface(Modifier.fillMaxSize()) {
+                    var report by remember { mutableStateOf(crash) }
+                    var styleAttempt by remember { mutableStateOf(0) }
+                    val style = remember(styleAttempt) { loadStyle() }
+                    when {
+                        report != null -> CrashReportScreen(report!!) { CrashGuard.clear(this@MainActivity); report = null }
+                        style.isFailure -> ErrorCard(
+                            "The map couldn't load",
+                            style.exceptionOrNull()?.let { "${it::class.java.simpleName}: ${it.message}" } ?: "Unknown error",
+                        ) { styleAttempt++ }
+                        else -> AppRoot(style.getOrThrow())
+                    }
+                }
+            }
+        }
     }
+
+    /** Error boundary: a bad style or asset shows an error card, never a crash. */
+    private fun loadStyle(): Result<String> = runCatching {
+        SkinAssets.load(this, "terrain-sepia", config.resolve(null, null).config.tileUrl)
+    }.onFailure { CrashGuard.record(this, "loadStyle", it) }
+
+    /** Error boundary for starting the trip service (e.g. a background-start restriction). */
+    private fun startTripService(intent: Intent): Boolean = runCatching {
+        ContextCompat.startForegroundService(this, intent)
+    }.onFailure {
+        CrashGuard.record(this, "startTripService", it)
+        android.widget.Toast.makeText(this, "Couldn't start the trip: ${it::class.java.simpleName}", android.widget.Toast.LENGTH_LONG).show()
+    }.isSuccess
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -102,7 +131,9 @@ class MainActivity : ComponentActivity() {
         }
 
         fun locateOnce() = scope.launch {
-            val fix = withTimeoutOrNull(15_000) { location.fixes(tripActive = false).firstOrNull() }
+            val fix = runCatching { withTimeoutOrNull(15_000) { location.fixes(tripActive = false).firstOrNull() } }
+                .onFailure { CrashGuard.record(ctx, "locateOnce", it) }
+                .getOrNull()
             if (fix != null) { me = fix; center = fix.position.lat to fix.position.lon }
         }
 
@@ -128,7 +159,13 @@ class MainActivity : ComponentActivity() {
             me?.let { add(Overlay("me", it.position.lat, it.position.lon, "#0E6B6A", 7f)) }
             destination?.let { add(Overlay("quest", it.lat, it.lon, "#B4530A", 10f)) }
         }
+        var mapError by remember { mutableStateOf<Throwable?>(null) }
+        mapError?.let { e ->
+            ErrorCard("The map couldn't start", "${e::class.java.simpleName}: ${e.message}") { mapError = null }
+            return
+        }
         MapScreen(
+            onMapError = { e -> CrashGuard.record(ctx, "map", e); mapError = e },
             styleJson = style,
             overlays = overlays,
             centerOn = center,
@@ -147,10 +184,9 @@ class MainActivity : ComponentActivity() {
                     ),
                     onStart = { mode, radii ->
                         withLocation {
-                            ContextCompat.startForegroundService(
-                                ctx, TripService.startIntent(ctx, dest.lat, dest.lon, "the pinned place", mode.name, radii.toDoubleArray()),
-                            )
-                            destination = null
+                            if (startTripService(TripService.startIntent(ctx, dest.lat, dest.lon, "the pinned place", mode.name, radii.toDoubleArray()))) {
+                                destination = null
+                            }
                         }
                     },
                     onFix = { item -> fix(item, ctx) { withLocation {} } },

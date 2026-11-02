@@ -32,6 +32,7 @@ import io.github.vedantjoshi23.kairos.feature.trip.domain.TravelMode
 import io.github.vedantjoshi23.kairos.feature.trip.domain.TripEffect
 import io.github.vedantjoshi23.kairos.feature.trip.domain.TripEvent
 import io.github.vedantjoshi23.kairos.feature.trip.domain.TripSession
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,8 +61,34 @@ class TripService : LifecycleService() {
         alerts = PhoneAlertAdapter(this, AlarmSound(this))
     }
 
+    /**
+     * Safety-path error boundary (STD-CODE rule 5; Law 1): any failure becomes a loud
+     * "Trip alarm interrupted" alert, never a silent death.
+     */
+    private val guard = CoroutineExceptionHandler { _, e -> onSafetyFailure("coroutine", e) }
+
+    private fun onSafetyFailure(where: String, e: Throwable) {
+        android.util.Log.e(TAG, "trip safety path failed in $where: ${e::class.java.simpleName}", e)
+        val s = session
+        val raised = s != null && runCatching {
+            alerts.raise(io.github.vedantjoshi23.kairos.feature.trip.domain.Alert(AlertKind.TRIP_INTERRUPTED, s.tripId))
+        }.isSuccess
+        if (!raised) InterruptedNotifier.raise(this, s?.destination?.label ?: "your destination")
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        try {
+            handle(intent)
+        } catch (e: Exception) {
+            onSafetyFailure("onStartCommand", e)
+        }
+        if (session == null) stopSelf()
+        // Never restarted by the system: a dead session is reported loudly instead (R25).
+        return START_NOT_STICKY
+    }
+
+    private fun handle(intent: Intent?) {
         when (intent?.action) {
             ACTION_START -> start(intent)
             ACTION_RESUME -> resume()
@@ -70,9 +97,6 @@ class TripService : LifecycleService() {
             ACTION_ACK -> intent.getStringExtra(EXTRA_KIND)?.let { applyEffects(session?.acknowledge(AlertKind.valueOf(it)).orEmpty()) }
             ACTION_END -> applyEffects(session?.end().orEmpty())
         }
-        if (session == null) stopSelf()
-        // Never restarted by the system: a dead session is reported loudly instead (R25).
-        return START_NOT_STICKY
     }
 
     private fun start(intent: Intent) {
@@ -88,7 +112,7 @@ class TripService : LifecycleService() {
 
     private fun resume() {
         if (session != null) return
-        lifecycleScope.launch {
+        lifecycleScope.launch(guard) {
             val (trip, stored) = TripStore.activeTrip(this@TripService) ?: return@launch stopSelf()
             val alarms = stored.map { Alarm(AlarmId(it.id), it.radiusM, AlarmState.valueOf(it.state)) }
             if (alarms.none { it.state.isActive }) return@launch stopSelf()
@@ -105,19 +129,19 @@ class TripService : LifecycleService() {
         _active.value = true
         ServiceCompat.startForeground(this, FOREGROUND_ID, ongoing(s), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
         applyEffects(effects)
-        jobs += lifecycleScope.launch {
+        jobs += lifecycleScope.launch(guard) {
             locationSource.fixes(tripActive = true).collect { dto ->
                 val fix = Fix(dto.position, dto.accuracyM, dto.elapsedMs, if (dto.fromNetwork) FixSource.NETWORK else FixSource.GPS)
                 applyEffects(session?.onFix(fix).orEmpty())
             }
         }
-        jobs += lifecycleScope.launch {
+        jobs += lifecycleScope.launch(guard) {
             while (isActive) {
                 applyEffects(session?.onTick(SystemClock.elapsedRealtime()).orEmpty())
                 delay(15_000)
             }
         }
-        jobs += lifecycleScope.launch {
+        jobs += lifecycleScope.launch(guard) {
             while (isActive) {
                 writeHeartbeat()
                 delay(SafetyTiming.HEARTBEAT_INTERVAL_MS)
@@ -149,7 +173,7 @@ class TripService : LifecycleService() {
     }
 
     private fun persist(s: TripSession) {
-        lifecycleScope.launch {
+        lifecycleScope.launch(guard) {
             TripStore.save(
                 this@TripService,
                 TripEntity(s.tripId.value, s.destination.position.lat, s.destination.position.lon, s.destination.label, s.mode.name, active = !s.ended),
@@ -162,7 +186,7 @@ class TripService : LifecycleService() {
     private fun writeHeartbeat() {
         val s = session ?: return
         val hb = Heartbeat(System.currentTimeMillis(), SystemClock.elapsedRealtime(), BootCount.read(this))
-        lifecycleScope.launch { BootRecordStore.write(this@TripService, s.bootRecord(hb)) }
+        lifecycleScope.launch(guard) { BootRecordStore.write(this@TripService, s.bootRecord(hb)) }
     }
 
     private fun finish() {
@@ -203,6 +227,7 @@ class TripService : LifecycleService() {
         const val EXTRA_ALARM = "alarm"
         const val EXTRA_KIND = "kind"
         private const val FOREGROUND_ID = 0x4B52
+        private const val TAG = "KairosTrip"
 
         private val _active = MutableStateFlow(false)
         val active: StateFlow<Boolean> = _active

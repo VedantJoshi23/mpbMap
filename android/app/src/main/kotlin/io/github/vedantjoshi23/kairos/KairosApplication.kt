@@ -8,4 +8,10 @@ import dagger.hilt.android.HiltAndroidApp
  * touch credential-encrypted storage. Nothing is initialised here.
  */
 @HiltAndroidApp
-class KairosApplication : Application()
+class KairosApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // Installs a handler only; it writes nothing until a crash (direct-boot safe).
+        CrashGuard.install(this)
+    }
+}
